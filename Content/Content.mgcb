@@ -9,7 +9,10 @@
 /compress:False
 
 #-------------------------------- References --------------------------------#
-
+# mgcb /@:./Content/Content.mgcb
 
 #---------------------------------- Content ---------------------------------#
 
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:ball.png
