@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -9,14 +7,19 @@ namespace JeuVideo;
 // core of the MonoGame project, with several critical sections necessary for the game to run:
 
 // heart of the MonoGame project
-public class Game1 : Microsoft.Xna.Framework.Game
+public class Game1 : Game
 {
     // attributs : provide easy access to the various components of MonoGame
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     
-    private Vector2 ballPosition;
-    private Player player;
+    private Texture2D _textureAtlas;
+    private Texture2D _hitboxTexture;
+    private Texture2D _rectangleTexture;
+    private Tile _tile;
+    
+    private Player _player;
+
 
     // tell the project how to start, and add key variables
     public Game1()
@@ -32,6 +35,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+        _graphics.IsFullScreen = false;
+        _graphics.PreferredBackBufferWidth = 640;
+        _graphics.PreferredBackBufferHeight = 480;
+        _graphics.ApplyChanges();
+
         base.Initialize();
     }
 
@@ -40,10 +48,17 @@ public class Game1 : Microsoft.Xna.Framework.Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        
-        Texture2D ballTexture = Content.Load<Texture2D>("ball");
-        ballPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
-        player = new Player(ballTexture, ballPosition, 50, _graphics);
+
+        Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
+        _player = new Player(playerTexture, new Vector2(160, 80), 32, _graphics);
+
+        _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
+        _hitboxTexture = Content.Load<Texture2D>("Assets/Tileset/collisions");
+
+        _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
+        _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
+
+        _tile = new(_textureAtlas, _hitboxTexture, _rectangleTexture);
     }
 
     // called on a regular interval to update the game state, e.g. take player inputs, move ships, or animate entities
@@ -56,7 +71,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
             Exit();
 
         // TODO: Add your update logic here
-        player.Update(gameTime);
+        _player.Update(Keyboard.GetState(), _tile, gameTime);
+
         base.Update(gameTime);
     }
 
@@ -67,9 +83,14 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            player.Draw(_spriteBatch);
+
+            _tile.Draw(_spriteBatch);
+
+            _player.Draw(_spriteBatch);
+
         _spriteBatch.End();
 
         base.Draw(gameTime);
     }
+    
 }

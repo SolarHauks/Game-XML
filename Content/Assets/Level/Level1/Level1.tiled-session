@@ -1,0 +1,55 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "save.tmx",
+    "expandedProjectPaths": [
+        "tilesets",
+        "."
+    ],
+    "fileStates": {
+        "save.tmx": {
+            "scale": 1.8888,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 242.74671749258795,
+                "y": 209.92164337145277
+            }
+        },
+        "tileset.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "tilesets/collision.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tilesets/tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level/Level1/output",
+    "last.externalTilesetPath": "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level/Level1/tilesets",
+    "last.imagePath": "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Tileset",
+    "map.lastUsedExportFilter": "Tiled map files (*.tmx *.xml)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "openFiles": [
+        "save.tmx"
+    ],
+    "project": "Level1.tiled-project",
+    "recentFiles": [
+        "save.tmx",
+        "tilesets/collision.tsx",
+        "tilesets/tileset.tsx",
+        "tileset.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

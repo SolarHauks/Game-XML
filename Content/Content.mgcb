@@ -7,12 +7,21 @@
 /config:
 /profile:Reach
 /compress:False
+/incremental:True
 
 #-------------------------------- References --------------------------------#
-# mgcb /@:./Content/Content.mgcb
+# dotnet mgcb /@:./Content/Content.mgcb
 
 #---------------------------------- Content ---------------------------------#
 
 /importer:TextureImporter
 /processor:TextureProcessor
-/build:ball.png
+/build:Assets/Character/character.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/Tileset/tileset.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/Tileset/collisions.png
