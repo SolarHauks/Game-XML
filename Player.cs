@@ -46,7 +46,7 @@ public class Player : GameObject
         }
         
         // Jump
-        if (_grounded && keystate.IsKeyDown(Keys.Up) && !_prevKeystate.IsKeyDown(Keys.Up)) {
+        if (_grounded && keystate.IsKeyDown(Keys.Space) && !_prevKeystate.IsKeyDown(Keys.Space)) {
             Velocity.Y = -600 * dt;
         }
         
@@ -110,6 +110,7 @@ public class Player : GameObject
                 else if (Velocity.Y < 0.0f)
                 {
                     _position.Y = collision.Bottom;
+                    Velocity.Y = 0.0f;
                 }
             }
         }
