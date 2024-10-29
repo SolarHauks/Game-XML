@@ -17,10 +17,11 @@ public class Player : GameObject
     
     public Player(Texture2D texture, Vector2 position, int size, GraphicsDeviceManager graphics) 
         : base(texture, position, size) {
-        Velocity = new();
+        Velocity = new Vector2();
         _graphics = graphics;
         _grounded = false;
         Direction = -1;
+        _intersections = [];
     }
     
     public void Update(KeyboardState keystate, Tile tile, GameTime gameTime) {
@@ -71,7 +72,7 @@ public class Player : GameObject
 
                 if (Velocity.X > 0.0f)
                 {
-                    _position.X = collision.Left - _Rect.Width;
+                    _position.X = collision.Left - _size;
                 }
                 else if (Velocity.X < 0.0f)
                 {
@@ -103,7 +104,7 @@ public class Player : GameObject
                 // colliding with the top face
                 if (Velocity.Y > 0.0f)
                 {
-                    _position.Y = collision.Top - _Rect.Height;
+                    _position.Y = collision.Top - _size;
                     Velocity.Y = 1.0f; // counter snap to ground
                     _grounded = true;
                 }
