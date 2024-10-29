@@ -13,12 +13,12 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     
-    private Texture2D _textureAtlas;
-    private Texture2D _hitboxTexture;
-    private Texture2D _rectangleTexture;
-    private Tile _tile;
+    private Texture2D _textureAtlas;    // texture pour le tileset
+    private Texture2D _hitboxTexture;   // texture de debug servant à afficher les collisions
+    private Texture2D _rectangleTexture;    // texture de debug pour les collisions. Sert dans Tile.DrawRectHollow
+    private Tile _tile; // classe Tile pour gérer les tiles
     
-    private Player _player;
+    private Player _player; // classe Player pour gérer le joueur
 
 
     // tell the project how to start, and add key variables
@@ -35,6 +35,7 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+        // Paramétrage de la fenètre de jeu
         _graphics.IsFullScreen = false;
         _graphics.PreferredBackBufferWidth = 640;
         _graphics.PreferredBackBufferHeight = 480;
@@ -48,16 +49,20 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+        
+        // Joueur
         Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
         _player = new Player(playerTexture, new Vector2(160, 80), 32, _graphics);
 
+        // Texture des tiles
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
         _hitboxTexture = Content.Load<Texture2D>("Assets/Tileset/collisions");
 
+        // Texture de debug pour les collisions
         _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
         _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
 
+        // Tile
         _tile = new(_textureAtlas, _hitboxTexture, _rectangleTexture);
     }
 
@@ -66,11 +71,13 @@ public class Game1 : Game
     // and it is used to update your game state (checking for collisions, gathering input, playing audio, etc.).
     protected override void Update(GameTime gameTime)
     {
+        // Commande de fermeture de la fenêtre
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
         // TODO: Add your update logic here
+        // Logique du joueur
         _player.Update(Keyboard.GetState(), _tile, gameTime);
 
         base.Update(gameTime);
@@ -84,9 +91,9 @@ public class Game1 : Game
         // TODO: Add your drawing code here
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            _tile.Draw(_spriteBatch);
+            _tile.Draw(_spriteBatch);   // dessin des tiles
 
-            _player.Draw(_spriteBatch);
+            _player.Draw(_spriteBatch); // dessin du joueur
 
         _spriteBatch.End();
 
