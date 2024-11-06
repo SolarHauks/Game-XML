@@ -7,7 +7,7 @@ public class GameObject : Sprite
 {
     protected Vector2 Velocity;
     
-    protected GameObject(Texture2D texture, Vector2 position, int size) 
-        : base(texture, position, size) {
+    protected GameObject(Texture2D texture, Vector2 position) 
+        : base(texture, position) {
     }
 }

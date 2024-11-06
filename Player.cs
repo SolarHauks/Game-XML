@@ -6,8 +6,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace JeuVideo;
 
-// Représente le joueur
-// Continent le code spécifique au joueur
+/// Représente un joueur dans le jeu.
+/// Hérite de la classe GameObject.
 public class Player : GameObject
 {
     private readonly GraphicsDeviceManager _graphics;
@@ -17,8 +17,8 @@ public class Player : GameObject
     private List<Rectangle> _intersections; // Liste des intersections avec les tiles, utile pour les collisions
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
     
-    public Player(Texture2D texture, Vector2 position, int size, GraphicsDeviceManager graphics) 
-        : base(texture, position, size) {
+    public Player(Texture2D texture, Vector2 position, GraphicsDeviceManager graphics) 
+        : base(texture, position) {
         Velocity = new Vector2();
         _graphics = graphics;
         _grounded = false;
@@ -26,6 +26,11 @@ public class Player : GameObject
         _intersections = [];
     }
     
+    
+    /// Met à jour l'état du joueur.
+    /// param keystate : L'état actuel du clavier.
+    /// param tile : Les informations sur les tiles pour la détection des collisions.
+    /// param gameTime : Le temps écoulé depuis la dernière frame.
     public void Update(KeyboardState keystate, Tile tile, GameTime gameTime) {
         
         // Déplacements
@@ -35,10 +40,6 @@ public class Player : GameObject
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         
         Velocity.X = 0.0f;  // Reset la vitesse horizontale, supprime l'inertie
-        Velocity.Y += 35.0f * dt;   // Gravité
-        
-        Velocity.Y = Math.Min(25.0f, Velocity.Y);   // Limite la vitesse de chute
-
         float horizontalSpeed = 300 * dt;   // Vitesse horizontale
         
         // Déplacements horizontaux
@@ -50,13 +51,6 @@ public class Player : GameObject
         if (keystate.IsKeyDown(Keys.Right)) {
             Velocity.X = horizontalSpeed; // Vitesse horizontale
             Direction = 1; // Direction
-        }
-        
-        // Jump
-        // Si le joueur est au sol et que la touche espace est pressée -> on saute
-        // Evite de sauter quand on est dans les airs
-        if (_grounded && keystate.IsKeyDown(Keys.Space) && !_prevKeystate.IsKeyDown(Keys.Space)) {
-            Velocity.Y = -600 * dt;
         }
         
         Position.X += (int)Velocity.X;  // Déplacement horizontal
@@ -83,7 +77,7 @@ public class Player : GameObject
 
                 if (Velocity.X > 0.0f)
                 {
-                    Position.X = collision.Left - Size;
+                    Position.X = collision.Left - HorizontalSize;
                 }
                 else if (Velocity.X < 0.0f)
                 {
@@ -91,7 +85,17 @@ public class Player : GameObject
                 }
             }
         }
-
+        
+        // Gestion des déplacements horizontaux : saut et gravité
+        Velocity.Y += 35.0f * dt;   // Gravité
+        Velocity.Y = Math.Min(25.0f, Velocity.Y);   // Limite la vitesse de chute
+        
+        // Si le joueur est au sol et que la touche espace est pressée -> on saute
+        // Evite de sauter quand on est dans les airs
+        if (_grounded && keystate.IsKeyDown(Keys.Space) && !_prevKeystate.IsKeyDown(Keys.Space)) {
+            Velocity.Y = -600 * dt;
+        }
+        
         Position.Y += (int)Velocity.Y; // Déplacement vertical
         _intersections = GetIntersectingTilesVertical(Rect); // Récupère les tiles intersectés par le joueur
 
@@ -117,7 +121,7 @@ public class Player : GameObject
                 // colliding with the top face
                 if (Velocity.Y > 0.0f)
                 {
-                    Position.Y = collision.Top - Size;
+                    Position.Y = collision.Top - VerticalSize;
                     Velocity.Y = 1.0f; // counter snap to ground
                     _grounded = true;
                 }
@@ -135,7 +139,9 @@ public class Player : GameObject
         CheckLimits(); // Vérifie que le joueur ne sorte pas de l'écran
     }
 
-    // Vérifie que le joueur ne sorte pas de l'écran
+    
+    // Vérifie que le joueur ne sorte pas des limites de l'écran.
+    // Replace le joueur s'il dépasse les limites horizontales ou verticales.
     private void CheckLimits()
     {
         // Limite horizontale
@@ -161,8 +167,10 @@ public class Player : GameObject
         }
     }
     
-    // Récupère les tiles intersectés par le joueur en horizontal
-    // On calcule les tiles intersectées par le joueur en fonction de sa taille, et on en renvoit la liste
+    // Récupère les tiles intersectées par le joueur en direction horizontale.
+    // Calcule les tiles intersectées par le joueur en fonction de sa taille et renvoie la liste.
+    // param : Le rectangle représentant la position et la taille actuelle du joueur.
+    // retour : Une liste de rectangles représentant les tiles intersectées.
     private List<Rectangle> GetIntersectingTilesHorizontal(Rectangle target)
     {
         List<Rectangle> intersections = new();
@@ -186,15 +194,17 @@ public class Player : GameObject
 
         return intersections;
     }
-
-    // Récupère les tiles intersectés par le joueur en vertical
-    // On calcule les tiles intersectées par le joueur en fonction de sa taille, et on en renvoit la liste
+    
+    // Récupère les tiles intersectées par le joueur en direction verticale.
+    // Calcule les tiles intersectées par le joueur en fonction de sa taille et renvoie la liste.
+    // param : Le rectangle représentant la position et la taille actuelle du joueur.
+    // retour : Une liste de rectangles représentant les tiles intersectées.
     private List<Rectangle> GetIntersectingTilesVertical(Rectangle target)
     {
         List<Rectangle> intersections = new();
 
-        int widthInTiles = (target.Width - (target.Width % 16)) / 16;   // Largeur en tiles
-        int heightInTiles = (target.Height - (target.Height % 16)) / 16;    // Hauteur en tiles
+        int widthInTiles = (int)Math.Ceiling(target.Width / 16.0f);   // Largeur en tiles
+        int heightInTiles = (int)Math.Ceiling(target.Height / 16.0f);    // Hauteur en tiles
 
         // Remplis la liste des tiles intersectées par le joueur
         for (int x = 0; x <= widthInTiles; x++) {
@@ -212,4 +222,5 @@ public class Player : GameObject
 
         return intersections;
     }
+    
 }

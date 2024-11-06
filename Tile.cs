@@ -18,7 +18,7 @@ public class Tile
     private int _numTilesPerRow;
     private int _pixelTilesize;
     
-    private readonly Texture2D _rectangleTexture;
+    public readonly Texture2D _rectangleTexture;
 
     public Dictionary<Vector2, int> Collisions
     {

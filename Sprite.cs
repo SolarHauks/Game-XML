@@ -8,20 +8,22 @@ namespace JeuVideo;
 public class Sprite {
     
     protected Vector2 Position; // Position
-    protected int Size; // Taille
+    protected readonly int HorizontalSize; // Taille horizontale
+    protected readonly int VerticalSize; // Taille verticale
     
-    // attribut calculé, rectangle de l'objet
-    protected Rectangle Rect => new Rectangle((int) Position.X, (int)Position.Y, Size, Size);
+    // attribut calculé, rectangle de l'objet. Sert pour l'affichage et pour les collisions (= hitbox)
+    protected Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, HorizontalSize, VerticalSize);
     
     // Direction (dans le sens du côté dans lequel il regarde)
     protected int Direction { get; set; } // -1 for left, 1 for right
 
     protected Texture2D Texture { get; } // Texture de l'objet
     
-    protected Sprite(Texture2D texture, Vector2 position, int size) {
+    protected Sprite(Texture2D texture, Vector2 position) {
         Texture = texture;
         Position = position;
-        this.Size = size;
+        HorizontalSize = Texture.Width;
+        VerticalSize = Texture.Height;
     }
     
     public void Draw(SpriteBatch spriteBatch)
