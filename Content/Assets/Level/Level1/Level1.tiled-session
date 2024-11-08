@@ -5,16 +5,25 @@
     },
     "activeFile": "save.tmx",
     "expandedProjectPaths": [
+        ".",
         "tilesets",
-        "."
+        "output"
     ],
     "fileStates": {
+        "output/test.tmx": {
+            "scale": 2.1434375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 240.03499052339987,
+                "y": 159.79005685960053
+            }
+        },
         "save.tmx": {
             "scale": 1.8888,
-            "selectedLayer": 2,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 242.74671749258795,
-                "y": 209.92164337145277
+                "y": 217.33375688267682
             }
         },
         "tileset.tsx": {
@@ -38,13 +47,15 @@
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
-        "save.tmx"
+        "save.tmx",
+        "tilesets/tileset.tsx"
     ],
     "project": "Level1.tiled-project",
     "recentFiles": [
+        "tilesets/tileset.tsx",
         "save.tmx",
         "tilesets/collision.tsx",
-        "tilesets/tileset.tsx",
+        "output/test.tmx",
         "tileset.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

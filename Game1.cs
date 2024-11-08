@@ -36,8 +36,9 @@ public class Game1 : Game
     {
         // TODO: Add your initialization logic here
         // Paramétrage de la fenètre de jeu
+        // Taille actuelle : 480 x 320
         _graphics.IsFullScreen = false;
-        _graphics.PreferredBackBufferWidth = 640;
+        _graphics.PreferredBackBufferWidth = 854;
         _graphics.PreferredBackBufferHeight = 480;
         _graphics.ApplyChanges();
 
