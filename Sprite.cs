@@ -12,7 +12,7 @@ public class Sprite {
     protected readonly int VerticalSize; // Taille verticale
     
     // attribut calculé, rectangle de l'objet. Sert pour l'affichage et pour les collisions (= hitbox)
-    protected Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, HorizontalSize, VerticalSize);
+    public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, HorizontalSize, VerticalSize);
     
     // Direction (dans le sens du côté dans lequel il regarde)
     protected int Direction { get; set; } // -1 for left, 1 for right
@@ -26,15 +26,19 @@ public class Sprite {
         VerticalSize = Texture.Height;
     }
     
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch, Vector2 offset)
     {
         // Si on regarde à gauche, retourne l'image horizontalement. Sinon la laisse telle quelle
         SpriteEffects spriteEffect = (Direction == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+        // Rectangle de destination, -> position du joueur + décalage lié à la caméra
+        Rectangle dRect = Rect;
+        dRect.Offset(offset);
         
         // var origin = new Vector2(Texture.Width / 2f, Texture.Height / 2f); // A garder pour plus tard peut etre
         Vector2 origin = Vector2.Zero; // temporaire
         spriteBatch.Draw( Texture, // Texture2D,
-            Rect, // Rectangle destinationRectangle,
+            dRect, // Rectangle destinationRectangle,
             null, // Nullable<Rectangle> sourceRectangle,
             Color.White, //  Color,
             0.0f, //  float rotation,

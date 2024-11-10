@@ -17,7 +17,7 @@ public class Tile
     private int _displayTilesize;
     private int _pixelTilesize;
     private int _numTilesPerRow;
-    private double _onScreenMultiplier = 1.5;
+    private double _onScreenMultiplier = 1.0; // WIP
 
     public Dictionary<Vector2, int> Collisions { private set; get; }
     
@@ -174,11 +174,11 @@ public class Tile
         return result;
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch, Vector2 offset)
     {
         foreach (var layer in _layerList)
         {
-            DrawMap(layer, spriteBatch, _textureAtlas);
+            DrawMap(layer, spriteBatch, _textureAtlas, offset);
         }
         
         // debug : draw collisions
@@ -195,13 +195,14 @@ public class Tile
         }*/
     }
 
-    private void DrawMap(Dictionary<Vector2, int> data, SpriteBatch spriteBatch, Texture2D texture)
+    private void DrawMap(Dictionary<Vector2, int> data, SpriteBatch spriteBatch, Texture2D texture, Vector2 offset)
     {
         foreach (var item in data)
         {
+            // Rectangle de destination, on le place en fonction de la position du tile et du décalage lié à la caméra
             Rectangle drect = new(
-                (int)item.Key.X * _displayTilesize,
-                (int)item.Key.Y * _displayTilesize,
+                (int)(item.Key.X * _displayTilesize + offset.X),
+                (int)(item.Key.Y * _displayTilesize + offset.Y),
                 _displayTilesize,
                 _displayTilesize
             );

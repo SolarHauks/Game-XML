@@ -19,6 +19,8 @@ public class Game1 : Game
     private Tile _tile; // classe Tile pour gérer les tiles
     
     private Player _player; // classe Player pour gérer le joueur
+    
+    private Camera _camera; // classe Camera pour gérer la caméra
 
 
     // tell the project how to start, and add key variables
@@ -27,6 +29,7 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+        _camera = new Camera(Vector2.Zero);
     }
 
     // initialize the game upon its startup
@@ -80,6 +83,10 @@ public class Game1 : Game
         // TODO: Add your update logic here
         // Logique du joueur
         _player.Update(Keyboard.GetState(), _tile, gameTime);
+        
+        // Logique de la caméra
+        // A décommenter si on veut utiliser la caméra
+        // _camera.Follow(_player.Rect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
 
         base.Update(gameTime);
     }
@@ -89,12 +96,14 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
+        Vector2 offset = _camera.Position;  // Offset lié à la caméra
+
         // TODO: Add your drawing code here
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            _tile.Draw(_spriteBatch);   // dessin des tiles
+            _tile.Draw(_spriteBatch, offset);   // dessin des tiles
 
-            _player.Draw(_spriteBatch); // dessin du joueur
+            _player.Draw(_spriteBatch, offset); // dessin du joueur
 
         _spriteBatch.End();
 
