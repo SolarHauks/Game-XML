@@ -56,7 +56,8 @@ public class Game1 : Game
         
         // Joueur
         Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
-        _player = new Player(playerTexture, new Vector2(160, 80), _graphics);
+        Vector2 screenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+        _player = new Player(playerTexture, new Vector2(160, 80), screenSize);
 
         // Texture des tiles
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
