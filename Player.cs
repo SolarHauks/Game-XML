@@ -30,11 +30,15 @@ public class Player : GameObject
     /// param keystate : L'état actuel du clavier.
     /// param tile : Les informations sur les tiles pour la détection des collisions.
     /// param gameTime : Le temps écoulé depuis la dernière frame.
-    public void Update(KeyboardState keystate, Tile tile, GameTime gameTime) {
+    public void Update(KeyboardState keystate, Tile tile, GameTime gameTime, List<Enemy> enemies) {
         
         _keystate = keystate; // Sauvegarde l'état du clavier (ie : les touches actuellement pressées)
         
         base.Update(tile, gameTime); // Met à jour la position du joueur
+        
+        if (_keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C)) {
+            Attack(enemies);
+        }
         
         _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
         
@@ -113,7 +117,7 @@ public class Player : GameObject
     protected override void DeplacementHorizontal(float dt)
     {
         Velocity.X = 0.0f;  // Reset la vitesse horizontale, supprime l'inertie
-        float horizontalSpeed = 300 * dt;   // Vitesse horizontale
+        float horizontalSpeed = 250 * dt;   // Vitesse horizontale
         
         // Déplacements horizontaux
         if (_keystate.IsKeyDown(Keys.Left)) {
@@ -143,4 +147,23 @@ public class Player : GameObject
         
         Position.Y += (int)Velocity.Y; // Déplacement vertical
     }
+
+    private void Attack(List<Enemy> enemies)
+    {
+        Rectangle hitbox = new Rectangle(
+            (int)Position.X + (Direction == 1 ? 16 : -16),
+            (int)Position.Y,
+            16,
+            16
+        );
+
+        foreach (var enemy in enemies)
+        {
+            if (hitbox.Intersects(enemy.Rect))
+            {
+                enemy.TakeDamage(20, Position);
+            }
+        }
+    }
+    
 }

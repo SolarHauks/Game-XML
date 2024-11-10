@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -19,6 +21,8 @@ public class Game1 : Game
     private Tile _tile; // classe Tile pour gérer les tiles
     
     private Player _player; // classe Player pour gérer le joueur
+
+    private List<Enemy> _enemies;
     
     private Camera _camera; // classe Camera pour gérer la caméra
 
@@ -30,6 +34,7 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         _camera = new Camera(Vector2.Zero);
+        _enemies = new List<Enemy>();
     }
 
     // initialize the game upon its startup
@@ -58,6 +63,11 @@ public class Game1 : Game
         Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
         Vector2 screenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         _player = new Player(playerTexture, new Vector2(160, 80), screenSize);
+        
+        // Ennemis
+        Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
+        Enemy snake = new(snakeTexture, new Vector2(192, 272), 100);
+        _enemies.Add(snake);
 
         // Texture des tiles
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
@@ -83,13 +93,33 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         // Logique du joueur
-        _player.Update(Keyboard.GetState(), _tile, gameTime);
+        _player.Update(Keyboard.GetState(), _tile, gameTime, _enemies);
+        
+        // Logique des ennemis
+        foreach (Enemy enemy in _enemies)
+        {
+            enemy.Update(_tile, gameTime);
+        }
+        
+        // Vérifie et supprime les ennemis avec 0 point de vie
+        RemoveDeadEnemies();
         
         // Logique de la caméra
         // A décommenter si on veut utiliser la caméra
         // _camera.Follow(_player.Rect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
 
         base.Update(gameTime);
+    }
+
+    private void RemoveDeadEnemies()
+    {
+        foreach (Enemy enemy in _enemies.ToList())
+        {
+            if (enemy.Health <= 0)
+            {
+                _enemies.Remove(enemy);
+            }
+        }
     }
 
     // called on a regular interval to take the current game state and draw the game entities to the screen
@@ -103,7 +133,12 @@ public class Game1 : Game
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             _tile.Draw(_spriteBatch, offset);   // dessin des tiles
-
+            
+            foreach (Enemy enemy in _enemies)
+            {
+                enemy.Draw(_spriteBatch, offset);   // dessin des ennemis
+            }
+            
             _player.Draw(_spriteBatch, offset); // dessin du joueur
 
         _spriteBatch.End();

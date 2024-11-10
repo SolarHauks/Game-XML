@@ -20,6 +20,10 @@
 
 /importer:TextureImporter
 /processor:TextureProcessor
+/build:Assets/Enemies/snake.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
 /build:Assets/Tileset/tileset.png
 
 /importer:TextureImporter

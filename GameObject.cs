@@ -13,7 +13,7 @@ public abstract class GameObject : Sprite
         : base(texture, position) {
     }
 
-    protected void Update(Tile tile, GameTime gameTime)
+    public void Update(Tile tile, GameTime gameTime)
     {
         // Delta time, temps depuis la dernière frame
         // Sert pour que le jeu soit indépendant de la vitesse de la machine
