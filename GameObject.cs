@@ -24,6 +24,8 @@ public abstract class GameObject : Sprite
 
         DeplacementVertical(dt);
         CheckCollisionsVertical(tile);
+        
+        AnimationManager.Update();
     }
     
     protected abstract void DeplacementHorizontal(float dt);

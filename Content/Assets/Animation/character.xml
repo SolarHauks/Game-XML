@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animations nbCol="23" largeur="32" hauteur="32">
+    <animation name="walk">
+        <frame numFrame="24"/>
+        <frame numFrame="25"/>
+        <frame numFrame="26"/>
+        <frame numFrame="27"/>
+    </animation>
+</animations>

@@ -66,7 +66,7 @@ public class Game1 : Game
         
         // Ennemis
         Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
-        Enemy snake = new(snakeTexture, new Vector2(192, 272), 100);
+        Enemy snake = new(snakeTexture, new Vector2(192, 80), 100);
         _enemies.Add(snake);
 
         // Texture des tiles

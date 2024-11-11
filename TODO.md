@@ -1,6 +1,7 @@
 # A fix
 - Fix : quand le joueur colle une plateforme sur le coté, il se tp (au dessus souvent). Vient probablement de GetIntersectingTilesHorizontal
 - Fix : taille affichage (ATTENTION : GROS TRAVAIL)
+- Optionnel : Dans l'AnimManager, on pourrait rajouter une vérification de l'instance XML des données vis à vis d'un schéma
 
 
 
