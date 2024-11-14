@@ -77,6 +77,11 @@ public class AnimationManager
         return spriteSheet.ToString().Split('/')[^1]; 
     }
 
+    public Vector2 GetSize()
+    {
+        return _size;
+    }
+
     private int[] GetFramesArray(int numFrames, XmlNode animationNode)
     {
         int[] frames = new int[numFrames];

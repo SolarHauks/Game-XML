@@ -5,7 +5,7 @@
  </editorsettings>
  <tileset firstgid="1" source="tilesets/tileset.tsx"/>
  <tileset firstgid="137" source="tilesets/collision.tsx"/>
- <layer id="2" name="bg" width="30" height="20" visible="0">
+ <layer id="2" name="bg" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

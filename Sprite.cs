@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,11 +11,15 @@ public class Sprite {
     protected Vector2 Position; // Position
     protected readonly int HorizontalSize; // Taille horizontale
     protected readonly int VerticalSize; // Taille verticale
+    private readonly int _displayHorizontalSize; // Taille horizontale
+    private readonly int _displayVerticalSize; // Taille verticale
+    private Vector2 _size; // Taille d'une frame de l'objet
     
     protected AnimationManager AnimationManager; // Gestionnaire d'animations
     
     // attribut calculé, rectangle de l'objet. Sert pour l'affichage et pour les collisions (= hitbox)
     public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, HorizontalSize, VerticalSize);
+    private Rectangle DispRect => new Rectangle((int)Position.X, (int)Position.Y, _displayHorizontalSize, _displayVerticalSize);
     
     // Direction (dans le sens du côté dans lequel il regarde)
     protected int Direction { get; set; } // -1 for left, 1 for right
@@ -26,7 +31,10 @@ public class Sprite {
         AnimationManager = new AnimationManager(texture);
         Position = position;
         HorizontalSize = Texture.Width;
+        _displayHorizontalSize = (((int)_size.X / 16) + 1) * 16; 
         VerticalSize = Texture.Height;
+        _displayVerticalSize = (((int)_size.Y / 16) + 1) * 16;
+        _size = AnimationManager.GetSize();
     }
     
     public void Draw(SpriteBatch spriteBatch, Vector2 offset)
@@ -35,8 +43,11 @@ public class Sprite {
         SpriteEffects spriteEffect = (Direction == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
         // Rectangle de destination, -> position du joueur + décalage lié à la caméra
-        Rectangle dRect = new Rectangle((int)Position.X, (int)Position.Y, 32, 32);
-        // dRect.Offset(offset);
+        Rectangle dRect = DispRect;
+        dRect.Offset(offset);
+        
+        if(this is Enemy)
+            Console.WriteLine(dRect);
         
         Rectangle sRect = AnimationManager.GetSourceRectangle();
         
