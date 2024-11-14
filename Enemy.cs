@@ -13,7 +13,7 @@ public class Enemy : GameObject
     public int Health
     {
         get => _currentHealth;
-        set
+        private set
         {
             if (value < 0) _currentHealth = 0;
             else if (value > _maxHealth) _currentHealth = _maxHealth;
@@ -25,7 +25,6 @@ public class Enemy : GameObject
         _maxHealth = maxHealth;
         _currentHealth = maxHealth;
         _startPosition = position;
-        Direction = 1;
     }
 
     protected override void DeplacementHorizontal(float dt)

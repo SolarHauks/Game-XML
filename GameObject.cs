@@ -9,8 +9,7 @@ public abstract class GameObject : Sprite
 {
     protected Vector2 Velocity;
     
-    protected GameObject(Texture2D texture, Vector2 position) 
-        : base(texture, position) {
+    protected GameObject(Texture2D texture, Vector2 position) : base(texture, position) {
     }
 
     public void Update(Tile tile, GameTime gameTime)
@@ -160,4 +159,5 @@ public abstract class GameObject : Sprite
 
         return intersections;
     }
+    
 }

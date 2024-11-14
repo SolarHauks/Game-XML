@@ -10,20 +10,15 @@ namespace JeuVideo;
 /// Hérite de la classe GameObject.
 public class Player : GameObject
 {
-    private readonly Vector2 _screenSize; // Limite de l'écran
-
     private KeyboardState _keystate;
     
     private bool _grounded; // Si le joueur est au sol
     
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
     
-    public Player(Texture2D texture, Vector2 position, Vector2 screenSize) 
-        : base(texture, position) {
+    public Player(Texture2D texture, Vector2 position) : base(texture, position) {
         Velocity = new Vector2();
-        _screenSize = screenSize;
         _grounded = false;
-        Direction = -1;
     }
     
     /// Met à jour l'état du joueur.
@@ -40,17 +35,25 @@ public class Player : GameObject
             Attack(enemies);
         }
         
+        if (_keystate.IsKeyDown(Keys.Z) && !_prevKeystate.IsKeyDown(Keys.Z))
+        {
+            Position.X = 10;
+            Position.Y = 10 ;
+        }
+        
         _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
         
         // Limites
-        CheckLimits(); // Vérifie que le joueur ne sorte pas de l'écran. Inutile si on utilise la caméra
+        // CheckLimits(); // Vérifie que le joueur ne sorte pas de l'écran. Inutile si on utilise la caméra
     }
 
     
     // Vérifie que le joueur ne sorte pas des limites de l'écran.
     // Replace le joueur s'il dépasse les limites horizontales ou verticales.
     // A noter que cette fonction est inutile si on utilise la caméra, car le joueur sera alors toujours au centre de l'écran
-    private void CheckLimits()
+    // ATTENTION : cette fonction n'a pas été mis à jour et utilise encore les dimensions de la texture pour fonctionner
+    // => A maj si on veut l'utliser
+    /*private void CheckLimits()
     {
         // Limite horizontale
         // Si le joueur dépasse à droite ou à gauche, on le replace
@@ -73,7 +76,7 @@ public class Player : GameObject
         {
             Position.Y = Texture.Height / 2.0f;
         }
-    }
+    }*/
     
     protected override void CheckCollisionsVertical(Tile tile)
     {

@@ -59,23 +59,22 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         
+        // Texture de debug pour les collisions
+        _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
+        _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
+        
         // Joueur
         Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
-        Vector2 screenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
-        _player = new Player(playerTexture, new Vector2(160, 80), screenSize);
+        _player = new Player(playerTexture, new Vector2(160, 80));
         
         // Ennemis
         Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
-        Enemy snake = new(snakeTexture, new Vector2(192, 80), 100);
+        Enemy snake = new(snakeTexture, new Vector2(192, 270), 100);
         _enemies.Add(snake);
 
         // Texture des tiles
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
         _hitboxTexture = Content.Load<Texture2D>("Assets/Tileset/collisions");
-
-        // Texture de debug pour les collisions
-        _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
-        _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
 
         // Tile
         _tile = new(_textureAtlas, _hitboxTexture, _rectangleTexture);

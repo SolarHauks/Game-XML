@@ -13,9 +13,8 @@ public class Sprite {
     protected readonly int VerticalSize; // Taille verticale
     private readonly int _displayHorizontalSize; // Taille horizontale
     private readonly int _displayVerticalSize; // Taille verticale
-    private Vector2 _size; // Taille d'une frame de l'objet
     
-    protected AnimationManager AnimationManager; // Gestionnaire d'animations
+    protected readonly AnimationManager AnimationManager; // Gestionnaire d'animations
     
     // attribut calculé, rectangle de l'objet. Sert pour l'affichage et pour les collisions (= hitbox)
     public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, HorizontalSize, VerticalSize);
@@ -28,13 +27,16 @@ public class Sprite {
     
     protected Sprite(Texture2D texture, Vector2 position) {
         Texture = texture;
-        AnimationManager = new AnimationManager(texture);
         Position = position;
-        HorizontalSize = Texture.Width;
-        _displayHorizontalSize = (((int)_size.X / 16) + 1) * 16; 
-        VerticalSize = Texture.Height;
-        _displayVerticalSize = (((int)_size.Y / 16) + 1) * 16;
-        _size = AnimationManager.GetSize();
+        Direction = 1;
+        
+        AnimationManager = new AnimationManager(texture);
+        Vector2 size = AnimationManager.GetSize();
+        _displayHorizontalSize = (int)(Math.Ceiling(size.X / 16.0) * 16);
+        _displayVerticalSize = (int)(Math.Ceiling(size.Y / 16.0) * 16);
+        
+        HorizontalSize = _displayHorizontalSize;
+        VerticalSize = _displayVerticalSize;
     }
     
     public void Draw(SpriteBatch spriteBatch, Vector2 offset)
@@ -44,10 +46,10 @@ public class Sprite {
 
         // Rectangle de destination, -> position du joueur + décalage lié à la caméra
         Rectangle dRect = DispRect;
-        dRect.Offset(offset);
+        // dRect.Offset(offset);
         
-        if(this is Enemy)
-            Console.WriteLine(dRect);
+        /*if (this is Player)
+            Console.WriteLine(dRect);*/
         
         Rectangle sRect = AnimationManager.GetSourceRectangle();
         
