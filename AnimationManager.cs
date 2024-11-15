@@ -8,19 +8,15 @@ namespace JeuVideo;
 
 public class AnimationManager
 {
-    private Texture2D _spriteSheet;
-    
     private int _numColumns;
     private Vector2 _size;
     
-    private Dictionary<string, Animation> _animations;
+    private readonly Dictionary<string, Animation> _animations;
     
     public AnimationManager(Texture2D spriteSheet)
     {
-        _spriteSheet = spriteSheet;
         _animations = new Dictionary<string, Animation>();
-
-        LoadData(_spriteSheet);
+        LoadData(spriteSheet);
     }
 
     private void LoadData(Texture2D spriteSheet)
@@ -106,6 +102,11 @@ public class AnimationManager
     public void Update()
     {
         string currentAnimation = "walk";    // TODO : A remplacer par un renvoit décidé par un automate
+        /*foreach (string name in _animations.Keys)
+        {
+            Console.WriteLine(name);
+        }
+        Console.WriteLine();*/
         _animations[currentAnimation].Update();
     }
 }

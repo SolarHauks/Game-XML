@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animations nbCol="23" largeur="32" hauteur="32">
     <animation name="walk">
-        <frame numFrame="24"/>
-        <frame numFrame="25"/>
-        <frame numFrame="26"/>
-        <frame numFrame="27"/>
+        <frame numFrame="1"/>
+        <frame numFrame="2"/>
+        <frame numFrame="3"/>
+        <frame numFrame="4"/>
+    </animation>
+    <animation name="jump">
+        <frame numFrame="5"/>
+        <frame numFrame="6"/>
+        <frame numFrame="7"/>
+        <frame numFrame="8"/>
+    </animation>
+    <animation name="hit">
+        <frame numFrame="9"/>
+        <frame numFrame="10"/>
+        <frame numFrame="9"/>
+    </animation>
+    <animation name="slash">
+        <frame numFrame="12"/>
+        <frame numFrame="11"/>
+        <frame numFrame="12"/>
+        <frame numFrame="13"/>
+    </animation>
+    <animation name="punch">
+        <frame numFrame="12"/>
+        <frame numFrame="14"/>
+        <frame numFrame="12"/>
+    </animation>
+    <animation name="run">
+        <frame numFrame="15"/>
+        <frame numFrame="16"/>
+        <frame numFrame="17"/>
+        <frame numFrame="18"/>
+    </animation>
+    <animation name="climb">
+        <frame numFrame="19"/>
+        <frame numFrame="20"/>
+        <frame numFrame="21"/>
+        <frame numFrame="22"/>
     </animation>
 </animations>

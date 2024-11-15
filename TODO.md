@@ -1,11 +1,10 @@
 # A fix
-- Fix : quand le joueur colle une plateforme sur le coté, il se tp (au dessus souvent). Vient probablement de GetIntersectingTilesHorizontal
-- Fix : taille affichage (ATTENTION : GROS TRAVAIL)
-- Optionnel : Dans l'AnimManager, on pourrait rajouter une vérification de l'instance XML des données vis à vis d'un schéma
-- Fix collisions ennemies (il faut utiliser la vélocité)
+- Quand le joueur colle une plateforme sur le coté, il se tp (au dessus souvent). Vient probablement de GetIntersectingTilesHorizontal
+- Depuis la correction des collisions des ennemis, on ne peut plus les taper
 
-
-
-# A demander :
-- Pour la classe GameObject, vaut-il mieux créer des méthodes communes qui serviront de briques aux sous-classe
-  ou vaut-il mieux prévoir la logique générale et demander aux sous-classes de réimplémenter les fonctions nécéssaires ?
+# TODO
+- A faire : taille affichage (ATTENTION : GROS TRAVAIL)
+- Ré-écrire : A plusieurs endroits on fait des if pour vérifier que le contenu de certaines variables n'est pas nul.
+  On pourrait remplacer ça par des validations de schéma xml, pour vérifier que nos données sont correct
+  Il faut donc faire tous les schémas et intégrer les vérifications au code
+- A faire : faire charger les données du joueur depuis un xml
