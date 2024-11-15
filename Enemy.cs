@@ -29,7 +29,9 @@ public class Enemy : GameObject
 
     protected override void DeplacementHorizontal(float dt)
     {
-        Position.X += Direction * 50 * dt;
+        // On passe par la velocité car on en a besoin pour les collisions
+        Velocity.X = Direction * 50 * dt;
+        Position.X += Velocity.X;
         if (Position.X > _startPosition.X + 50 || Position.X < _startPosition.X - 50)
         {
             Direction *= -1;
@@ -38,6 +40,8 @@ public class Enemy : GameObject
 
     protected override void DeplacementVertical(float dt)
     {
+        Velocity.Y = 25 * dt;
+        Position.Y += Velocity.Y;
     }
     
     public void TakeDamage(int damage, Vector2 source)

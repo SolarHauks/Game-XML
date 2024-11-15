@@ -5,8 +5,8 @@
     },
     "activeFile": "save.tmx",
     "expandedProjectPaths": [
-        "tilesets",
         ".",
+        "tilesets",
         "output"
     ],
     "fileStates": {
