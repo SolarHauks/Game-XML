@@ -10,6 +10,7 @@ public class AnimationManager
 {
     private int _numColumns;
     private Vector2 _size;
+    private string _currentAnimation;
     
     private readonly Dictionary<string, Animation> _animations;
     
@@ -17,6 +18,8 @@ public class AnimationManager
     {
         _animations = new Dictionary<string, Animation>();
         LoadData(spriteSheet);
+
+        _currentAnimation = "walk";
     }
 
     private void LoadData(Texture2D spriteSheet)
@@ -90,8 +93,7 @@ public class AnimationManager
 
     public Rectangle GetSourceRectangle()
     {
-        string currentAnimation = "walk";    // TODO : A remplacer par un renvoit décidé par un automate
-        int currentFrame = _animations[currentAnimation].GetNextFrame();
+        int currentFrame = _animations[_currentAnimation].GetNextFrame();
         
         int x = currentFrame % _numColumns * (int)_size.X;
         int y = currentFrame / _numColumns * (int)_size.Y;
@@ -101,12 +103,11 @@ public class AnimationManager
     
     public void Update()
     {
-        string currentAnimation = "walk";    // TODO : A remplacer par un renvoit décidé par un automate
         /*foreach (string name in _animations.Keys)
         {
             Console.WriteLine(name);
         }
         Console.WriteLine();*/
-        _animations[currentAnimation].Update();
+        _animations[_currentAnimation].Update();
     }
 }
