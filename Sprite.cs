@@ -1,6 +1,8 @@
 using System;
+using JeuVideo.Animation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+
 
 namespace JeuVideo;
 
@@ -46,10 +48,8 @@ public class Sprite {
 
         // Rectangle de destination, -> position du joueur + décalage lié à la caméra
         Rectangle dRect = DispRect;
+        dRect.Inflate(5f, 5f);
         // dRect.Offset(offset);
-        
-        /*if (this is Player)
-            Console.WriteLine(dRect);*/
         
         Rectangle sRect = AnimationManager.GetSourceRectangle();
         

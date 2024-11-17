@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JeuVideo.Animation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -33,6 +34,8 @@ public class Player : GameObject
         
         if (_keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C)) {
             Attack(enemies);
+            AnimationManager.SetAnimation("hit");
+            ((OneTimeAnimation)AnimationManager.GetAnimation("hit")).Play();
         }
         
         if (_keystate.IsKeyDown(Keys.Z) && !_prevKeystate.IsKeyDown(Keys.Z))
@@ -40,6 +43,8 @@ public class Player : GameObject
             Position.X = 10;
             Position.Y = 10 ;
         }
+        
+        Animate(Velocity); // Gère l'animation du joueur
         
         _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
         
@@ -166,6 +171,32 @@ public class Player : GameObject
             if (hitbox.Intersects(enemy.Rect))
             {
                 enemy.TakeDamage(20, Position);
+            }
+        }
+    }
+
+    protected override void Animate(Vector2 velocity)
+    {
+        string currentAnim = AnimationManager.GetCurrentAnimation();
+        
+        if (currentAnim == "hit" && AnimationManager.IsPlaying())
+        {
+            return; // Do not change animation if attack is playing
+        }
+
+        if (_grounded)
+        {
+            if (velocity.X != 0 && currentAnim != "run") {
+                AnimationManager.SetAnimation("run");
+            } else if (velocity.X == 0 && currentAnim != "idle") {
+                AnimationManager.SetAnimation("idle");
+            }
+        }
+        else
+        {
+            string newAnim = velocity.Y > 1 ? "fall" : "jump";
+            if (currentAnim != newAnim) {
+                AnimationManager.SetAnimation(newAnim);
             }
         }
     }

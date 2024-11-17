@@ -4,30 +4,31 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace JeuVideo;
+namespace JeuVideo.Animation;
 
 public class AnimationManager
 {
-    private Texture2D _spriteSheet;
-    
     private int _numColumns;
     private Vector2 _size;
+    private string _currentAnimation;
     
-    private Dictionary<string, Animation> _animations;
+    private readonly Dictionary<string, IAnimation> _animations;
+    
+    private const string XmlFilePathPrefix = "../../../Content/Assets/Animation/";
     
     public AnimationManager(Texture2D spriteSheet)
     {
-        _spriteSheet = spriteSheet;
-        _animations = new Dictionary<string, Animation>();
+        _animations = new Dictionary<string, IAnimation>();
+        LoadData(spriteSheet);
 
-        LoadData(_spriteSheet);
+        _currentAnimation = "walk";
     }
 
     private void LoadData(Texture2D spriteSheet)
     {
         string dataFileName = GetFileName(spriteSheet) + ".xml";
+        string xmlFilePath = XmlFilePathPrefix + dataFileName;
         
-        string xmlFilePath = "../../../Content/Assets/Animation/" + dataFileName; // Chemin du fichier XML
         XmlDocument doc = new XmlDocument();
         doc.Load(xmlFilePath);
         
@@ -49,7 +50,9 @@ public class AnimationManager
         XmlNodeList animationNodes = doc.SelectNodes("//animation"); // Sélectionne la racine du document XML
 
         if (animationNodes == null)
-            Console.WriteLine("Erreur : le fichier XML ne contient pas de noeud animation");
+        {
+            Console.WriteLine("Erreur : le fichier XML ne contient pas de noeud animation");   
+        }
         else
         {
             foreach (XmlNode animationNode in animationNodes)
@@ -61,10 +64,22 @@ public class AnimationManager
 
                 string nom = animationNode.Attributes["name"].Value;
                 int numFrames = animationNode.SelectNodes("frame").Count;
+                string type = animationNode.Attributes["type"].Value;
                 
                 int[] frames = GetFramesArray(numFrames, animationNode);
-
-                _animations.Add(nom, new Animation(frames));
+                
+                if (type == "continu")
+                {
+                    _animations.Add(nom, new ContinuousAnimation(frames));
+                }
+                else if (type == "ponctuel")
+                {
+                    _animations.Add(nom, new OneTimeAnimation(frames));
+                }
+                else
+                {
+                    Console.WriteLine("Erreur : le type d'animation " + type + " n'existe pas");
+                }
             }
         }
             
@@ -94,8 +109,7 @@ public class AnimationManager
 
     public Rectangle GetSourceRectangle()
     {
-        string currentAnimation = "walk";    // TODO : A remplacer par un renvoit décidé par un automate
-        int currentFrame = _animations[currentAnimation].GetNextFrame();
+        int currentFrame = _animations[_currentAnimation].GetNextFrame();
         
         int x = currentFrame % _numColumns * (int)_size.X;
         int y = currentFrame / _numColumns * (int)_size.Y;
@@ -105,7 +119,45 @@ public class AnimationManager
     
     public void Update()
     {
-        string currentAnimation = "walk";    // TODO : A remplacer par un renvoit décidé par un automate
-        _animations[currentAnimation].Update();
+        _animations[_currentAnimation].Update();
+    }
+    
+    public void SetAnimation(string anim)
+    {
+        if (_animations.ContainsKey(anim))
+        {
+            _currentAnimation = anim;
+        }
+        else
+        {
+            Console.WriteLine("Erreur : l'animation " + anim + " n'existe pas");   
+        }
+    }
+    
+    public IAnimation GetAnimation(string name)
+    {
+        if (_animations.TryGetValue(name, out var animation))
+        {
+            return animation;
+        }
+        else
+        {
+            Console.WriteLine("Erreur : l'animation " + name + " n'existe pas");
+            return null;
+        }
+    }
+    
+    public string GetCurrentAnimation()
+    {
+        return _currentAnimation;
+    }
+    
+    public bool IsPlaying()
+    {
+        if (_animations[_currentAnimation] is OneTimeAnimation oneTimeAnimation)
+        {
+            return oneTimeAnimation.IsPlaying;
+        }
+        return false;
     }
 }
