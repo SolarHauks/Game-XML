@@ -158,11 +158,12 @@ public class Player : GameObject
 
     private void Attack(List<Enemy> enemies)
     {
+        Console.WriteLine("test");
         Rectangle hitbox = new Rectangle(
             (int)Position.X + (Direction == 1 ? 16 : -16),
             (int)Position.Y,
-            16,
-            16
+            32,
+            32
         );
 
         foreach (var enemy in enemies)
