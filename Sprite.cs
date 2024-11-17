@@ -8,28 +8,30 @@ namespace JeuVideo;
 
 // Représente un objet graphique
 // S'occupe de tout ce qui est en rapport avec l'affichage
-public class Sprite {
+public abstract class Sprite {
     
+    private readonly int _horizontalSize; // Taille horizontale
+    private readonly int _verticalSize; // Taille verticale
+    private readonly int _displayHorizontalSize; // Taille horizontale affichée
+    private readonly int _displayVerticalSize; // Taille verticale affichée
     protected Vector2 Position; // Position
-    protected readonly int HorizontalSize; // Taille horizontale
-    protected readonly int VerticalSize; // Taille verticale
-    private readonly int _displayHorizontalSize; // Taille horizontale
-    private readonly int _displayVerticalSize; // Taille verticale
     
     protected readonly AnimationManager AnimationManager; // Gestionnaire d'animations
     
-    // attribut calculé, rectangle de l'objet. Sert pour l'affichage et pour les collisions (= hitbox)
-    public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, HorizontalSize, VerticalSize);
+    // Hitbox de l'objet, sert pour les collisions
+    public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, _horizontalSize, _verticalSize);
+    
+    // Rectangle de destination, sert pour l'affichage
     private Rectangle DispRect => new Rectangle((int)Position.X, (int)Position.Y, _displayHorizontalSize, _displayVerticalSize);
     
     // Direction (dans le sens du côté dans lequel il regarde)
     protected int Direction { get; set; } // -1 for left, 1 for right
 
-    protected Texture2D Texture { get; } // Texture de l'objet
+    private Texture2D Texture { get; } // Texture de l'objet
     
     protected Sprite(Texture2D texture, Vector2 position) {
         Texture = texture;
-        Position = position;
+        Position = position;    // Position initiale de l'objet
         Direction = 1;
         
         AnimationManager = new AnimationManager(texture);
@@ -37,8 +39,8 @@ public class Sprite {
         _displayHorizontalSize = (int)(Math.Ceiling(size.X / 16.0) * 16);
         _displayVerticalSize = (int)(Math.Ceiling(size.Y / 16.0) * 16);
         
-        HorizontalSize = _displayHorizontalSize;
-        VerticalSize = _displayVerticalSize;
+        _horizontalSize = _displayHorizontalSize;
+        _verticalSize = _displayVerticalSize;
     }
     
     public void Draw(SpriteBatch spriteBatch, Vector2 offset)
@@ -48,8 +50,7 @@ public class Sprite {
 
         // Rectangle de destination, -> position du joueur + décalage lié à la caméra
         Rectangle dRect = DispRect;
-        dRect.Inflate(5f, 5f);
-        // dRect.Offset(offset);
+        dRect.Offset(offset);
         
         Rectangle sRect = AnimationManager.GetSourceRectangle();
         

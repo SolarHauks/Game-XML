@@ -11,10 +11,9 @@ namespace JeuVideo;
 /// Hérite de la classe GameObject.
 public class Player : GameObject
 {
-    private KeyboardState _keystate;
-    
     private bool _grounded; // Si le joueur est au sol
     
+    private KeyboardState _keystate; // Etat actuel du clavier
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
     
     public Player(Texture2D texture, Vector2 position) : base(texture, position) {
@@ -38,9 +37,10 @@ public class Player : GameObject
             ((OneTimeAnimation)AnimationManager.GetAnimation("hit")).Play();
         }
         
+        // Reset de la position du joueur, uniquement pour les tests
         if (_keystate.IsKeyDown(Keys.Z) && !_prevKeystate.IsKeyDown(Keys.Z))
         {
-            Position.X = 10;
+            Position.X = 20;
             Position.Y = 10 ;
         }
         
@@ -109,7 +109,7 @@ public class Player : GameObject
                 // colliding with the top face
                 if (Velocity.Y > 0.0f)
                 {
-                    Position.Y = collision.Top - VerticalSize;
+                    Position.Y = collision.Top - Rect.Height;
                     Velocity.Y = 1.0f; // counter snap to ground
                     _grounded = true;
                 }
@@ -158,7 +158,6 @@ public class Player : GameObject
 
     private void Attack(List<Enemy> enemies)
     {
-        Console.WriteLine("test");
         Rectangle hitbox = new Rectangle(
             (int)Position.X + (Direction == 1 ? 16 : -16),
             (int)Position.Y,

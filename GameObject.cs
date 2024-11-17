@@ -59,7 +59,7 @@ public abstract class GameObject : Sprite
 
                 if (Velocity.X > 0.0f)
                 {
-                    Position.X = collision.Left - HorizontalSize;
+                    Position.X = collision.Left - Rect.Width;
                 }
                 else if (Velocity.X < 0.0f)
                 {
@@ -94,7 +94,7 @@ public abstract class GameObject : Sprite
                 // colliding with the top face
                 if (Velocity.Y > 0.0f)
                 {
-                    Position.Y = collision.Top - VerticalSize;
+                    Position.Y = collision.Top - Rect.Height;
                     Velocity.Y = 1.0f; // counter snap to ground
                 }
                 else if (Velocity.Y < 0.0f)
@@ -161,7 +161,9 @@ public abstract class GameObject : Sprite
 
         return intersections;
     }
-
+    
+    // Anime l'objet de jeu
+    // <param : velocity - La vélocité de l'objet de jeu.
     protected abstract void Animate(Vector2 velocity);
 
 }
