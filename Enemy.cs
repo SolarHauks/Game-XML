@@ -43,7 +43,12 @@ public class Enemy : GameObject
         Velocity.Y = 25 * dt;
         Position.Y += Velocity.Y;
     }
-    
+
+    protected override void Animate(Vector2 velocity)
+    {
+        AnimationManager.SetAnimation("walk");
+    }
+
     public void TakeDamage(int damage, Vector2 source)
     {
         Health -= damage;

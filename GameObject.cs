@@ -23,6 +23,8 @@ public abstract class GameObject : Sprite
 
         DeplacementVertical(dt);
         CheckCollisionsVertical(tile);
+
+        Animate(Velocity);
         
         AnimationManager.Update();
     }
@@ -159,5 +161,7 @@ public abstract class GameObject : Sprite
 
         return intersections;
     }
-    
+
+    protected abstract void Animate(Vector2 velocity);
+
 }
