@@ -157,10 +157,10 @@ public class Game1 : Game
             
             foreach (Enemy enemy in _enemies)
             {
-                enemy.Draw(_spriteBatch, offset);   // dessin des ennemis
+                enemy.Draw(offset);   // dessin des ennemis
             }
             
-            _player.Draw(_spriteBatch, offset); // dessin du joueur
+            _player.Draw(offset); // dessin du joueur
             
             _effectsManager.Draw(offset);    // dessin des effets
 

@@ -1,18 +1,15 @@
-using System;
 using JeuVideo.Animation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 
 namespace JeuVideo;
 
 // Représente un objet graphique
 // S'occupe de tout ce qui est en rapport avec l'affichage
 public abstract class Sprite {
-    
     private readonly Vector2 _displaySize; // Taille affichée
     protected Vector2 Position; // Position
-    
+
     private Texture2D Texture { get; } // Texture de l'objet
     protected readonly AnimationManager AnimationManager; // Gestionnaire d'animations
     
@@ -26,12 +23,13 @@ public abstract class Sprite {
         Direction = 1;
         
         AnimationManager = new AnimationManager(texture);
-        Vector2 size = AnimationManager.GetSize();
-        _displaySize = new Vector2((int)(Math.Ceiling(size.X / 16.0) * 16), (int)(Math.Ceiling(size.Y / 16.0) * 16));
+        _displaySize = AnimationManager.GetSize();
     }
     
-    public void Draw(SpriteBatch spriteBatch, Vector2 offset)
+    public void Draw(Vector2 offset)
     {
+        SpriteBatch spriteBatch = Globals.SpriteBatch;
+        
         // Si on regarde à gauche, retourne l'image horizontalement. Sinon la laisse telle quelle
         SpriteEffects spriteEffect = (Direction == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
