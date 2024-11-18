@@ -10,16 +10,12 @@ namespace JeuVideo;
 // S'occupe de tout ce qui est en rapport avec l'affichage
 public abstract class Sprite {
     
-    private readonly int _horizontalSize; // Taille horizontale
-    private readonly int _verticalSize; // Taille verticale
     private readonly int _displayHorizontalSize; // Taille horizontale affichée
     private readonly int _displayVerticalSize; // Taille verticale affichée
     protected Vector2 Position; // Position
     
     protected readonly AnimationManager AnimationManager; // Gestionnaire d'animations
     
-    // Hitbox de l'objet, sert pour les collisions
-    public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, _horizontalSize, _verticalSize);
     
     // Rectangle de destination, sert pour l'affichage
     private Rectangle DispRect => new Rectangle((int)Position.X, (int)Position.Y, _displayHorizontalSize, _displayVerticalSize);
@@ -38,9 +34,6 @@ public abstract class Sprite {
         Vector2 size = AnimationManager.GetSize();
         _displayHorizontalSize = (int)(Math.Ceiling(size.X / 16.0) * 16);
         _displayVerticalSize = (int)(Math.Ceiling(size.Y / 16.0) * 16);
-        
-        _horizontalSize = _displayHorizontalSize;
-        _verticalSize = _displayVerticalSize;
     }
     
     public void Draw(SpriteBatch spriteBatch, Vector2 offset)

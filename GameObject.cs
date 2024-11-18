@@ -8,8 +8,16 @@ namespace JeuVideo;
 public abstract class GameObject : Sprite
 {
     protected Vector2 Velocity;
+    private readonly int _horizontalSize; // Taille horizontale
+    private readonly int _verticalSize; // Taille verticale
+    
+    // Hitbox de l'objet, sert pour les collisions
+    public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, _horizontalSize, _verticalSize);
     
     protected GameObject(Texture2D texture, Vector2 position) : base(texture, position) {
+        Vector2 size = AnimationManager.GetSize();
+        _horizontalSize = (int)(Math.Ceiling(size.X / 16.0) * 16);
+        _verticalSize = (int)(Math.Ceiling(size.Y / 16.0) * 16);
     }
 
     public void Update(Tile tile, GameTime gameTime)

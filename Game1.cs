@@ -12,7 +12,7 @@ namespace JeuVideo;
 public class Game1 : Game
 {
     // attributs : provide easy access to the various components of MonoGame
-    private GraphicsDeviceManager _graphics;
+    private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     
     private Texture2D _textureAtlas;    // texture pour le tileset
@@ -24,7 +24,7 @@ public class Game1 : Game
 
     private List<Enemy> _enemies;
     
-    private Camera _camera; // classe Camera pour gérer la caméra
+    private readonly Camera _camera; // classe Camera pour gérer la caméra
 
 
     // tell the project how to start, and add key variables
@@ -46,8 +46,8 @@ public class Game1 : Game
         // Paramétrage de la fenètre de jeu
         // Taille actuelle : 480 x 320
         _graphics.IsFullScreen = false;
-        _graphics.PreferredBackBufferWidth = 854;
-        _graphics.PreferredBackBufferHeight = 480;
+        _graphics.PreferredBackBufferWidth = 640;
+        _graphics.PreferredBackBufferHeight = 320;
         _graphics.ApplyChanges();
 
         base.Initialize();
@@ -65,6 +65,18 @@ public class Game1 : Game
         
         // Joueur
         Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
+        
+        /*int[] data = new int[playerTexture.Width * playerTexture.Height];
+        playerTexture.GetData<int>(data);
+        for (int y = 0; y < playerTexture.Height; y++)
+        {
+            for (int x = 0; x < playerTexture.Width; x++)
+            {
+                Console.Write(data[y * playerTexture.Width + x] + " ");
+            }
+            Console.WriteLine();
+        }*/
+        
         _player = new Player(playerTexture, new Vector2(160, 80));
         
         // Ennemis
@@ -105,7 +117,7 @@ public class Game1 : Game
         
         // Logique de la caméra
         // A décommenter si on veut utiliser la caméra
-        // _camera.Follow(_player.Rect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
+        _camera.Follow(_player.Rect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
 
         base.Update(gameTime);
     }

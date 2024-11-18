@@ -20,7 +20,8 @@ public class Camera
         Position = new Vector2(
             
             -target.X + (screenSize.X / 2) - (target.Width / 2.0f),
-            -target.Y + (screenSize.Y / 2) - (target.Height / 2.0f)
+            // -target.Y + (screenSize.Y / 2) - (target.Height / 2.0f)
+            0
             
         );
     }

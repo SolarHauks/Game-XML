@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -40,7 +41,7 @@ public class Enemy : GameObject
 
     protected override void DeplacementVertical(float dt)
     {
-        Velocity.Y = 25 * dt;
+        Velocity.Y = 25.0f * dt;   // Gravité
         Position.Y += Velocity.Y;
     }
 

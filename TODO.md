@@ -7,7 +7,7 @@
   On pourrait remplacer ça par des validations de schéma xml, pour vérifier que nos données sont correct
   Il faut donc faire tous les schémas et intégrer les vérifications au code
 - A faire : faire charger les données du joueur depuis un xml
-
+- A faire : indexer le framerate des anim sur le deltatime
 
 
 # A demander
