@@ -34,7 +34,6 @@ public class Player : GameObject
         if (_keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C)) {
             Attack(enemies);
             AnimationManager.SetAnimation("hit");
-            ((OneTimeAnimation)AnimationManager.GetAnimation("hit")).Play();
         }
         
         // Reset de la position du joueur, uniquement pour les tests

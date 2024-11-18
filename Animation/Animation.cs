@@ -1,33 +1,53 @@
 namespace JeuVideo.Animation;
 
+public enum AnimationType
+{
+    Continuous,
+    OneTime
+}
+
 // Classe représentant une animation continue.
-public class ContinuousAnimation : IAnimation
+public class Animation
 {
     private readonly int[] _frames;
     private int _counter;
     private int _activeFrame;
-    private const int Interval = 15; // TODO : Sera à remplacer par une constante du jeu
-    
+    private const int Interval = 15; // Replace with a game constant if necessary
+    private readonly int _nbFrames;
+
+    public bool IsPlaying { get; set; }
+
+    public AnimationType Type { get; }
+
     // Constructeur de la classe ContinuousAnimation.
     // param : frames - Tableau des indices des frames de l'animation dans le tileset.
-    public ContinuousAnimation(int[] frames)
+    public Animation(int[] frames, AnimationType type)
     {
         _frames = frames;
+        Type = type;   
+        _nbFrames = frames.Length;
         _activeFrame = 0;
         _counter = 0;
+        IsPlaying = true;
     }
 
     // Met à jour l'état de l'animation.
     public void Update()
     {
+        if (!IsPlaying) return;
+
         _counter++;
         if (_counter > Interval)
         {
             _counter = 0;
             _activeFrame++;
-            if (_activeFrame >= _frames.Length)
+            if (_activeFrame >= _nbFrames)
             {
                 _activeFrame = 0;
+                if (Type == AnimationType.OneTime)
+                {
+                    IsPlaying = false;
+                }
             }
         }
     }

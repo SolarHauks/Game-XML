@@ -12,16 +12,14 @@ public class AnimationManager
     private Vector2 _size;
     private string _currentAnimation;
     
-    private readonly Dictionary<string, IAnimation> _animations;
+    private readonly Dictionary<string, Animation> _animations;
     
     private const string XmlFilePathPrefix = "../../../Content/Assets/Animation/";
     
     public AnimationManager(Texture2D spriteSheet)
     {
-        _animations = new Dictionary<string, IAnimation>();
+        _animations = new Dictionary<string, Animation>();
         LoadData(spriteSheet);
-
-        _currentAnimation = "walk";
     }
 
     private void LoadData(Texture2D spriteSheet)
@@ -70,11 +68,11 @@ public class AnimationManager
                 
                 if (type == "continu")
                 {
-                    _animations.Add(nom, new ContinuousAnimation(frames));
+                    _animations.Add(nom, new Animation(frames, AnimationType.Continuous));
                 }
                 else if (type == "ponctuel")
                 {
-                    _animations.Add(nom, new OneTimeAnimation(frames));
+                    _animations.Add(nom, new Animation(frames, AnimationType.OneTime));
                 }
                 else
                 {
@@ -91,12 +89,7 @@ public class AnimationManager
         // On utilise l'indexation à partir de la fin pour obtenir le dernier segment
         return spriteSheet.ToString().Split('/')[^1]; 
     }
-
-    public Vector2 GetSize()
-    {
-        return _size;
-    }
-
+    
     private int[] GetFramesArray(int numFrames, XmlNode animationNode)
     {
         int[] frames = new int[numFrames];
@@ -105,6 +98,21 @@ public class AnimationManager
             frames[i] = int.Parse(animationNode.SelectNodes("frame")[i].Attributes["numFrame"].Value);
         }
         return frames;
+    }
+
+    public Vector2 GetSize()
+    {
+        return _size;
+    }
+    
+    public string GetCurrentAnimation()
+    {
+        return _currentAnimation;
+    }
+    
+    public bool IsPlaying()
+    {
+        return _animations[_currentAnimation].IsPlaying;
     }
 
     public Rectangle GetSourceRectangle()
@@ -124,9 +132,13 @@ public class AnimationManager
     
     public void SetAnimation(string anim)
     {
-        if (_animations.ContainsKey(anim))
+        if (_animations.TryGetValue(anim, out Animation value))
         {
             _currentAnimation = anim;
+            if (value.Type == AnimationType.OneTime)
+            {
+                value.IsPlaying = true;
+            }
         }
         else
         {
@@ -134,30 +146,4 @@ public class AnimationManager
         }
     }
     
-    public IAnimation GetAnimation(string name)
-    {
-        if (_animations.TryGetValue(name, out var animation))
-        {
-            return animation;
-        }
-        else
-        {
-            Console.WriteLine("Erreur : l'animation " + name + " n'existe pas");
-            return null;
-        }
-    }
-    
-    public string GetCurrentAnimation()
-    {
-        return _currentAnimation;
-    }
-    
-    public bool IsPlaying()
-    {
-        if (_animations[_currentAnimation] is OneTimeAnimation oneTimeAnimation)
-        {
-            return oneTimeAnimation.IsPlaying;
-        }
-        return false;
-    }
 }
