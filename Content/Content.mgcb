@@ -29,3 +29,7 @@
 /importer:TextureImporter
 /processor:TextureProcessor
 /build:Assets/Tileset/collisions.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/Effects/slash.png

@@ -10,20 +10,15 @@ namespace JeuVideo;
 // S'occupe de tout ce qui est en rapport avec l'affichage
 public abstract class Sprite {
     
-    private readonly int _displayHorizontalSize; // Taille horizontale affichée
-    private readonly int _displayVerticalSize; // Taille verticale affichée
+    private readonly Vector2 _displaySize; // Taille affichée
     protected Vector2 Position; // Position
     
+    private Texture2D Texture { get; } // Texture de l'objet
     protected readonly AnimationManager AnimationManager; // Gestionnaire d'animations
-    
-    
-    // Rectangle de destination, sert pour l'affichage
-    private Rectangle DispRect => new Rectangle((int)Position.X, (int)Position.Y, _displayHorizontalSize, _displayVerticalSize);
     
     // Direction (dans le sens du côté dans lequel il regarde)
     protected int Direction { get; set; } // -1 for left, 1 for right
-
-    private Texture2D Texture { get; } // Texture de l'objet
+    
     
     protected Sprite(Texture2D texture, Vector2 position) {
         Texture = texture;
@@ -32,8 +27,7 @@ public abstract class Sprite {
         
         AnimationManager = new AnimationManager(texture);
         Vector2 size = AnimationManager.GetSize();
-        _displayHorizontalSize = (int)(Math.Ceiling(size.X / 16.0) * 16);
-        _displayVerticalSize = (int)(Math.Ceiling(size.Y / 16.0) * 16);
+        _displaySize = new Vector2((int)(Math.Ceiling(size.X / 16.0) * 16), (int)(Math.Ceiling(size.Y / 16.0) * 16));
     }
     
     public void Draw(SpriteBatch spriteBatch, Vector2 offset)
@@ -42,13 +36,17 @@ public abstract class Sprite {
         SpriteEffects spriteEffect = (Direction == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
         // Rectangle de destination, -> position du joueur + décalage lié à la caméra
-        Rectangle dRect = DispRect;
-        dRect.Offset(offset);
+        Vector2 displayPosition = Position + offset;
+        Rectangle dRect = new Rectangle(
+            (int)displayPosition.X, 
+            (int)displayPosition.Y, 
+            (int)_displaySize.X, 
+            (int)_displaySize.Y);
         
         Rectangle sRect = AnimationManager.GetSourceRectangle();
         
-        // var origin = new Vector2(Texture.Width / 2f, Texture.Height / 2f); // A garder pour plus tard peut etre
-        Vector2 origin = Vector2.Zero; // temporaire
+        Vector2 origin = Vector2.Zero;
+        
         spriteBatch.Draw( 
             Texture, // Texture2D,
             dRect, // Rectangle destinationRectangle,

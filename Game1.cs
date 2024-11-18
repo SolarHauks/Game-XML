@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JeuVideo.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -21,8 +22,8 @@ public class Game1 : Game
     private Tile _tile; // classe Tile pour gérer les tiles
     
     private Player _player; // classe Player pour gérer le joueur
-
     private List<Enemy> _enemies;
+    private EffectsManager _effectsManager; // classe EffectsManager pour gérer les effets
     
     private readonly Camera _camera; // classe Camera pour gérer la caméra
 
@@ -58,10 +59,16 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        Globals.SpriteBatch = _spriteBatch;
+        Globals.Content = Content;
         
         // Texture de debug pour les collisions
         _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
         _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
+        
+        // Effets
+        _effectsManager = new EffectsManager();
+        _effectsManager.AddEffect("slash");
         
         // Joueur
         Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
@@ -77,7 +84,7 @@ public class Game1 : Game
             Console.WriteLine();
         }*/
         
-        _player = new Player(playerTexture, new Vector2(160, 80));
+        _player = new Player(playerTexture, new Vector2(160, 80), _effectsManager);
         
         // Ennemis
         Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
@@ -104,7 +111,7 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         // Logique du joueur
-        _player.Update(Keyboard.GetState(), _tile, gameTime, _enemies);
+        _player.Update(_tile, gameTime, _enemies);
         
         // Logique des ennemis
         foreach (Enemy enemy in _enemies)
@@ -114,6 +121,9 @@ public class Game1 : Game
         
         // Vérifie et supprime les ennemis avec 0 point de vie
         RemoveDeadEnemies();
+        
+        // Logique des effets
+        _effectsManager.Update();
         
         // Logique de la caméra
         // A décommenter si on veut utiliser la caméra
@@ -151,6 +161,8 @@ public class Game1 : Game
             }
             
             _player.Draw(_spriteBatch, offset); // dessin du joueur
+            
+            _effectsManager.Draw(offset);    // dessin des effets
 
         _spriteBatch.End();
 

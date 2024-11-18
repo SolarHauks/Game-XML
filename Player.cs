@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using JeuVideo.Animation;
+using JeuVideo.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,31 +13,32 @@ public class Player : GameObject
 {
     private bool _grounded; // Si le joueur est au sol
     
-    private KeyboardState _keystate; // Etat actuel du clavier
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
     
-    public Player(Texture2D texture, Vector2 position) : base(texture, position) {
+    private EffectsManager _effectsManager; // Gestionnaire des effets
+    
+    public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position) {
         Velocity = new Vector2();
         _grounded = false;
+        _effectsManager = effets;
     }
     
     /// Met à jour l'état du joueur.
     /// param keystate : L'état actuel du clavier.
     /// param tile : Les informations sur les tiles pour la détection des collisions.
     /// param gameTime : Le temps écoulé depuis la dernière frame.
-    public void Update(KeyboardState keystate, Tile tile, GameTime gameTime, List<Enemy> enemies) {
+    public void Update(Tile tile, GameTime gameTime, List<Enemy> enemies) {
         
-        _keystate = keystate; // Sauvegarde l'état du clavier (ie : les touches actuellement pressées)
+        KeyboardState keystate = Keyboard.GetState();    // Récupère l'état du clavier (ie : les touches actuellement pressées)
         
         base.Update(tile, gameTime); // Met à jour la position du joueur
         
-        if (_keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C)) {
+        if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C)) {
             Attack(enemies);
-            AnimationManager.SetAnimation("hit");
         }
         
         // Reset de la position du joueur, uniquement pour les tests
-        if (_keystate.IsKeyDown(Keys.Z) && !_prevKeystate.IsKeyDown(Keys.Z))
+        if (keystate.IsKeyDown(Keys.Z) && !_prevKeystate.IsKeyDown(Keys.Z))
         {
             Position.X = 20;
             Position.Y = 10 ;
@@ -125,14 +126,15 @@ public class Player : GameObject
     {
         Velocity.X = 0.0f;  // Reset la vitesse horizontale, supprime l'inertie
         float horizontalSpeed = 250 * dt;   // Vitesse horizontale
+        KeyboardState keystate = Keyboard.GetState();
         
         // Déplacements horizontaux
-        if (_keystate.IsKeyDown(Keys.Left)) {
+        if (keystate.IsKeyDown(Keys.Left)) {
             Velocity.X = -horizontalSpeed;  // Vitesse horizontale
             Direction = -1; // Direction
         }
         
-        if (_keystate.IsKeyDown(Keys.Right)) {
+        if (keystate.IsKeyDown(Keys.Right)) {
             Velocity.X = horizontalSpeed; // Vitesse horizontale
             Direction = 1; // Direction
         }
@@ -142,13 +144,15 @@ public class Player : GameObject
 
     protected override void DeplacementVertical(float dt)
     {
+        KeyboardState keystate = Keyboard.GetState();
+        
         // Gestion des déplacements horizontaux : saut et gravité
         Velocity.Y += 35.0f * dt;   // Gravité
         Velocity.Y = Math.Min(25.0f, Velocity.Y);   // Limite la vitesse de chute
         
         // Si le joueur est au sol et que la touche espace est pressée -> on saute
         // Evite de sauter quand on est dans les airs
-        if (_grounded && _keystate.IsKeyDown(Keys.Space) && !_prevKeystate.IsKeyDown(Keys.Space)) {
+        if (_grounded && keystate.IsKeyDown(Keys.Space) && !_prevKeystate.IsKeyDown(Keys.Space)) {
             Velocity.Y = -600 * dt;
         }
         
@@ -171,13 +175,16 @@ public class Player : GameObject
                 enemy.TakeDamage(20, Position);
             }
         }
+        
+        _effectsManager.PlayEffect("slash", Position, Direction);
+        AnimationManager.SetAnimation("slash");
     }
 
     protected override void Animate(Vector2 velocity)
     {
         string currentAnim = AnimationManager.GetCurrentAnimation();
         
-        if (currentAnim == "hit" && AnimationManager.IsPlaying())
+        if (currentAnim == "slash" && AnimationManager.IsPlaying())
         {
             return; // Do not change animation if attack is playing
         }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animations nbCol="4" largeur="32" hauteur="32">
+    <animation name="slash" type="ponctuel">
+        <frame numFrame="1"/>
+        <frame numFrame="2"/>
+        <frame numFrame="3"/>
+        <frame numFrame="4"/>
+    </animation>
+</animations>
