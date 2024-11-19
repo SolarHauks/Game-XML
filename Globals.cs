@@ -9,4 +9,5 @@ public class Globals
     public static ContentManager Content { get; set; }
     public static SpriteBatch SpriteBatch { get; set; }
     public static GameTime GameTime { get; set; }
+    public static Texture2D debugTexture { get; set; }
 }

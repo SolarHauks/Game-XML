@@ -60,11 +60,6 @@ public abstract class GameObject : Sprite
                     16
                 );
 
-                if (Rect.Intersects(collision))
-                {
-                    continue;
-                }
-
                 if (Velocity.X > 0.0f)
                 {
                     Position.X = collision.Left - Rect.Width;
@@ -94,7 +89,7 @@ public abstract class GameObject : Sprite
                     16
                 );
 
-                if (!Rect.Intersects(collision))
+                if (Rect.Intersects(collision))
                 {
                     continue;
                 }
@@ -150,8 +145,11 @@ public abstract class GameObject : Sprite
     {
         List<Rectangle> intersections = new();
 
-        int widthInTiles = (int)Math.Ceiling(target.Width / 16.0f);   // Largeur en tiles
-        int heightInTiles = (int)Math.Ceiling(target.Height / 16.0f);    // Hauteur en tiles
+        /*int widthInTiles = (int)Math.Ceiling(target.Width / 16.0f);   // Largeur en tiles
+        int heightInTiles = (int)Math.Ceiling(target.Height / 16.0f);    // Hauteur en tiles*/
+        
+        int widthInTiles = (target.Width - (target.Width % 16)) / 16;   // Largeur en tiles
+        int heightInTiles = (target.Height - (target.Height % 16)) / 16;    // Hauteur en tiles
 
         // Remplis la liste des tiles intersectées par le joueur
         for (int x = 0; x <= widthInTiles; x++) {

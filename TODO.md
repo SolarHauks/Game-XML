@@ -1,6 +1,5 @@
 # A fix
-- Quand le joueur colle une plateforme sur le coté, il se tp (au dessus souvent). Vient probablement de GetIntersectingTilesHorizontal
-- Quand on change de direction, la première attaque ne part pas au bon endroit
+
 
 # TODO
 - A faire : taille affichage (ATTENTION : GROS TRAVAIL)

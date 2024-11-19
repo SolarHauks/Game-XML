@@ -64,6 +64,7 @@ public class Game1 : Game
         // Texture de debug pour les collisions
         _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
         _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
+        Globals.debugTexture = _rectangleTexture;
         
         // Effets
         _effectsManager = new EffectsManager();
