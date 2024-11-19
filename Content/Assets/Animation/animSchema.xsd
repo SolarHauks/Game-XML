@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.univ-grenoble-alpes.fr/jeu/animations"
+        xmlns:ci="http://www.univ-grenoble-alpes.fr/jeu/animations"
+        elementFormDefault="qualified" >
+
+    <!-- Element racine du schéma : animations -->
+    <element name="animations" type="ci:Animations"/>
+    
+    <!-- Définition du type complexe animations -->
+    <complexType name="Animations">
+        <sequence>
+            <element name="animation" type="ci:Animation" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="nbCol" type="ci:Nombre" use="required"/>
+        <attribute name="largeur" type="ci:Nombre" use="required"/>
+        <attribute name="hauteur" type="ci:Nombre" use="required"/>
+    </complexType>
+    
+    <!-- Définition du type complexe animation -->
+    <complexType name="Animation">
+        <sequence>
+            <element name="frame" type="ci:Frame" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="name" type="ci:Name" use="required"/>
+        <attribute name="type" type="ci:Type" use="required"/>
+        <attribute name="speed" type="ci:Nombre"/>
+    </complexType>
+    
+    <!-- Définition du type complexe frame -->
+    <complexType name="Frame">
+        <attribute name="numFrame" type="ci:Nombre" use="required"/>
+    </complexType>
+    
+    <!-- Définition du type énuméré Type -->
+    <simpleType name="Type">
+        <restriction base="string">
+            <enumeration value="continu"/>
+            <enumeration value="ponctuel"/>
+        </restriction>
+    </simpleType>
+    
+    <!-- Définition du type énuméré Name -->
+    <simpleType name="Name">
+        <restriction base="string">
+            <pattern value="[a-z]+"/>
+        </restriction>
+    </simpleType>
+    
+    <!-- Définition du type énuméré Nombre -->
+    <simpleType name="Nombre">
+        <restriction base="integer">
+            <minInclusive value="1"/>
+        </restriction>
+    </simpleType>
+    
+</schema>

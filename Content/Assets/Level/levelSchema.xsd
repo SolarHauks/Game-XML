@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.univ-grenoble-alpes.fr/jeu/level"
+        xmlns:ci="http://www.univ-grenoble-alpes.fr/jeu/level"
+        elementFormDefault="qualified" >
+
+    <!-- Element racine du schéma : animations -->
+    <element name="map" type="ci:Map"/>
+    
+    <!-- Type Map -->
+    <complexType name="Map">
+        <sequence>
+            <element name="tileset" type="ci:Tileset" maxOccurs="unbounded"/>
+            <element name="layer" type="ci:Layer" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="version" type="string" use="required"/>
+        <attribute name="tiledversion" type="string" use="required"/>
+        <attribute name="orientation" type="string" use="required"/>
+        <attribute name="renderorder" type="string" use="required"/>
+        <attribute name="width" type="string" use="required"/>
+        <attribute name="height" type="string" use="required"/>
+        <attribute name="tilewidth" type="string" use="required"/>
+        <attribute name="tileheight" type="string" use="required"/>
+        <attribute name="infinite" type="string" use="required"/>
+        <attribute name="nextlayerid" type="string" use="required"/>
+        <attribute name="nextobjectidnextobjectid" type="string" use="required"/>
+    </complexType>
+        
+    <!-- Type Tileset -->
+    <complexType name="Tileset">
+        <attribute name="firstgid" type="string" use="required"/>
+        <attribute name="source" type="string" use="required"/>
+    </complexType>
+    
+    <!-- Type Layer -->
+    <complexType name="Layer">
+        <sequence>
+            <element name="data" type="ci:Data"/>
+        </sequence>
+        <attribute name="id" type="string" use="required"/>
+        <attribute name="name" type="string" use="required"/>
+        <attribute name="width" type="string" use="required"/>
+        <attribute name="height" type="string" use="required"/>
+    </complexType>
+    
+    <!-- Type Data -->
+    <complexType name="Data">
+        <sequence>
+            <element name="data" type="ci:Data">
+                <complexType>
+                    <simpleContent>
+                        <extension base="string">
+                            <attribute name="encoding" type="string" use="required"/>
+                        </extension>
+                    </simpleContent>
+                </complexType>
+            </element>
+        </sequence>
+    </complexType>
+    
+</schema>
