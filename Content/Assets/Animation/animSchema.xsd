@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://www.univ-grenoble-alpes.fr/jeu/animations"
-        xmlns:ci="http://www.univ-grenoble-alpes.fr/jeu/animations"
+        targetNamespace="https://www.univ-grenoble-alpes.fr/jeu/animations"
+        xmlns:ci="https://www.univ-grenoble-alpes.fr/jeu/animations"
         elementFormDefault="qualified" >
 
     <!-- Element racine du schéma : animations -->

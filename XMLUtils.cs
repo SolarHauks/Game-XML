@@ -9,7 +9,7 @@ namespace JeuVideo;
 
 public class XmlUtils
 {
-    public static Task ValidateXmlFile (string schemaNamespace, string xsdFilePath, string xmlFilePath) {
+    public static void ValidateXmlFile (string schemaNamespace, string xsdFilePath, string xmlFilePath) {
         var settings = new XmlReaderSettings();
         settings.Schemas.Add (schemaNamespace, xsdFilePath);
         settings.ValidationType = ValidationType.Schema;
@@ -17,7 +17,6 @@ public class XmlUtils
         settings.ValidationEventHandler += ValidationCallBack;
         var readItems = XmlReader.Create(xmlFilePath, settings);
         while (readItems.Read()) { }
-        return Task.CompletedTask;
     }
 
 

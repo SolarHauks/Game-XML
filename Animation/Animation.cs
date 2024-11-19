@@ -1,4 +1,3 @@
-using System;
 
 namespace JeuVideo.Animation;
 
@@ -40,9 +39,6 @@ public class Animation
         if (!IsPlaying) return;
 
         float deltaTime = (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
-        
-        Console.WriteLine(deltaTime);
-        Console.WriteLine(_interval);
         
         _counter += deltaTime;
         if (_counter > _interval)

@@ -8,16 +8,16 @@ namespace JeuVideo;
 
 public class Tile
 {
-    private List<Dictionary<Vector2, int>> _layerList;
+    private readonly List<Dictionary<Vector2, int>> _layerList;
 
-    private Texture2D _textureAtlas;    // texture pour le tileset
+    private readonly Texture2D _textureAtlas;    // texture pour le tileset
     private Texture2D _hitboxTexture;   // ne sert que pour le debug à afficher les collisions
     private readonly Texture2D _rectangleTexture;    // texture de debug pour les collisions. Sert dans Tile.DrawRectHollow
 
     private int _displayTilesize;
     private int _pixelTilesize;
     private int _numTilesPerRow;
-    private double _onScreenMultiplier = 1.0; // WIP
+    private readonly double _onScreenMultiplier = 1.0; // WIP
 
     public Dictionary<Vector2, int> Collisions { private set; get; }
     
@@ -50,38 +50,43 @@ public class Tile
     // param : doc - Le document XML contenant les données des layers.
     private void GetLayers(XmlDocument doc)
     {
+        // Validation du fichier XML
+        // Cela permet d'etre sur que les noeuds qu'on va utiliser après ne sont pas nul
+        // sans avoir besoin de faire des vérifications
+        string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/level";
+        string xsdFilePath = "../../../Content/Assets/Level/levelSchema.xsd";
+        string xmlFilePath = "../../../Content/Assets/Level/Level1/output/test.tmx";
+        XmlUtils.ValidateXmlFile(schemaNamespace, xsdFilePath, xmlFilePath);
+        
         int threshold = GetTilesetThreshold(doc);
 
         // traitement des layers
         XmlNodeList layerNodes = doc.SelectNodes("//layer/data"); // Selectionne toutes les données des noeuds layer
+        
+        foreach (XmlNode layerNode in layerNodes)
+        {
+            string nodeContent = layerNode.InnerText;
+            Dictionary<Vector2, int> layer = LoadMap(nodeContent);
+            
+            // On regarde si le layer qu'on vient de charger est le layer de collision
+            // Si oui on le sépare des autres car on ne veut pas l'afficher, on s'en sert just pour la logique
+            bool containsGreaterValue = false;
 
-        if (layerNodes != null) {
-            foreach (XmlNode layerNode in layerNodes)
+            foreach (int value in layer.Values)
             {
-                string nodeContent = layerNode.InnerText;
-                Dictionary<Vector2, int> layer = LoadMap(nodeContent);
-                
-                // On regarde si le layer qu'on vient de charger est le layer de collision
-                // Si oui on le sépare des autres car on ne veut pas l'afficher, on s'en sert just pour la logique
-                bool containsGreaterValue = false;
-
-                foreach (int value in layer.Values)
+                if (value >= threshold)
                 {
-                    if (value >= threshold)
-                    {
-                        containsGreaterValue = true;
-                        break;
-                    }
-                }
-                
-                if (containsGreaterValue) {
-                    Collisions = layer;
-                } else {
-                    _layerList.Add(layer);
+                    containsGreaterValue = true;
+                    break;
                 }
             }
+            
+            if (containsGreaterValue) {
+                Collisions = layer;
+            } else {
+                _layerList.Add(layer);
+            }
         }
-        
     }
     
     private int GetTilesetThreshold(XmlDocument doc)

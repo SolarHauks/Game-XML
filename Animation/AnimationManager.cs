@@ -30,57 +30,42 @@ public class AnimationManager
         XmlDocument doc = new XmlDocument();
         doc.Load(xmlFilePath);
         
-        // TODO : On pourrait inclure ici une vérification de l'instance XML vis à vis d'un schéma
+        // Validation du fichier XML
+        // Cela permet d'etre sur que les noeuds qu'on va utiliser après ne sont pas nul
+        // sans avoir besoin de faire des vérifications
+        string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/animations";
+        string xsdFilePath = "../../../Content/Assets/Animation/animSchema.xsd";
+        XmlUtils.ValidateXmlFile(schemaNamespace, xsdFilePath, xmlFilePath);
         
         XmlNode paramNode = doc.DocumentElement; // Sélectionne la racine du document XML
-        
-        if (paramNode?.Attributes?["nbCol"]?.Value == null ||
-            paramNode.Attributes?["largeur"]?.Value == null ||
-            paramNode.Attributes?["hauteur"]?.Value == null)
-        {
-            Console.WriteLine("Erreur : le tilesetNode n'a pas les attributs requis");
-            return;
-        }
 
         _numColumns = int.Parse(paramNode.Attributes["nbCol"].Value);
         _size = new Vector2(int.Parse(paramNode.Attributes["largeur"].Value), int.Parse(paramNode.Attributes["hauteur"].Value));
         
         XmlNodeList animationNodes = doc.SelectNodes("//animation"); // Sélectionne la racine du document XML
+        
+        foreach (XmlNode animationNode in animationNodes)
+        {
+            string nom = animationNode.Attributes["name"].Value;
+            int numFrames = animationNode.SelectNodes("frame").Count;
+            string type = animationNode.Attributes["type"].Value;
 
-        if (animationNodes == null)
-        {
-            Console.WriteLine("Erreur : le fichier XML ne contient pas de noeud animation");   
-        }
-        else
-        {
-            foreach (XmlNode animationNode in animationNodes)
+            // Vitesse de l'animation, 15 par défaut
+            int speed = animationNode.Attributes["speed"] != null ? int.Parse(animationNode.Attributes["speed"].Value) : 15;
+            
+            int[] frames = GetFramesArray(numFrames, animationNode);
+            
+            if (type == "continu")
             {
-                if (animationNode?.Attributes?["name"]?.Value == null) {
-                    Console.WriteLine("Erreur : l'animationNode n'a pas les attributs requis");
-                    return;
-                }
-
-                string nom = animationNode.Attributes["name"].Value;
-                int numFrames = animationNode.SelectNodes("frame").Count;
-                string type = animationNode.Attributes["type"].Value;
-
-                // Vitesse de l'animation, 15 par défaut
-                int speed = animationNode.Attributes["speed"] != null ? int.Parse(animationNode.Attributes["speed"].Value) : 15;
-                
-                int[] frames = GetFramesArray(numFrames, animationNode);
-                
-                if (type == "continu")
-                {
-                    _animations.Add(nom, new Animation(frames, AnimationType.Continuous, speed));
-                }
-                else if (type == "ponctuel")
-                {
-                    _animations.Add(nom, new Animation(frames, AnimationType.OneTime, speed));
-                }
-                else
-                {
-                    Console.WriteLine("Erreur : le type d'animation " + type + " n'existe pas");
-                }
+                _animations.Add(nom, new Animation(frames, AnimationType.Continuous, speed));
+            }
+            else if (type == "ponctuel")
+            {
+                _animations.Add(nom, new Animation(frames, AnimationType.OneTime, speed));
+            }
+            else
+            {
+                Console.WriteLine("Erreur : le type d'animation " + type + " n'existe pas");
             }
         }
             
