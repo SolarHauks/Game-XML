@@ -63,16 +63,23 @@ public class AnimationManager
                 string nom = animationNode.Attributes["name"].Value;
                 int numFrames = animationNode.SelectNodes("frame").Count;
                 string type = animationNode.Attributes["type"].Value;
+
+                int speed = 15; // Valeur par défaut
+                
+                if (animationNode.Attributes["speed"] != null)
+                {
+                    speed = int.Parse(animationNode.Attributes["speed"].Value);
+                }
                 
                 int[] frames = GetFramesArray(numFrames, animationNode);
                 
                 if (type == "continu")
                 {
-                    _animations.Add(nom, new Animation(frames, AnimationType.Continuous));
+                    _animations.Add(nom, new Animation(frames, AnimationType.Continuous, speed));
                 }
                 else if (type == "ponctuel")
                 {
-                    _animations.Add(nom, new Animation(frames, AnimationType.OneTime));
+                    _animations.Add(nom, new Animation(frames, AnimationType.OneTime, speed));
                 }
                 else
                 {

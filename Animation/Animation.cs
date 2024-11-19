@@ -12,7 +12,7 @@ public class Animation
     private readonly int[] _frames;
     private int _counter;
     private int _activeFrame;
-    private const int Interval = 15; // Replace with a game constant if necessary
+    private readonly int _interval; // Replace with a game constant if necessary
     private readonly int _nbFrames;
 
     public bool IsPlaying { get; set; }
@@ -21,10 +21,11 @@ public class Animation
 
     // Constructeur de la classe ContinuousAnimation.
     // param : frames - Tableau des indices des frames de l'animation dans le tileset.
-    public Animation(int[] frames, AnimationType type)
+    public Animation(int[] frames, AnimationType type, int speed)
     {
         _frames = frames;
-        Type = type;   
+        Type = type;
+        _interval = speed;
         _nbFrames = frames.Length;
         _activeFrame = 0;
         _counter = 0;
@@ -37,7 +38,7 @@ public class Animation
         if (!IsPlaying) return;
 
         _counter++;
-        if (_counter > Interval)
+        if (_counter > _interval)
         {
             _counter = 0;
             _activeFrame++;

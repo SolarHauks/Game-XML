@@ -1,5 +1,6 @@
 # A fix
 - Quand le joueur colle une plateforme sur le coté, il se tp (au dessus souvent). Vient probablement de GetIntersectingTilesHorizontal
+- Quand on change de direction, la première attaque ne part pas au bon endroit
 
 # TODO
 - A faire : taille affichage (ATTENTION : GROS TRAVAIL)
@@ -8,6 +9,8 @@
   Il faut donc faire tous les schémas et intégrer les vérifications au code
 - A faire : faire charger les données du joueur depuis un xml
 - A faire : indexer le framerate des anim sur le deltatime
+- A faire : ajouter une vitesse par variable aux anims
+- Améliorer le système d'attaque : au moins l'ajout d'un delai
 
 
 # A demander
