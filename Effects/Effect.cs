@@ -18,8 +18,8 @@ public class Effect : Sprite
         if (AnimationManager.IsPlaying()) return;
         
         Position = position;
-        Position.X += (Direction == 1 ? 16 : -16);  // Pour l'instant fixé à 16, à adapter par la suite
         Direction = direction;
+        Position.X += (Direction == 1 ? 16 : -16);  // Pour l'instant fixé à 16, à adapter par la suite
         AnimationManager.SetAnimation(GetName);
     }
     
@@ -31,7 +31,5 @@ public class Effect : Sprite
         {
             base.Draw(offset);
         }
-        
-        
     }
 }

@@ -43,7 +43,6 @@ public class Game1 : Game
     // This is where you can query any required services and load any non-graphic related content.
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
         // Paramétrage de la fenètre de jeu
         // Taille actuelle : 480 x 320
         _graphics.IsFullScreen = false;
@@ -110,10 +109,13 @@ public class Game1 : Game
             Exit();
         
         Globals.GameTime = gameTime;
-
-        // TODO: Add your update logic here
+        
         // Logique du joueur
         _player.Update(_tile, gameTime, _enemies);
+        
+        // Logique de la caméra
+        // A décommenter si on veut utiliser la caméra
+        _camera.Follow(_player.Rect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
         
         // Logique des ennemis
         foreach (Enemy enemy in _enemies)
@@ -126,10 +128,6 @@ public class Game1 : Game
         
         // Logique des effets
         _effectsManager.Update();
-        
-        // Logique de la caméra
-        // A décommenter si on veut utiliser la caméra
-        _camera.Follow(_player.Rect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
 
         base.Update(gameTime);
     }
@@ -151,8 +149,7 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         Vector2 offset = _camera.Position;  // Offset lié à la caméra
-
-        // TODO: Add your drawing code here
+        
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             _tile.Draw(_spriteBatch, offset);   // dessin des tiles

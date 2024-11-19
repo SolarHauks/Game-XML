@@ -5,8 +5,8 @@
     },
     "activeFile": "save.tmx",
     "expandedProjectPaths": [
-        ".",
         "output",
+        ".",
         "tilesets"
     ],
     "fileStates": {
@@ -20,7 +20,7 @@
         },
         "save.tmx": {
             "scale": 0.9489,
-            "selectedLayer": 0,
+            "selectedLayer": 3,
             "viewCenter": {
                 "x": 399.4098429760776,
                 "y": 257.66677205184953
