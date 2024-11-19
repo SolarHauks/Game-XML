@@ -14,13 +14,17 @@ public class Player : GameObject
     private bool _grounded; // Si le joueur est au sol
     
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
+    private readonly EffectsManager _effectsManager; // Gestionnaire des effets
     
-    private EffectsManager _effectsManager; // Gestionnaire des effets
+    private double _lastAttackTime;
+    private const double AttackCooldown = 0.5; // Cooldown duration in seconds
     
     public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position) {
         Velocity = new Vector2();
         _grounded = false;
         _effectsManager = effets;
+        
+        _lastAttackTime = -AttackCooldown; // Initialize to allow immediate attack
     }
     
     /// Met à jour l'état du joueur.
@@ -161,6 +165,14 @@ public class Player : GameObject
 
     private void Attack(List<Enemy> enemies)
     {
+        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+        if (currentTime - _lastAttackTime < AttackCooldown)
+        {
+            return;
+        }
+        
+        _lastAttackTime = currentTime;  // Mise à jour du temps de la dernière attaque
+        
         Rectangle hitbox = new Rectangle(
             (int)Position.X + (Direction == 1 ? 16 : -16),
             (int)Position.Y,

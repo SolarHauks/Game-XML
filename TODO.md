@@ -5,7 +5,6 @@
 # TODO
 - A faire : taille affichage (ATTENTION : GROS TRAVAIL)
 - A faire : faire charger les données du joueur depuis un xml
-- Améliorer le système d'attaque : au moins l'ajout d'un delai
 
 
 # A demander

@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
@@ -7,13 +6,12 @@ using System.Xml.Xsl;
 
 namespace JeuVideo;
 
-public class XmlUtils
+public static class XmlUtils
 {
     public static void ValidateXmlFile (string schemaNamespace, string xsdFilePath, string xmlFilePath) {
         var settings = new XmlReaderSettings();
         settings.Schemas.Add (schemaNamespace, xsdFilePath);
         settings.ValidationType = ValidationType.Schema;
-        Console.WriteLine("Nombre de schemas utilisés dans la validation : " + settings.Schemas.Count);
         settings.ValidationEventHandler += ValidationCallBack;
         var readItems = XmlReader.Create(xmlFilePath, settings);
         while (readItems.Read()) { }
