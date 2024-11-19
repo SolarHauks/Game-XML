@@ -64,12 +64,8 @@ public class AnimationManager
                 int numFrames = animationNode.SelectNodes("frame").Count;
                 string type = animationNode.Attributes["type"].Value;
 
-                int speed = 15; // Valeur par défaut
-                
-                if (animationNode.Attributes["speed"] != null)
-                {
-                    speed = int.Parse(animationNode.Attributes["speed"].Value);
-                }
+                // Vitesse de l'animation, 15 par défaut
+                int speed = animationNode.Attributes["speed"] != null ? int.Parse(animationNode.Attributes["speed"].Value) : 15;
                 
                 int[] frames = GetFramesArray(numFrames, animationNode);
                 

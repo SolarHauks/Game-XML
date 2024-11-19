@@ -1,3 +1,5 @@
+using System;
+
 namespace JeuVideo.Animation;
 
 public enum AnimationType
@@ -10,9 +12,9 @@ public enum AnimationType
 public class Animation
 {
     private readonly int[] _frames;
-    private int _counter;
+    private float _counter;
     private int _activeFrame;
-    private readonly int _interval; // Replace with a game constant if necessary
+    private readonly float _interval; // Replace with a game constant if necessary
     private readonly int _nbFrames;
 
     public bool IsPlaying { get; set; }
@@ -25,7 +27,7 @@ public class Animation
     {
         _frames = frames;
         Type = type;
-        _interval = speed;
+        _interval = speed * (1.0f / 60.0f);
         _nbFrames = frames.Length;
         _activeFrame = 0;
         _counter = 0;
@@ -37,10 +39,15 @@ public class Animation
     {
         if (!IsPlaying) return;
 
-        _counter++;
+        float deltaTime = (float)Globals.GameTime.ElapsedGameTime.TotalSeconds;
+        
+        Console.WriteLine(deltaTime);
+        Console.WriteLine(_interval);
+        
+        _counter += deltaTime;
         if (_counter > _interval)
         {
-            _counter = 0;
+            _counter -= _interval;
             _activeFrame++;
             if (_activeFrame >= _nbFrames)
             {

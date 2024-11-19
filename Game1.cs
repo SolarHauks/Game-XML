@@ -108,6 +108,8 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
+        
+        Globals.GameTime = gameTime;
 
         // TODO: Add your update logic here
         // Logique du joueur
