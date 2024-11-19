@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Xml;
 using Microsoft.Xna.Framework;
@@ -12,7 +11,6 @@ public class Tile
 
     private readonly Texture2D _textureAtlas;    // texture pour le tileset
     private Texture2D _hitboxTexture;   // ne sert que pour le debug à afficher les collisions
-    private readonly Texture2D _rectangleTexture;    // texture de debug pour les collisions. Sert dans Tile.DrawRectHollow
 
     private int _displayTilesize;
     private int _pixelTilesize;
@@ -22,7 +20,7 @@ public class Tile
     public Dictionary<Vector2, int> Collisions { private set; get; }
     
 
-    public Tile(Texture2D textureAtlas, Texture2D hitboxTexture, Texture2D rectangleTexture)
+    public Tile(Texture2D textureAtlas, Texture2D hitboxTexture)
     {
         // initialisation des variables
         _layerList = new List<Dictionary<Vector2, int>>();
@@ -31,12 +29,18 @@ public class Tile
         // initialisation des textures
         _textureAtlas = textureAtlas;
         _hitboxTexture = hitboxTexture;
-        _rectangleTexture = rectangleTexture;
         
         // chargement du fichier XML du niveau
         string xmlFilePath = "../../../Content/Assets/Level/Level1/output/test.tmx"; // Chemin du fichier XML
         XmlDocument doc = new XmlDocument();
         doc.Load(xmlFilePath);
+        
+        // Validation du fichier XML
+        // Cela permet d'etre sur que les noeuds qu'on va utiliser après ne sont pas nul
+        // sans avoir besoin de faire des vérifications
+        string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/level";
+        string xsdFilePath = "../../../Content/Assets/Level/levelSchema.xsd";
+        XmlUtils.ValidateXmlFile(schemaNamespace, xsdFilePath, xmlFilePath);
         
         // récupère les valeurs de _displayTilesize, _pixelTilesize et numTilesPerRow
         GetNumbers(doc);
@@ -50,14 +54,6 @@ public class Tile
     // param : doc - Le document XML contenant les données des layers.
     private void GetLayers(XmlDocument doc)
     {
-        // Validation du fichier XML
-        // Cela permet d'etre sur que les noeuds qu'on va utiliser après ne sont pas nul
-        // sans avoir besoin de faire des vérifications
-        string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/level";
-        string xsdFilePath = "../../../Content/Assets/Level/levelSchema.xsd";
-        string xmlFilePath = "../../../Content/Assets/Level/Level1/output/test.tmx";
-        XmlUtils.ValidateXmlFile(schemaNamespace, xsdFilePath, xmlFilePath);
-        
         int threshold = GetTilesetThreshold(doc);
 
         // traitement des layers
@@ -93,26 +89,12 @@ public class Tile
     {
         int threshold = 0;
         XmlNodeList tilesetNodes = doc.SelectNodes("//tileset"); // Selectionne tous les noeuds tileset
-        if (tilesetNodes == null)
-        {
-            Console.WriteLine("Erreur : tilesetNodes est null");
-            threshold = -1;
-        }
-        else
-        {
-            foreach (XmlNode tilesetNode in tilesetNodes)
-            {
-                if (tilesetNode?.Attributes?["source"]?.Value == null ||
-                    tilesetNode.Attributes?["firstgid"]?.Value == null)
-                {
-                    Console.WriteLine("Erreur : le tilesetNode n'a pas les attributs requis");
-                    return 0;
-                }
 
-                if (tilesetNode.Attributes["source"].Value.EndsWith("collision.tsx"))
-                {
-                    threshold = int.Parse(tilesetNode.Attributes["firstgid"].Value);
-                }
+        foreach (XmlNode tilesetNode in tilesetNodes)
+        {
+            if (tilesetNode.Attributes["source"].Value.EndsWith("collision.tsx"))
+            {
+                threshold = int.Parse(tilesetNode.Attributes["firstgid"].Value);
             }
         }
 
@@ -130,13 +112,6 @@ public class Tile
     {
         // traitement des paramètres des tiles
         XmlNode paramNode = doc.DocumentElement; // Sélectionne la racine du document
-
-        if (paramNode?.Attributes?["tilewidth"]?.Value == null)
-        {
-            Console.WriteLine("Erreur : l'attribut tilewidth est manquant ou n'a pas de valeur.");
-            return;
-        }
-        
         _pixelTilesize = int.Parse(paramNode.Attributes["tilewidth"].Value);
     }
 
@@ -148,13 +123,6 @@ public class Tile
         
         // traitement des paramètres des tiles
         XmlNode paramNode = doc.DocumentElement; // Sélectionne la racine du document
-
-        if (paramNode?.Attributes?["columns"]?.Value == null)
-        {
-            Console.WriteLine("Erreur : l'attribut columns est manquant ou n'a pas de valeur.");
-            return;
-        }
-        
         _numTilesPerRow = int.Parse(paramNode.Attributes["columns"].Value);
     }
     
@@ -227,46 +195,4 @@ public class Tile
         }
     }
     
-    private void DrawRectHollow(SpriteBatch spriteBatch, Rectangle rect, int thickness) {
-        spriteBatch.Draw(
-            _rectangleTexture,
-            new Rectangle(
-                rect.X,
-                rect.Y,
-                rect.Width,
-                thickness
-            ),
-            Color.White
-        );
-        spriteBatch.Draw(
-            _rectangleTexture,
-            new Rectangle(
-                rect.X,
-                rect.Bottom - thickness,
-                rect.Width,
-                thickness
-            ),
-            Color.White
-        );
-        spriteBatch.Draw(
-            _rectangleTexture,
-            new Rectangle(
-                rect.X,
-                rect.Y,
-                thickness,
-                rect.Height
-            ),
-            Color.White
-        );
-        spriteBatch.Draw(
-            _rectangleTexture,
-            new Rectangle(
-                rect.Right - thickness,
-                rect.Y,
-                thickness,
-                rect.Height
-            ),
-            Color.White
-        );
-    }
 }

@@ -18,7 +18,6 @@ public class Game1 : Game
     
     private Texture2D _textureAtlas;    // texture pour le tileset
     private Texture2D _hitboxTexture;   // texture de debug servant à afficher les collisions
-    private Texture2D _rectangleTexture;    // texture de debug pour les collisions. Sert dans Tile.DrawRectHollow
     private Tile _tile; // classe Tile pour gérer les tiles
     
     private Player _player; // classe Player pour gérer le joueur
@@ -62,9 +61,9 @@ public class Game1 : Game
         Globals.Content = Content;
         
         // Texture de debug pour les collisions
-        _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
-        _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
-        Globals.debugTexture = _rectangleTexture;
+        Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
+        debugTexture.SetData(new Color[] { new(255, 0, 0, 255) });
+        Globals.DebugTexture = debugTexture;
         
         // Effets
         _effectsManager = new EffectsManager();
@@ -96,7 +95,7 @@ public class Game1 : Game
         _hitboxTexture = Content.Load<Texture2D>("Assets/Tileset/collisions");
 
         // Tile
-        _tile = new(_textureAtlas, _hitboxTexture, _rectangleTexture);
+        _tile = new(_textureAtlas, _hitboxTexture);
     }
 
     // called on a regular interval to update the game state, e.g. take player inputs, move ships, or animate entities
