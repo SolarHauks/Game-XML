@@ -17,7 +17,7 @@ public static class Globals
     public static Texture2D DebugTexture { get; set; }  
     
     // Fonction de debug, dessine les contours d'un rectangle passé en paramètre
-    private static void DrawRectHollow(Rectangle rect) {
+    public static void DrawRectHollow(Rectangle rect) {
         SpriteBatch spriteBatch = Globals.SpriteBatch;
         Texture2D texture = Globals.DebugTexture;
         int thickness = 1;

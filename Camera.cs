@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 
 namespace JeuVideo;
@@ -13,12 +14,10 @@ public class Camera(Vector2 position)
     // <param : screenSize - La taille de l'écran en tant que vecteur 2D.
     public void Follow(Rectangle target, Vector2 screenSize)
     {
+        float targetX = -target.X + (screenSize.X / 2) - (target.Width / 2.0f);
         Position = new Vector2(
-            
-            -target.X + (screenSize.X / 2) - (target.Width / 2.0f),
-            // -target.Y + (screenSize.Y / 2) - (target.Height / 2.0f)
+            Math.Min(targetX, 0),
             0
-            
         );
     }
 }
