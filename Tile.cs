@@ -122,16 +122,23 @@ public class Tile
         XmlNode paramNode = doc.DocumentElement; // Sélectionne la racine du document
         _pixelTilesize = int.Parse(paramNode.Attributes["tilewidth"].Value);
     }
-
+    
     private void GetNumTilesPerRow()
     {
-        string xmlFilePath = "../../../Content/Assets/Level/Data/Level1/tilesets/tileset.tsx"; // Chemin du fichier XML
-        XmlDocument doc = new XmlDocument();
-        doc.Load(xmlFilePath);
-        
-        // traitement des paramètres des tiles
-        XmlNode paramNode = doc.DocumentElement; // Sélectionne la racine du document
-        _numTilesPerRow = int.Parse(paramNode.Attributes["columns"].Value);
+        string xmlFilePath = "../../../Content/Assets/Level/Data/Level1/tilesets/tileset.tsx"; // Path to the XML file
+
+        using (XmlReader reader = XmlReader.Create(xmlFilePath))
+        {
+            while (reader.Read())
+            {
+                if (reader.IsStartElement() && reader.Name == "tileset")
+                {
+                    string columns = reader.GetAttribute("columns");
+                    _numTilesPerRow = int.Parse(columns);
+                    break;
+                }
+            }
+        }
     }
     
     // Charge les données d'un layer dans un dictionnaire
