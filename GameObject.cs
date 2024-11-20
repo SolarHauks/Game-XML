@@ -12,7 +12,7 @@ public abstract class GameObject : Sprite
     // Hitbox de l'objet, sert pour les collisions
     public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, (int)_size.X, (int)_size.Y);
     
-    protected GameObject(Texture2D texture, Vector2 position) : base(texture, position) {
+    protected GameObject(Texture2D texture, Vector2 position, bool isAnimed) : base(texture, position, isAnimed) {
         _size = AnimationManager.GetSize(); // Temporaire
     }
 

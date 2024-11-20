@@ -21,7 +21,7 @@ public class Enemy : GameObject
         }
     }
     
-    public Enemy(Texture2D texture, Vector2 position, int maxHealth) : base(texture, position) {
+    public Enemy(Texture2D texture, Vector2 position, int maxHealth) : base(texture, position, true) {
         _maxHealth = maxHealth;
         _currentHealth = maxHealth;
         _startPosition = position;

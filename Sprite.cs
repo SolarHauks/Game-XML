@@ -9,6 +9,7 @@ namespace JeuVideo;
 public abstract class Sprite {
     private readonly Vector2 _displaySize; // Taille affichée
     protected Vector2 Position; // Position
+    protected readonly bool IsAnimed; // Si l'objet est animé
 
     private readonly Texture2D _texture; // Texture de l'objet
     protected readonly AnimationManager AnimationManager; // Gestionnaire d'animations
@@ -17,13 +18,22 @@ public abstract class Sprite {
     protected int Direction { get; set; } // -1 for left, 1 for right
     
     
-    protected Sprite(Texture2D texture, Vector2 position) {
+    protected Sprite(Texture2D texture, Vector2 position, bool isAnimed) {
         _texture = texture;
         Position = position;    // Position initiale de l'objet
         Direction = 1;
-        
-        AnimationManager = new AnimationManager(texture);
-        _displaySize = AnimationManager.GetSize();  // Taille affichée = taille d'une frame d'animation
+        IsAnimed = isAnimed;
+
+        if (IsAnimed)
+        {
+            AnimationManager = new AnimationManager(texture);
+            _displaySize = AnimationManager.GetSize();  // Taille affichée = taille d'une frame d'animation
+        }
+        else
+        {
+            AnimationManager = null;
+            _displaySize = new Vector2(texture.Width, texture.Height);
+        }
     }
     
     public void Draw(Vector2 offset)
@@ -40,8 +50,16 @@ public abstract class Sprite {
             (int)displayPosition.Y, 
             (int)_displaySize.X, 
             (int)_displaySize.Y);
-        
-        Rectangle sRect = AnimationManager.GetSourceRectangle();
+
+        Rectangle sRect;
+        if (IsAnimed)
+        {
+            sRect = AnimationManager.GetSourceRectangle();   
+        }
+        else
+        {
+            sRect = new Rectangle(0, 0, _texture.Width, _texture.Height);
+        }
         
         Vector2 origin = Vector2.Zero;
         

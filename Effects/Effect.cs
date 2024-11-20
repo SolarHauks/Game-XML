@@ -7,7 +7,7 @@ public class Effect : Sprite
 {
     private string GetName { get; } // Nom de l'effet
     
-    public Effect(string textureName) : base(Globals.Content.Load<Texture2D>("Assets/Effects/" + textureName), new Vector2(0, -50))
+    public Effect(string textureName) : base(Globals.Content.Load<Texture2D>("Assets/Effects/" + textureName), new Vector2(0, -50), true)
     {
         AnimationManager.SetAnimation(textureName);
         GetName = textureName;

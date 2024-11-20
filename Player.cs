@@ -19,7 +19,7 @@ public class Player : GameObject
     private double _lastAttackTime; // Temps de la dernière attaque
     private const double AttackCooldown = 0.5; // Cooldown de l'attaque
     
-    public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position) {
+    public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position, true) {
         Velocity = new Vector2();
         _grounded = false;
         _effectsManager = effets;
