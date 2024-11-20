@@ -16,27 +16,28 @@ public class Player : GameObject
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
     private readonly EffectsManager _effectsManager; // Gestionnaire des effets
     
-    private double _lastAttackTime;
-    private const double AttackCooldown = 0.5; // Cooldown duration in seconds
+    private double _lastAttackTime; // Temps de la dernière attaque
+    private const double AttackCooldown = 0.5; // Cooldown de l'attaque
     
     public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position) {
         Velocity = new Vector2();
         _grounded = false;
         _effectsManager = effets;
         
-        _lastAttackTime = -AttackCooldown; // Initialize to allow immediate attack
+        _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
     }
     
     /// Met à jour l'état du joueur.
     /// param keystate : L'état actuel du clavier.
     /// param tile : Les informations sur les tiles pour la détection des collisions.
     /// param gameTime : Le temps écoulé depuis la dernière frame.
-    public void Update(Tile tile, GameTime gameTime, List<Enemy> enemies) {
+    public void Update(Tile tile, List<Enemy> enemies) {
         
         KeyboardState keystate = Keyboard.GetState();    // Récupère l'état du clavier (ie : les touches actuellement pressées)
         
-        base.Update(tile, gameTime); // Met à jour la position du joueur
+        base.Update(tile); // Met à jour la position du joueur
         
+        // Attaque
         if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C)) {
             Attack(enemies);
         }
@@ -87,6 +88,7 @@ public class Player : GameObject
         }
     }*/
     
+    // On réimplemente la détection verticales des collisions pour le joueur pour integrer le saut
     protected override void CheckCollisionsVertical(Tile tile)
     {
         _grounded = false;
@@ -126,43 +128,44 @@ public class Player : GameObject
         }
     }
     
-    protected override void DeplacementHorizontal(float dt)
+    protected override void DeplacementHorizontal(double dt)
     {
         Velocity.X = 0.0f;  // Reset la vitesse horizontale, supprime l'inertie
-        float horizontalSpeed = 250 * dt;   // Vitesse horizontale
+        double horizontalSpeed = 250 * dt;   // Vitesse horizontale
         KeyboardState keystate = Keyboard.GetState();
         
         // Déplacements horizontaux
         if (keystate.IsKeyDown(Keys.Left)) {
-            Velocity.X = -horizontalSpeed;  // Vitesse horizontale
+            Velocity.X = (float)-horizontalSpeed;  // Vitesse horizontale
             Direction = -1; // Direction
         }
         
         if (keystate.IsKeyDown(Keys.Right)) {
-            Velocity.X = horizontalSpeed; // Vitesse horizontale
+            Velocity.X = (float)horizontalSpeed; // Vitesse horizontale
             Direction = 1; // Direction
         }
         
         Position.X += (int)Velocity.X;  // Déplacement horizontal
     }
 
-    protected override void DeplacementVertical(float dt)
+    protected override void DeplacementVertical(double dt)
     {
         KeyboardState keystate = Keyboard.GetState();
         
         // Gestion des déplacements horizontaux : saut et gravité
-        Velocity.Y += 35.0f * dt;   // Gravité
+        Velocity.Y += 35.0f * (float)dt;   // Gravité
         Velocity.Y = Math.Min(25.0f, Velocity.Y);   // Limite la vitesse de chute
         
         // Si le joueur est au sol et que la touche espace est pressée -> on saute
         // Evite de sauter quand on est dans les airs
         if (_grounded && keystate.IsKeyDown(Keys.Space) && !_prevKeystate.IsKeyDown(Keys.Space)) {
-            Velocity.Y = -600 * dt;
+            Velocity.Y = -600 * (float)dt;
         }
         
         Position.Y += (int)Velocity.Y; // Déplacement vertical
     }
-
+    
+    // Gestion des attaques du joueur
     private void Attack(List<Enemy> enemies)
     {
         double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
@@ -192,6 +195,7 @@ public class Player : GameObject
         AnimationManager.SetAnimation("slash");
     }
 
+    // Gestion des animations du joueur
     protected override void Animate(Vector2 velocity)
     {
         string currentAnim = AnimationManager.GetCurrentAnimation();

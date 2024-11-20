@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -6,7 +5,7 @@ namespace JeuVideo;
 
 public class Enemy : GameObject
 {
-    private readonly Vector2 _startPosition;
+    private readonly Vector2 _startPosition;    // Position de départ, milieu de la zone de déplacement
     
     private readonly int _maxHealth;
     private int _currentHealth;
@@ -28,10 +27,10 @@ public class Enemy : GameObject
         _startPosition = position;
     }
 
-    protected override void DeplacementHorizontal(float dt)
+    protected override void DeplacementHorizontal(double dt)
     {
         // On passe par la velocité car on en a besoin pour les collisions
-        Velocity.X = Direction * 50 * dt;
+        Velocity.X = Direction * 50 * (float)dt;
         Position.X += Velocity.X;
         if (Position.X > _startPosition.X + 50 || Position.X < _startPosition.X - 50)
         {
@@ -39,9 +38,9 @@ public class Enemy : GameObject
         }
     }
 
-    protected override void DeplacementVertical(float dt)
+    protected override void DeplacementVertical(double dt)
     {
-        Velocity.Y = 25.0f * dt;   // Gravité
+        Velocity.Y = 25.0f * (float)dt;   // Gravité
         Position.Y += Velocity.Y;
     }
 

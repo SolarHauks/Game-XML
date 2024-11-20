@@ -111,7 +111,7 @@ public class Game1 : Game
         Globals.GameTime = gameTime;
         
         // Logique du joueur
-        _player.Update(_tile, gameTime, _enemies);
+        _player.Update(_tile, _enemies);
         
         // Logique de la caméra
         // A décommenter si on veut utiliser la caméra
@@ -120,7 +120,7 @@ public class Game1 : Game
         // Logique des ennemis
         foreach (Enemy enemy in _enemies)
         {
-            enemy.Update(_tile, gameTime);
+            enemy.Update(_tile);
         }
         
         // Vérifie et supprime les ennemis avec 0 point de vie

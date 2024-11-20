@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,23 +7,20 @@ namespace JeuVideo;
 public abstract class GameObject : Sprite
 {
     protected Vector2 Velocity;
-    private readonly int _horizontalSize; // Taille horizontale
-    private readonly int _verticalSize; // Taille verticale
+    private readonly Vector2 _size; // Taille logique de l'objet, sert pour les collisions
     
     // Hitbox de l'objet, sert pour les collisions
-    public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, _horizontalSize, _verticalSize);
+    public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, (int)_size.X, (int)_size.Y);
     
     protected GameObject(Texture2D texture, Vector2 position) : base(texture, position) {
-        Vector2 size = AnimationManager.GetSize();
-        _horizontalSize = (int)(Math.Ceiling(size.X / 16.0) * 16);
-        _verticalSize = (int)(Math.Ceiling(size.Y / 16.0) * 16);
+        _size = AnimationManager.GetSize(); // Temporaire
     }
 
-    public void Update(Tile tile, GameTime gameTime)
+    public void Update(Tile tile)
     {
         // Delta time, temps depuis la dernière frame
         // Sert pour que le jeu soit indépendant de la vitesse de la machine
-        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        double dt = Globals.GameTime.ElapsedGameTime.TotalSeconds;
         
         DeplacementHorizontal(dt);
         CheckCollisionsHorizontal(tile);
@@ -37,10 +33,11 @@ public abstract class GameObject : Sprite
         AnimationManager.Update();
     }
     
-    protected abstract void DeplacementHorizontal(float dt);
+    protected abstract void DeplacementHorizontal(double dt);
     
-    protected abstract void DeplacementVertical(float dt);
+    protected abstract void DeplacementVertical(double dt);
 
+    // Gère les collisions horizontales
     private void CheckCollisionsHorizontal(Tile tile)
     {
         // Liste des intersections avec les tiles, utile pour les collisions
@@ -72,6 +69,7 @@ public abstract class GameObject : Sprite
         }
     }
 
+    // Gère les collisions verticales
     protected virtual void CheckCollisionsVertical(Tile tile)
     {
         List<Rectangle> intersections = GetIntersectingTilesVertical(Rect); // Récupère les tiles intersectés par le joueur
@@ -169,7 +167,7 @@ public abstract class GameObject : Sprite
     }
     
     // Anime l'objet de jeu
-    // <param : velocity - La vélocité de l'objet de jeu.
+    // param : velocity - La vélocité de l'objet de jeu.
     protected abstract void Animate(Vector2 velocity);
 
 }

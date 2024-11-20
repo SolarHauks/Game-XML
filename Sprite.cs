@@ -10,7 +10,7 @@ public abstract class Sprite {
     private readonly Vector2 _displaySize; // Taille affichée
     protected Vector2 Position; // Position
 
-    private Texture2D Texture { get; } // Texture de l'objet
+    private readonly Texture2D _texture; // Texture de l'objet
     protected readonly AnimationManager AnimationManager; // Gestionnaire d'animations
     
     // Direction (dans le sens du côté dans lequel il regarde)
@@ -18,12 +18,12 @@ public abstract class Sprite {
     
     
     protected Sprite(Texture2D texture, Vector2 position) {
-        Texture = texture;
+        _texture = texture;
         Position = position;    // Position initiale de l'objet
         Direction = 1;
         
         AnimationManager = new AnimationManager(texture);
-        _displaySize = AnimationManager.GetSize();
+        _displaySize = AnimationManager.GetSize();  // Taille affichée = taille d'une frame d'animation
     }
     
     public void Draw(Vector2 offset)
@@ -46,7 +46,7 @@ public abstract class Sprite {
         Vector2 origin = Vector2.Zero;
         
         spriteBatch.Draw( 
-            Texture, // Texture2D,
+            _texture, // Texture2D,
             dRect, // Rectangle destinationRectangle,
             sRect, // Nullable<Rectangle> sourceRectangle,
             Color.White, //  Color,

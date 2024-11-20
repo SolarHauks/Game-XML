@@ -8,11 +8,11 @@ namespace JeuVideo.Animation;
 
 public class AnimationManager
 {
-    private int _numColumns;
-    private Vector2 _size;
-    private string _currentAnimation;
+    private int _numColumns;    // Nombre de frame par ligne
+    private Vector2 _size;  // Taille d'une frame d'animation
+    private string _currentAnimation;   // Animation actuelle
     
-    private readonly Dictionary<string, Animation> _animations;
+    private readonly Dictionary<string, Animation> _animations; // Dictoinnaire des animations
     
     private const string XmlFilePathPrefix = "../../../Content/Assets/Animation/";
     
