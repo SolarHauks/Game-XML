@@ -16,6 +16,7 @@ public abstract class Sprite {
     
     // Direction (dans le sens du côté dans lequel il regarde)
     protected int Direction { get; set; } // -1 for left, 1 for right
+    protected Vector2 Size => _displaySize; // Taille de l'objet
     
     
     protected Sprite(Texture2D texture, Vector2 position, bool isAnimed) {
@@ -36,7 +37,7 @@ public abstract class Sprite {
         }
     }
     
-    public void Draw(Vector2 offset)
+    public virtual void Draw(Vector2 offset)
     {
         SpriteBatch spriteBatch = Globals.SpriteBatch;
         

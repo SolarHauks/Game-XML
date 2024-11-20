@@ -18,7 +18,7 @@ public class Tile
     private readonly double _onScreenMultiplier = 1.0; // WIP
 
     // liste des tiles de collision, qu'on sépare par soucis de simplicité
-    public Dictionary<Vector2, int> Collisions { private set; get; }
+    private Dictionary<Vector2, int> Collisions { set; get; }
     
 
     public Tile(Texture2D textureAtlas, Texture2D hitboxTexture)
@@ -32,6 +32,11 @@ public class Tile
         _hitboxTexture = hitboxTexture;
         
         Load();
+    }
+    
+    public Dictionary<Vector2, int> GetCollisions()
+    {
+        return Collisions;
     }
 
     // Charge le niveau à partir des données XML

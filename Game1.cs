@@ -59,6 +59,7 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         Globals.SpriteBatch = _spriteBatch;
         Globals.Content = Content;
+        Globals.ScreenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         
         // Texture de debug pour les collisions
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -111,7 +112,7 @@ public class Game1 : Game
         Globals.GameTime = gameTime;
         
         // Logique du joueur
-        _player.Update(_tile, _enemies);
+        _player.Update(_tile.GetCollisions(), _enemies);
         
         // Logique de la caméra
         // A décommenter si on veut utiliser la caméra
@@ -120,7 +121,7 @@ public class Game1 : Game
         // Logique des ennemis
         foreach (Enemy enemy in _enemies)
         {
-            enemy.Update(_tile);
+            enemy.Update(_tile.GetCollisions());
         }
         
         // Vérifie et supprime les ennemis avec 0 point de vie

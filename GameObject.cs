@@ -12,25 +12,28 @@ public abstract class GameObject : Sprite
     // Hitbox de l'objet, sert pour les collisions
     public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, (int)_size.X, (int)_size.Y);
     
-    protected GameObject(Texture2D texture, Vector2 position, bool isAnimed) : base(texture, position, isAnimed) {
-        _size = AnimationManager.GetSize(); // Temporaire
+    protected GameObject(Texture2D texture, Vector2 position, bool isAnimed) : base(texture, position, isAnimed)
+    {
+        _size = Size;
     }
 
-    public void Update(Tile tile)
+    public void Update(Dictionary<Vector2, int> collision)
     {
         // Delta time, temps depuis la dernière frame
         // Sert pour que le jeu soit indépendant de la vitesse de la machine
         double dt = Globals.GameTime.ElapsedGameTime.TotalSeconds;
         
         DeplacementHorizontal(dt);
-        CheckCollisionsHorizontal(tile);
+        CheckCollisionsHorizontal(collision);
 
         DeplacementVertical(dt);
-        CheckCollisionsVertical(tile);
+        CheckCollisionsVertical(collision);
 
-        Animate(Velocity);
-        
-        AnimationManager.Update();
+        if (IsAnimed)
+        {
+            Animate(Velocity);
+            AnimationManager.Update();   
+        }
     }
     
     protected abstract void DeplacementHorizontal(double dt);
@@ -38,7 +41,7 @@ public abstract class GameObject : Sprite
     protected abstract void DeplacementVertical(double dt);
 
     // Gère les collisions horizontales
-    private void CheckCollisionsHorizontal(Tile tile)
+    private void CheckCollisionsHorizontal(Dictionary<Vector2, int> collision)
     {
         // Liste des intersections avec les tiles, utile pour les collisions
         var intersections = GetIntersectingTilesHorizontal(Rect);
@@ -48,29 +51,15 @@ public abstract class GameObject : Sprite
         // Si c'est la cas, on replace le joueur
         foreach (var rect in intersections)
         {
-            if (tile.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out _))
+            if (collision.TryGetValue(new Vector2(rect.X, rect.Y), out _))
             {
-                Rectangle collision = new Rectangle(
-                    rect.X * 16,
-                    rect.Y * 16,
-                    16,
-                    16
-                );
-
-                if (Velocity.X > 0.0f)
-                {
-                    Position.X = collision.Left - Rect.Width;
-                }
-                else if (Velocity.X < 0.0f)
-                {
-                    Position.X = collision.Right;
-                }
+                WhenHorizontalCollisions(rect);
             }
         }
     }
 
     // Gère les collisions verticales
-    protected virtual void CheckCollisionsVertical(Tile tile)
+    protected virtual void CheckCollisionsVertical(Dictionary<Vector2, int> collision)
     {
         List<Rectangle> intersections = GetIntersectingTilesVertical(Rect); // Récupère les tiles intersectés par le joueur
 
@@ -78,32 +67,56 @@ public abstract class GameObject : Sprite
         // Si c'est la cas, on replace le joueur
         foreach (var rect in intersections)
         {
-            if (tile.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out _))
+            if (collision.TryGetValue(new Vector2(rect.X, rect.Y), out _))
             {
-                Rectangle collision = new Rectangle(
-                    rect.X * 16,
-                    rect.Y * 16,
-                    16,
-                    16
-                );
-
-                if (Rect.Intersects(collision))
-                {
-                    continue;
-                }
-
-                // colliding with the top face
-                if (Velocity.Y > 0.0f)
-                {
-                    Position.Y = collision.Top - Rect.Height;
-                    Velocity.Y = 1.0f; // counter snap to ground
-                }
-                else if (Velocity.Y < 0.0f)
-                {
-                    Position.Y = collision.Bottom;
-                    Velocity.Y = 0.0f;
-                }
+                WhenVerticalCollisions(rect);
             }
+        }
+    }
+
+    protected virtual void WhenHorizontalCollisions(Rectangle rect)
+    {
+        Rectangle collisionTile = new Rectangle(
+            rect.X * 16,
+            rect.Y * 16,
+            16,
+            16
+        );
+
+        if (Velocity.X > 0.0f)
+        {
+            Position.X = collisionTile.Left - Rect.Width;
+        }
+        else if (Velocity.X < 0.0f)
+        {
+            Position.X = collisionTile.Right;
+        }
+    }
+    
+    protected virtual void WhenVerticalCollisions(Rectangle rect)
+    {
+        Rectangle collisionTile = new Rectangle(
+            rect.X * 16,
+            rect.Y * 16,
+            16,
+            16
+        );
+
+        if (Rect.Intersects(collisionTile))
+        {
+            return;
+        }
+
+        // colliding with the top face
+        if (Velocity.Y > 0.0f)
+        {
+            Position.Y = collisionTile.Top - Rect.Height;
+            Velocity.Y = 1.0f; // counter snap to ground
+        }
+        else if (Velocity.Y < 0.0f)
+        {
+            Position.Y = collisionTile.Bottom;
+            Velocity.Y = 0.0f;
         }
     }
 

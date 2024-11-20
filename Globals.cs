@@ -8,9 +8,10 @@ namespace JeuVideo;
 // Permet leur accès dans l'entièreté du projet sans avoir à faire circuler en paramètre.
 public static class Globals
 {
-    public static ContentManager Content { get; set; }
-    public static SpriteBatch SpriteBatch { get; set; }
-    public static GameTime GameTime { get; set; }
+    public static ContentManager Content { get; set; }  // Permet de charger des textures
+    public static SpriteBatch SpriteBatch { get; set; } // Utile dans tous les Draw()
+    public static GameTime GameTime { get; set; }   // Pour deltaTime
+    public static Vector2 ScreenSize { get; set; }  // Taille de l'écran
     
     // Texture utilisée pour le debug, reglangle rouge
     // Sert seulement pour la fonction DrawRectHollow

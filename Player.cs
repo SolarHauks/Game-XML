@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using JeuVideo.Effects;
+using JeuVideo.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,7 +15,9 @@ public class Player : GameObject
     private bool _grounded; // Si le joueur est au sol
     
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
+    
     private readonly EffectsManager _effectsManager; // Gestionnaire des effets
+    private readonly WeaponsManager _weaponsManager; // Gestionnaire des armes
     
     private double _lastAttackTime; // Temps de la dernière attaque
     private const double AttackCooldown = 0.5; // Cooldown de l'attaque
@@ -25,21 +28,29 @@ public class Player : GameObject
         _effectsManager = effets;
         
         _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
+        
+        _weaponsManager = new WeaponsManager();
+        _weaponsManager.AddWeapon("gun");
     }
     
     /// Met à jour l'état du joueur.
     /// param keystate : L'état actuel du clavier.
     /// param tile : Les informations sur les tiles pour la détection des collisions.
     /// param gameTime : Le temps écoulé depuis la dernière frame.
-    public void Update(Tile tile, List<Enemy> enemies) {
+    public void Update(Dictionary<Vector2, int> collision, List<Enemy> enemies) {
         
         KeyboardState keystate = Keyboard.GetState();    // Récupère l'état du clavier (ie : les touches actuellement pressées)
         
-        base.Update(tile); // Met à jour la position du joueur
+        base.Update(collision); // Met à jour la position du joueur
         
         // Attaque
         if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C)) {
             Attack(enemies);
+        }
+        
+        // Tir
+        if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V)) {
+            Shoot();
         }
         
         // Reset de la position du joueur, uniquement pour les tests
@@ -50,46 +61,13 @@ public class Player : GameObject
         }
         
         Animate(Velocity); // Gère l'animation du joueur
+        _weaponsManager.Update(collision, enemies, Position); // Met à jour les armes du joueur
         
         _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
-        
-        // Limites
-        // CheckLimits(); // Vérifie que le joueur ne sorte pas de l'écran. Inutile si on utilise la caméra
     }
-
-    
-    // Vérifie que le joueur ne sorte pas des limites de l'écran.
-    // Replace le joueur s'il dépasse les limites horizontales ou verticales.
-    // A noter que cette fonction est inutile si on utilise la caméra, car le joueur sera alors toujours au centre de l'écran
-    // ATTENTION : cette fonction n'a pas été mis à jour et utilise encore les dimensions de la texture pour fonctionner
-    // => A maj si on veut l'utliser
-    /*private void CheckLimits()
-    {
-        // Limite horizontale
-        // Si le joueur dépasse à droite ou à gauche, on le replace
-        if (Position.X > _screenSize.X - Texture.Width / 2.0f)
-        {
-            Position.X = _screenSize.X - Texture.Width / 2.0f;
-        }
-        else if (Position.X < Texture.Width / 2.0f)
-        {
-            Position.X = Texture.Width / 2.0f;
-        }
-        
-        // Limite verticale
-        // Si le joueur dépasse en haut ou en bas, on le replace
-        if (Position.Y > _screenSize.Y - Texture.Height / 2.0f)
-        {
-            Position.Y = _screenSize.X - Texture.Height / 2.0f;
-        }
-        else if (Position.Y < Texture.Height / 2.0f)
-        {
-            Position.Y = Texture.Height / 2.0f;
-        }
-    }*/
     
     // On réimplemente la détection verticales des collisions pour le joueur pour integrer le saut
-    protected override void CheckCollisionsVertical(Tile tile)
+    protected override void CheckCollisionsVertical(Dictionary<Vector2, int> collision)
     {
         _grounded = false;
         List<Rectangle> intersections = GetIntersectingTilesVertical(Rect); // Récupère les tiles intersectés par le joueur
@@ -98,16 +76,16 @@ public class Player : GameObject
         // Si c'est la cas, on replace le joueur
         foreach (var rect in intersections)
         {
-            if (tile.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out _))
+            if (collision.TryGetValue(new Vector2(rect.X, rect.Y), out _))
             {
-                Rectangle collision = new Rectangle(
+                Rectangle collisionTile = new Rectangle(
                     rect.X * 16,
                     rect.Y * 16,
                     16,
                     16
                 );
 
-                if (!Rect.Intersects(collision))
+                if (!Rect.Intersects(collisionTile))
                 {
                     continue;
                 }
@@ -115,13 +93,13 @@ public class Player : GameObject
                 // colliding with the top face
                 if (Velocity.Y > 0.0f)
                 {
-                    Position.Y = collision.Top - Rect.Height;
+                    Position.Y = collisionTile.Top - Rect.Height;
                     Velocity.Y = 1.0f; // counter snap to ground
                     _grounded = true;
                 }
                 else if (Velocity.Y < 0.0f)
                 {
-                    Position.Y = collision.Bottom;
+                    Position.Y = collisionTile.Bottom;
                     Velocity.Y = 0.0f;
                 }
             }
@@ -195,6 +173,12 @@ public class Player : GameObject
         AnimationManager.SetAnimation("slash");
     }
 
+    private void Shoot()
+    {
+        Vector2 weaponPosition = new Vector2(Position.X + (Direction == 1 ? 16 : -16), Position.Y + 16);
+        _weaponsManager.Fire("gun", weaponPosition, Direction);
+    }
+
     // Gestion des animations du joueur
     protected override void Animate(Vector2 velocity)
     {
@@ -220,6 +204,12 @@ public class Player : GameObject
                 AnimationManager.SetAnimation(newAnim);
             }
         }
+    }
+    
+    public override void Draw(Vector2 offset)
+    {
+        base.Draw(offset);
+        _weaponsManager.Draw(offset);
     }
     
 }
