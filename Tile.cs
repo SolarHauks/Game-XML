@@ -30,6 +30,11 @@ public class Tile
         _textureAtlas = textureAtlas;
         _hitboxTexture = hitboxTexture;
         
+        Load();
+    }
+
+    private void Load()
+    {
         // chargement du fichier XML du niveau
         string xmlFilePath = "../../../Content/Assets/Level/Level1/output/test.tmx"; // Chemin du fichier XML
         XmlDocument doc = new XmlDocument();
@@ -47,7 +52,6 @@ public class Tile
         
         // récupère les layers
         GetLayers(doc);
-        
     }
     
     // Récupère les layers du document XML et les sépare en layers d'affichage et layer de collision.

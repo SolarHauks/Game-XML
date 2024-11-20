@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="1">
  <editorsettings>
-  <export target="output/test.tmx" format="tmx"/>
+  <export format="tmx"/>
  </editorsettings>
- <tileset firstgid="1" source="tilesets/tileset.tsx"/>
- <tileset firstgid="137" source="tilesets/collision.tsx"/>
+ <tileset firstgid="1" source="../../Level1/tilesets/tileset.tsx"/>
+ <tileset firstgid="137" source="../../Level1/tilesets/collision.tsx"/>
  <layer id="2" name="bg" width="50" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
