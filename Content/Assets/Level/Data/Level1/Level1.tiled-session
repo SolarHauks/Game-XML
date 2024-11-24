@@ -10,6 +10,20 @@
         "tilesets"
     ],
     "fileStates": {
+        "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level/Level1/tilesets/collision.tsx": {
+            "scaleInDock": 1
+        },
+        "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level/Level1/tilesets/tileset.tsx": {
+            "scaleInDock": 1
+        },
+        "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level/test.tmx": {
+            "scale": 2.0504166666666666,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 239.95122942491366,
+                "y": 90.9571225360699
+            }
+        },
         "output/test.tmx": {
             "scale": 2.1434375,
             "selectedLayer": 0,
@@ -19,42 +33,57 @@
             }
         },
         "save.tmx": {
-            "scale": 0.9489,
-            "selectedLayer": 3,
+            "scale": 1.725,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 399.4098429760776,
-                "y": 257.66677205184953
+                "x": 245.2173913043478,
+                "y": 199.13043478260872
             }
         },
         "tileset.tsx": {
             "scaleInDock": 1.5,
             "scaleInEditor": 1
         },
+        "tilesets/MayaGood.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 4.029
+        },
         "tilesets/collision.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
-        "tilesets/tileset.tsx": {
+        "tilesets/maya1.tsx": {
             "scaleInDock": 1,
+            "scaleInEditor": 0.12
+        },
+        "tilesets/mayaResize.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2.1152
+        },
+        "tilesets/tileset.tsx": {
+            "scaleInDock": 1.5,
             "scaleInEditor": 1
         }
     },
     "last.exportedFilePath": "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level",
-    "last.externalTilesetPath": "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level/Level1/tilesets",
+    "last.externalTilesetPath": "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level/Data/Level1/tilesets",
     "last.imagePath": "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Tileset",
     "map.lastUsedExportFilter": "Tiled map files (*.tmx *.xml)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
-        "save.tmx",
-        "tilesets/tileset.tsx"
+        "save.tmx"
     ],
     "project": "Level1.tiled-project",
     "recentFiles": [
-        "tilesets/tileset.tsx",
         "save.tmx",
         "tilesets/collision.tsx",
+        "tilesets/tileset.tsx",
+        "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level/test.tmx",
+        "tilesets/MayaGood.tsx",
+        "tilesets/mayaResize.tsx",
+        "tilesets/maya1.tsx",
         "output/test.tmx",
         "tileset.tsx"
     ],

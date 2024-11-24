@@ -3,8 +3,8 @@
  <editorsettings>
   <export format="tmx"/>
  </editorsettings>
- <tileset firstgid="1" source="../../Level1/tilesets/tileset.tsx"/>
- <tileset firstgid="137" source="../../Level1/tilesets/collision.tsx"/>
+ <tileset firstgid="1" source="tilesets/tileset.tsx"/>
+ <tileset firstgid="137" source="tilesets/collision.tsx"/>
  <layer id="2" name="bg" width="50" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
