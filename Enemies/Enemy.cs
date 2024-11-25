@@ -1,28 +1,24 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace JeuVideo;
+namespace JeuVideo.Enemies;
 
 public abstract class Enemy : GameObject
 {
-    protected Vector2 _startPosition;    // Position de départ, milieu de la zone de déplacement
-    protected int _maxHealth;
-    protected int _currentHealth;
+    protected Vector2 StartPosition;    // Position de départ, milieu de la zone de déplacement
+    protected int MaxHealth;
+    protected int CurrentHealth;
     public int Health
     {
-        get => _currentHealth;
-        set
-        {
-            if (value < 0) _currentHealth = 0;
-            else if (value > _maxHealth) _currentHealth = _maxHealth;
-            else _currentHealth = value;
-        }
+        get => CurrentHealth;
+        protected set => CurrentHealth = Math.Clamp(value, 0, MaxHealth);
     }
     
     public Enemy(Texture2D texture, Vector2 position, int maxHealth) : base(texture, position, true) {
-        _maxHealth = maxHealth;
-        _currentHealth = maxHealth;
-        _startPosition = position;
+        MaxHealth = maxHealth;
+        CurrentHealth = maxHealth;
+        StartPosition = position;
     }
 
     protected abstract override void DeplacementHorizontal(double dt);

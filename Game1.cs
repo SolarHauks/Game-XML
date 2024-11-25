@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JeuVideo.Effects;
+using JeuVideo.Enemies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -88,7 +89,7 @@ public class Game1 : Game
         
         // Ennemis
         Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
-        Enemy_snake snake = new(snakeTexture, new Vector2(192, 270), 100);
+        Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
         _enemies.Add(snake);
 
         // Texture des tiles

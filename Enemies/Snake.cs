@@ -1,25 +1,16 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace JeuVideo;
+namespace JeuVideo.Enemies;
 
-public class Enemy_snake : Enemy
+public class Snake(Texture2D texture, Vector2 position, int maxHealth) : Enemy(texture, position, maxHealth)
 {
-    
-    public Enemy_snake(Texture2D texture, Vector2 position, int maxHealth) : base(texture, position, maxHealth)
-    {
-        _maxHealth = maxHealth;
-        _currentHealth = maxHealth;
-        _startPosition = position;
-    }
-    
-    
     protected override void DeplacementHorizontal(double dt)
     {
         // On passe par la velocité car on en a besoin pour les collisions
         Velocity.X = Direction * 50 * (float)dt;
         Position.X += Velocity.X;
-        if (Position.X > _startPosition.X + 50 || Position.X < _startPosition.X - 50)
+        if (Position.X > StartPosition.X + 50 || Position.X < StartPosition.X - 50)
         {
             Direction *= -1;
         }
