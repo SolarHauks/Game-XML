@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,7 +15,7 @@ public abstract class GameObject : Sprite
     
     protected GameObject(Texture2D texture, Vector2 position, bool isAnimed) : base(texture, position, isAnimed)
     {
-        _size = Size;
+        _size = Size*1.001f;
     }
 
     public void Update(Dictionary<Vector2, int> collision)
@@ -47,8 +48,8 @@ public abstract class GameObject : Sprite
         var intersections = GetIntersectingTilesHorizontal(Rect);
 
         // Repositionnement du joueur selon les collisions
-        // Pour chaque tile que le joueur intersect, on vérifit si il y a collision avec une tile du layer 'collisions'
-        // Si c'est la cas, on replace le joueur
+        // Pour chaque tile que le joueur intersect, on vérifie s'il y a collision avec une tile du layer 'collisions'
+        // Si c'est le cas, on replace le joueur
         foreach (var rect in intersections)
         {
             if (collision.TryGetValue(new Vector2(rect.X, rect.Y), out _))
@@ -156,11 +157,11 @@ public abstract class GameObject : Sprite
     {
         List<Rectangle> intersections = new();
 
-        /*int widthInTiles = (int)Math.Ceiling(target.Width / 16.0f);   // Largeur en tiles
-        int heightInTiles = (int)Math.Ceiling(target.Height / 16.0f);    // Hauteur en tiles*/
+        int widthInTiles = (int)Math.Ceiling(target.Width / 16.0f);   // Largeur en tiles
+        int heightInTiles = (int)Math.Ceiling(target.Height / 16.0f);    // Hauteur en tiles
         
-        int widthInTiles = (target.Width - (target.Width % 16)) / 16;   // Largeur en tiles
-        int heightInTiles = (target.Height - (target.Height % 16)) / 16;    // Hauteur en tiles
+        /*int widthInTiles = (target.Width - (target.Width % 16)) / 16;   // Largeur en tiles
+        int heightInTiles = (target.Height - (target.Height % 16)) / 16;*/    // Hauteur en tiles
 
         // Remplis la liste des tiles intersectées par le joueur
         for (int x = 0; x <= widthInTiles; x++) {
