@@ -1,3 +1,11 @@
+# Next
+- Différents ennemies
+- Upgrade d'arme
+- UI
+- Boss
+- Vie
+- Mana -> Attaque Spé sur l'arme
+
 # A fix
 
 

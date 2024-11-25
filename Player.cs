@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using JeuVideo.Effects;
-using JeuVideo.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,7 +16,6 @@ public class Player : GameObject
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
     
     private readonly EffectsManager _effectsManager; // Gestionnaire des effets
-    private readonly WeaponsManager _weaponsManager; // Gestionnaire des armes
     
     private double _lastAttackTime; // Temps de la dernière attaque
     private const double AttackCooldown = 0.5; // Cooldown de l'attaque
@@ -28,9 +26,6 @@ public class Player : GameObject
         _effectsManager = effets;
         
         _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
-        
-        _weaponsManager = new WeaponsManager();
-        _weaponsManager.AddWeapon("gun");
     }
     
     /// Met à jour l'état du joueur.
@@ -48,11 +43,6 @@ public class Player : GameObject
             Attack(enemies);
         }
         
-        // Tir
-        if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V)) {
-            Shoot();
-        }
-        
         // Reset de la position du joueur, uniquement pour les tests
         if (keystate.IsKeyDown(Keys.Z) && !_prevKeystate.IsKeyDown(Keys.Z))
         {
@@ -61,7 +51,6 @@ public class Player : GameObject
         }
         
         Animate(Velocity); // Gère l'animation du joueur
-        _weaponsManager.Update(collision, enemies, Position); // Met à jour les armes du joueur
         
         _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
     }
@@ -173,12 +162,6 @@ public class Player : GameObject
         AnimationManager.SetAnimation("slash");
     }
 
-    private void Shoot()
-    {
-        Vector2 weaponPosition = new Vector2(Position.X + (Direction == 1 ? 16 : -16), Position.Y + 16);
-        _weaponsManager.Fire("gun", weaponPosition, Direction);
-    }
-
     // Gestion des animations du joueur
     protected override void Animate(Vector2 velocity)
     {
@@ -204,12 +187,6 @@ public class Player : GameObject
                 AnimationManager.SetAnimation(newAnim);
             }
         }
-    }
-    
-    public override void Draw(Vector2 offset)
-    {
-        base.Draw(offset);
-        _weaponsManager.Draw(offset);
     }
     
 }
