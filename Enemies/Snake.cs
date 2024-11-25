@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,9 +11,12 @@ public class Snake(Texture2D texture, Vector2 position, int maxHealth) : Enemy(t
         // On passe par la velocité car on en a besoin pour les collisions
         Velocity.X = Direction * 50 * (float)dt;
         Position.X += Velocity.X;
-        if (Position.X > StartPosition.X + 50 || Position.X < StartPosition.X - 50)
+        if (Position.X > StartPosition.X + 50)
         {
-            Direction *= -1;
+            Direction = -1;
+        } else if (Position.X < StartPosition.X - 50)
+        {
+            Direction = 1;
         }
     }
     
@@ -31,5 +35,6 @@ public class Snake(Texture2D texture, Vector2 position, int maxHealth) : Enemy(t
     {
         Health -= damage;
         Position.X += (Position.X < source.X ? -8 : 8);
+        Console.Out.WriteLine("Enemy hit! Health: " + Health);
     }
 }

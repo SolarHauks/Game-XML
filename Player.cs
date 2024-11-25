@@ -119,12 +119,12 @@ public class Player : GameObject
         KeyboardState keystate = Keyboard.GetState();
         
         // Déplacements horizontaux
-        if (keystate.IsKeyDown(Keys.Q)) {
+        if (keystate.IsKeyDown(Keys.Left)) {
             Velocity.X = (float)-horizontalSpeed;  // Vitesse horizontale
             Direction = -1; // Direction
         }
         
-        if (keystate.IsKeyDown(Keys.D)) {
+        if (keystate.IsKeyDown(Keys.Right)) {
             Velocity.X = (float)horizontalSpeed; // Vitesse horizontale
             Direction = 1; // Direction
         }
@@ -142,7 +142,7 @@ public class Player : GameObject
         
         // Si le joueur est au sol et que la touche espace est pressée -> on saute
         // Evite de sauter quand on est dans les airs
-        if (_grounded && keystate.IsKeyDown(Keys.Z) && !_prevKeystate.IsKeyDown(Keys.Z)) {
+        if (_grounded && keystate.IsKeyDown(Keys.Space) && !_prevKeystate.IsKeyDown(Keys.Space)) {
             Velocity.Y = -600 * (float)dt;
         }
         
@@ -214,7 +214,9 @@ public class Player : GameObject
             {
                 Health -= 20;
                 _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                Console.Out.WriteLine(Health);
+                int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
+                Position.X += attackDirection * 20;
+                Console.Out.WriteLine("Player hit! Health: " + Health);
             }
         }
     }
