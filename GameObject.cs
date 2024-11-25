@@ -15,7 +15,7 @@ public abstract class GameObject : Sprite
     
     protected GameObject(Texture2D texture, Vector2 position, bool isAnimed) : base(texture, position, isAnimed)
     {
-        _size = Size*1.001f;
+        _size = Size;
     }
 
     public void Update(Dictionary<Vector2, int> collision)

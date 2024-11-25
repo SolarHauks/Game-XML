@@ -21,6 +21,8 @@ public class Player : GameObject
     private double _lastAttackTime; // Temps de la dernière attaque
     private const double AttackCooldown = 0.5; // Cooldown de l'attaque
     
+    private double _lastDamageTime; // Temps du dernier dégât
+    
     private readonly int _maxHealth;
     private int _currentHealth;
     private int Health
@@ -38,6 +40,7 @@ public class Player : GameObject
         _currentHealth = _maxHealth;
         
         _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
+        _lastDamageTime = 0;
     }
     
     /// Met à jour l'état du joueur.
@@ -56,13 +59,15 @@ public class Player : GameObject
         }
         
         // Reset de la position du joueur, uniquement pour les tests
-        if (keystate.IsKeyDown(Keys.Z) && !_prevKeystate.IsKeyDown(Keys.Z))
+        if (keystate.IsKeyDown(Keys.A) && !_prevKeystate.IsKeyDown(Keys.A))
         {
             Position.X = 20;
             Position.Y = 10 ;
         }
         
         Animate(Velocity); // Gère l'animation du joueur
+        
+        TakeDamage(enemies); // Gère les dégâts du joueur
         
         _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
     }
@@ -114,12 +119,12 @@ public class Player : GameObject
         KeyboardState keystate = Keyboard.GetState();
         
         // Déplacements horizontaux
-        if (keystate.IsKeyDown(Keys.Left)) {
+        if (keystate.IsKeyDown(Keys.Q)) {
             Velocity.X = (float)-horizontalSpeed;  // Vitesse horizontale
             Direction = -1; // Direction
         }
         
-        if (keystate.IsKeyDown(Keys.Right)) {
+        if (keystate.IsKeyDown(Keys.D)) {
             Velocity.X = (float)horizontalSpeed; // Vitesse horizontale
             Direction = 1; // Direction
         }
@@ -137,7 +142,7 @@ public class Player : GameObject
         
         // Si le joueur est au sol et que la touche espace est pressée -> on saute
         // Evite de sauter quand on est dans les airs
-        if (_grounded && keystate.IsKeyDown(Keys.Space) && !_prevKeystate.IsKeyDown(Keys.Space)) {
+        if (_grounded && keystate.IsKeyDown(Keys.Z) && !_prevKeystate.IsKeyDown(Keys.Z)) {
             Velocity.Y = -600 * (float)dt;
         }
         
@@ -201,10 +206,17 @@ public class Player : GameObject
         }
     }
     
-    public void TakeDamage(int damage, Vector2 source)
+    private void TakeDamage(List<Enemy> enemies)
     {
-        Health -= damage;
-        Position.X += (Position.X < source.X ? -8 : 8);
+        foreach (Enemy enemy in enemies)
+        {
+            if (Rect.Intersects(enemy.Rect) && Globals.GameTime.TotalGameTime.TotalSeconds - _lastDamageTime > 1)
+            {
+                Health -= 20;
+                _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+                Console.Out.WriteLine(Health);
+            }
+        }
     }
     
 }
