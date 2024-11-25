@@ -5,9 +5,9 @@
     },
     "activeFile": "save.tmx",
     "expandedProjectPaths": [
+        "tilesets",
         "output",
-        ".",
-        "tilesets"
+        "."
     ],
     "fileStates": {
         "/Users/antoine/RiderProjects/JeuVideo/Content/Assets/Level/Level1/tilesets/collision.tsx": {
@@ -36,7 +36,7 @@
             "scale": 1.725,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 245.2173913043478,
+                "x": 245.21739130434784,
                 "y": 199.13043478260872
             }
         },
