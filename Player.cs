@@ -25,6 +25,9 @@ public class Player : GameObject
     
     private readonly int _maxHealth;
     private int _currentHealth;
+    
+    private readonly int _maxMana;
+    private int _currentMana;
     private int Health
     {
         get => _currentHealth;
@@ -38,6 +41,9 @@ public class Player : GameObject
         
         _maxHealth = 100;
         _currentHealth = _maxHealth;
+        
+        _maxMana = 100;
+        _currentMana = _maxMana;
         
         _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
         _lastDamageTime = 0;
@@ -58,6 +64,11 @@ public class Player : GameObject
             Attack(enemies);
         }
         
+        // Attaque Spé
+        if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V)) {
+            SpecialAttack(enemies);
+        }
+        
         // Reset de la position du joueur, uniquement pour les tests
         if (keystate.IsKeyDown(Keys.A) && !_prevKeystate.IsKeyDown(Keys.A))
         {
@@ -71,7 +82,7 @@ public class Player : GameObject
         
         _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
     }
-    
+
     // On réimplemente la détection verticales des collisions pour le joueur pour integrer le saut
     protected override void CheckCollisionsVertical(Dictionary<Vector2, int> collision)
     {
@@ -176,6 +187,37 @@ public class Player : GameObject
         }
         
         _effectsManager.PlayEffect("slash", Position, Direction);
+        AnimationManager.SetAnimation("slash");
+    }
+    
+    private void SpecialAttack(List<Enemy> enemies)
+    {
+        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+        if (currentTime - _lastAttackTime < AttackCooldown || _currentMana < 20)
+        {
+            return;
+        }
+        
+        _lastAttackTime = currentTime;  // Mise à jour du temps de la dernière attaque
+
+        _currentMana = Math.Max(0, _currentMana - 20);
+        
+        Rectangle hitbox = new Rectangle(
+            (int)Position.X + (Direction == 1 ? 16 : -16),
+            (int)Position.Y,
+            64,
+            64
+        );
+
+        foreach (var enemy in enemies)
+        {
+            if (hitbox.Intersects(enemy.Rect))
+            {
+                enemy.TakeDamage(50, Position);
+            }
+        }
+        
+        _effectsManager.PlayEffect("slash", Position + new Vector2(32,0), Direction);
         AnimationManager.SetAnimation("slash");
     }
 
