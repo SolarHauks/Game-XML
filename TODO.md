@@ -3,7 +3,7 @@
 - Upgrade d'arme
 - UI
 - Boss
-- Vie
+- Vie + Attaque des ennemies
 - Mana -> Attaque Spé sur l'arme
 
 # A fix

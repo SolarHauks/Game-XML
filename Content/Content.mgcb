@@ -28,12 +28,12 @@
 
 /importer:TextureImporter
 /processor:TextureProcessor
+/build:Assets/Tileset/maya.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
 /build:Assets/Tileset/collisions.png
 
 /importer:TextureImporter
 /processor:TextureProcessor
 /build:Assets/Effects/slash.png
-
-/importer:TextureImporter
-/processor:TextureProcessor
-/build:Assets/Weapons/bullet.png

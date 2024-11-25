@@ -20,10 +20,21 @@ public class Player : GameObject
     private double _lastAttackTime; // Temps de la dernière attaque
     private const double AttackCooldown = 0.5; // Cooldown de l'attaque
     
+    private readonly int _maxHealth;
+    private int _currentHealth;
+    private int Health
+    {
+        get => _currentHealth;
+        set => _currentHealth = Math.Clamp(value, 0, _maxHealth);
+    }
+    
     public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position, true) {
         Velocity = new Vector2();
         _grounded = false;
         _effectsManager = effets;
+        
+        _maxHealth = 100;
+        _currentHealth = _maxHealth;
         
         _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
     }
@@ -187,6 +198,12 @@ public class Player : GameObject
                 AnimationManager.SetAnimation(newAnim);
             }
         }
+    }
+    
+    public void TakeDamage(int damage, Vector2 source)
+    {
+        Health -= damage;
+        Position.X += (Position.X < source.X ? -8 : 8);
     }
     
 }
