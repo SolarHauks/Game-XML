@@ -16,6 +16,9 @@ public class Player : GameObject
     
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
     
+    private QuantityBar _healthBar; // Barre de vie
+    private QuantityBar _manaBar; // Barre de mana
+    
     private readonly EffectsManager _effectsManager; // Gestionnaire des effets
     
     private double _lastAttackTime; // Temps de la dernière attaque
@@ -44,6 +47,9 @@ public class Player : GameObject
         
         _maxMana = 100;
         _currentMana = _maxMana;
+        
+        _healthBar = new QuantityBar(_maxHealth, Color.Red, new Vector2(10, 10));
+        _manaBar = new QuantityBar(_maxMana, Color.Blue, new Vector2(10, 30));
         
         _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
         _lastDamageTime = 0;
@@ -160,8 +166,8 @@ public class Player : GameObject
         Position.Y += (int)Velocity.Y; // Déplacement vertical
     }
     
-    // Gestion des attaques du joueur
-    private void Attack(List<Enemy> enemies)
+    // Attaque du joueur
+    private void  Attack(List<Enemy> enemies)
     {
         double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
         if (currentTime - _lastAttackTime < AttackCooldown)
@@ -190,6 +196,7 @@ public class Player : GameObject
         AnimationManager.SetAnimation("slash");
     }
     
+    // Attaque spéciale du joueur, plus puissante mais coutant du mana
     private void SpecialAttack(List<Enemy> enemies)
     {
         double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
@@ -201,6 +208,7 @@ public class Player : GameObject
         _lastAttackTime = currentTime;  // Mise à jour du temps de la dernière attaque
 
         _currentMana = Math.Max(0, _currentMana - 20);
+        _manaBar.Set(_currentMana);
         
         Rectangle hitbox = new Rectangle(
             (int)Position.X + (Direction == 1 ? 16 : -16),
@@ -248,6 +256,8 @@ public class Player : GameObject
         }
     }
     
+    // Gère les dégâts subis par le joueur lorsqu'il entre en collision avec un ennemi.
+    // enemies - Liste des ennemis présents dans le jeu.
     private void TakeDamage(List<Enemy> enemies)
     {
         foreach (Enemy enemy in enemies)
@@ -255,12 +265,20 @@ public class Player : GameObject
             if (Rect.Intersects(enemy.Rect) && Globals.GameTime.TotalGameTime.TotalSeconds - _lastDamageTime > 1)
             {
                 Health -= 20;
+                _healthBar.Set(Health);
                 _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
                 int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
                 Position.X += attackDirection * 20;
                 Console.Out.WriteLine("Player hit! Health: " + Health);
             }
         }
+    }
+    
+    public override void Draw(Vector2 offset)
+    {
+        base.Draw(offset);
+        _healthBar.Draw();
+        _manaBar.Draw();
     }
     
 }

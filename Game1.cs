@@ -61,6 +61,7 @@ public class Game1 : Game
         Globals.SpriteBatch = _spriteBatch;
         Globals.Content = Content;
         Globals.ScreenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+        Globals.GraphicsDevice = GraphicsDevice;
         
         // Texture de debug pour les collisions
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);

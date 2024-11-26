@@ -11,6 +11,7 @@ public static class Globals
     public static ContentManager Content { get; set; }  // Permet de charger des textures
     public static SpriteBatch SpriteBatch { get; set; } // Utile dans tous les Draw()
     public static GameTime GameTime { get; set; }   // Pour deltaTime
+    public static GraphicsDevice GraphicsDevice { get; set; }  // Pour les textures
     public static Vector2 ScreenSize { get; set; }  // Taille de l'écran
     
     // Texture utilisée pour le debug, reglangle rouge
