@@ -96,6 +96,10 @@ public class Game1 : Game
         Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
         Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
         _enemies.Add(snake);
+        
+        Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
+        Ghost ghost = new(ghostTexture, new Vector2(680, 30), 20, _player);
+        _enemies.Add(ghost);
 
         // Texture des tiles
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
