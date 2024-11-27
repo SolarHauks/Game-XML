@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JeuVideo.Effects;
 using JeuVideo.Enemies;
@@ -165,8 +164,6 @@ public class Game1 : Game
     // called on a regular interval to take the current game state and draw the game entities to the screen
     protected override void Draw(GameTime gameTime)
     {
-        Console.WriteLine(_isPaused);
-        
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         Vector2 offset = _camera.Position;  // Offset lié à la caméra
