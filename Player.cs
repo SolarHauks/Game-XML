@@ -16,9 +16,6 @@ public class Player : GameObject
     
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
     
-    private QuantityBar _healthBar; // Barre de vie
-    private QuantityBar _manaBar; // Barre de mana
-    
     private readonly EffectsManager _effectsManager; // Gestionnaire des effets
     
     private double _lastAttackTime; // Temps de la dernière attaque
@@ -26,15 +23,32 @@ public class Player : GameObject
     
     private double _lastDamageTime; // Temps du dernier dégât
     
+    private QuantityBar _healthBar; // Barre de vie
+    private QuantityBar _manaBar; // Barre de mana
+    
     private readonly int _maxHealth;
     private int _currentHealth;
     
     private readonly int _maxMana;
     private int _currentMana;
+
+    private double _regenTimer;
     private int Health
     {
         get => _currentHealth;
-        set => _currentHealth = Math.Clamp(value, 0, _maxHealth);
+        set {
+            _currentHealth = Math.Clamp(value, 0, _maxHealth);
+            _healthBar.Set(_currentHealth);
+        }
+    }
+    
+    private int Mana
+    {
+        get => _currentMana;
+        set {
+            _currentMana = Math.Clamp(value, 0, _maxMana);
+            _manaBar.Set(_currentMana);
+        }
     }
     
     public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position, true) {
@@ -53,6 +67,8 @@ public class Player : GameObject
         
         _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
         _lastDamageTime = 0;
+        
+        _regenTimer = 0;
     }
     
     /// Met à jour l'état du joueur.
@@ -85,6 +101,15 @@ public class Player : GameObject
         Animate(Velocity); // Gère l'animation du joueur
         
         TakeDamage(enemies); // Gère les dégâts du joueur
+        
+        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+        if (currentTime - _regenTimer > 1)
+        {
+            _regenTimer = currentTime;
+            
+            Health += 2;
+            Mana += 2;
+        }
         
         _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
     }
@@ -207,8 +232,7 @@ public class Player : GameObject
         
         _lastAttackTime = currentTime;  // Mise à jour du temps de la dernière attaque
 
-        _currentMana = Math.Max(0, _currentMana - 20);
-        _manaBar.Set(_currentMana);
+        Mana -= 20;
         
         Rectangle hitbox = new Rectangle(
             (int)Position.X + (Direction == 1 ? 16 : -48),
@@ -267,7 +291,6 @@ public class Player : GameObject
             if (Rect.Intersects(enemy.Rect) && Globals.GameTime.TotalGameTime.TotalSeconds - _lastDamageTime > 1)
             {
                 Health -= 20;
-                _healthBar.Set(Health);
                 _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
                 int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
                 Position.X += attackDirection * 20;

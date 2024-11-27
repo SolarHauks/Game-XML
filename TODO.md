@@ -1,6 +1,6 @@
 # Next
 - Différents ennemies
-- Upgrade d'arme
+- Upgrade (BIG)
 - UI
 - Boss
 
