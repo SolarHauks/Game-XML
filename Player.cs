@@ -211,10 +211,10 @@ public class Player : GameObject
         _manaBar.Set(_currentMana);
         
         Rectangle hitbox = new Rectangle(
-            (int)Position.X + (Direction == 1 ? 16 : -16),
+            (int)Position.X + (Direction == 1 ? 16 : -48),
             (int)Position.Y,
             64,
-            64
+            32
         );
 
         foreach (var enemy in enemies)
@@ -224,8 +224,10 @@ public class Player : GameObject
                 enemy.TakeDamage(50, Position);
             }
         }
+
+        Vector2 decalage = new Vector2((Direction == 1 ? 32 : -32), 0);
         
-        _effectsManager.PlayEffect("slash", Position + new Vector2(32,0), Direction);
+        _effectsManager.PlayEffect("slash", Position+decalage, Direction);
         AnimationManager.SetAnimation("slash");
     }
 
