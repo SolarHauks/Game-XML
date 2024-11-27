@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animations nbCol="3" largeur="48" hauteur="64">
+    <animation name="fly" type="continu">
+        <frame numFrame="4"/>
+        <frame numFrame="5"/>
+        <frame numFrame="6"/>
+    </animation>
+</animations>

@@ -8,7 +8,7 @@ namespace JeuVideo;
 // S'occupe de tout ce qui est en rapport avec l'affichage
 public abstract class Sprite {
     private readonly Vector2 _displaySize; // Taille affichée
-    protected Vector2 Position; // Position
+    public Vector2 Position; // Position
     protected readonly bool IsAnimed; // Si l'objet est animé
 
     private readonly Texture2D _texture; // Texture de l'objet
