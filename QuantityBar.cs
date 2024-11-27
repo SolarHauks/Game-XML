@@ -6,27 +6,24 @@ namespace JeuVideo;
 public class QuantityBar
 {
     private int _currentValue;
-    private readonly Color _color;
-    private Vector2 _position;
+    private readonly Vector2 _position;
     
     private Texture2D Bar { get; }
 
     public QuantityBar(int value, Color color, Vector2 position)
     {
-        _color = color;
         _currentValue = value;
         _position = position;
         
         Bar = new Texture2D(Globals.GraphicsDevice, 1, 1);
-        Bar.SetData([_color]);
-
+        Bar.SetData([color]);
     }
-    
+
     public void Set(int value)
     {
         _currentValue = value;
     }
-    
+
     public void Draw()
     {
         SpriteBatch spriteBatch = Globals.SpriteBatch;
