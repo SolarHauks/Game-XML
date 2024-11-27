@@ -12,6 +12,7 @@
 - faire charger les données du joueur depuis un xml
 - creer une classe utilitaire Dom2Xpath et mettre à jour Tile en conséquence
 - A réfléchir mais ça peut peut etre valoir le coup de passer Animation à la sérialization
+- Faire une fonction qui fait que le ghost ne peut se déplacer que si on le voit au moins une fois
 
 
 # A demander

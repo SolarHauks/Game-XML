@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JeuVideo.Effects;
 using JeuVideo.Enemies;
@@ -26,7 +27,9 @@ public class Game1 : Game
     private EffectsManager _effectsManager; // classe EffectsManager pour gérer les effets
     
     private readonly Camera _camera; // classe Camera pour gérer la caméra
-
+    
+    private bool _isPaused; // variable pour la pause du jeu
+    private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
 
     // tell the project how to start, and add key variables
     public Game1()
@@ -36,6 +39,7 @@ public class Game1 : Game
         IsMouseVisible = true;
         _camera = new Camera(Vector2.Zero);
         _enemies = new List<Enemy>();
+        _previousKeyState = Keyboard.GetState();
     }
 
     // initialize the game upon its startup
@@ -97,6 +101,10 @@ public class Game1 : Game
         Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
         Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
         _enemies.Add(snake);
+        
+        Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
+        Ghost ghost = new(ghostTexture, new Vector2(680, 30), 20, _player);
+        _enemies.Add(ghost);
 
         // Texture des tiles
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
@@ -111,12 +119,20 @@ public class Game1 : Game
     // and it is used to update your game state (checking for collisions, gathering input, playing audio, etc.).
     protected override void Update(GameTime gameTime)
     {
+        Globals.GameTime = gameTime;
+
+        _previousKeyState = _currentKeyState;
+        _currentKeyState = Keyboard.GetState();
+        
         // Commande de fermeture de la fenêtre
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (_currentKeyState.IsKeyDown(Keys.Escape))
             Exit();
         
-        Globals.GameTime = gameTime;
+        // Commande de pause du jeu
+        if (_currentKeyState.IsKeyDown(Keys.P) && !_previousKeyState.IsKeyDown(Keys.P))
+            _isPaused = !_isPaused;
+        
+        if (_isPaused) return;
         
         // Logique du joueur
         _player.Update(_tile.GetCollisions(), _enemies);
@@ -136,7 +152,7 @@ public class Game1 : Game
         
         // Logique des effets
         _effectsManager.Update();
-
+        
         base.Update(gameTime);
     }
 
@@ -154,6 +170,8 @@ public class Game1 : Game
     // called on a regular interval to take the current game state and draw the game entities to the screen
     protected override void Draw(GameTime gameTime)
     {
+        Console.WriteLine(_isPaused);
+        
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         Vector2 offset = _camera.Position;  // Offset lié à la caméra

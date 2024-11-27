@@ -24,6 +24,10 @@
 
 /importer:TextureImporter
 /processor:TextureProcessor
+/build:Assets/Enemies/ghost.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
 /build:Assets/Tileset/tileset.png
 
 /importer:TextureImporter

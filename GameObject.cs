@@ -42,7 +42,7 @@ public abstract class GameObject : Sprite
     protected abstract void DeplacementVertical(double dt);
 
     // Gère les collisions horizontales
-    private void CheckCollisionsHorizontal(Dictionary<Vector2, int> collision)
+    protected virtual void CheckCollisionsHorizontal(Dictionary<Vector2, int> collision)
     {
         // Liste des intersections avec les tiles, utile pour les collisions
         var intersections = GetIntersectingTilesHorizontal(Rect);
