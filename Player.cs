@@ -297,11 +297,11 @@ public class Player : GameObject
                 else
                 {
                     Health -= 20;
-                    _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                    int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
-                    Position.X += attackDirection * 20;
-                    Console.Out.WriteLine("Player hit! Health: " + Health);
                 }
+                _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+                int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
+                Position.X += attackDirection * 20;
+                Console.Out.WriteLine("Player hit! Health: " + Health);
             }
         }
     }

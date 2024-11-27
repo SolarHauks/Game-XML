@@ -46,13 +46,6 @@ public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player pl
         AnimationManager.SetAnimation("fly");
     }
     
-    public override void TakeDamage(int damage, Vector2 source)
-    {
-        Health -= damage;
-        Position.X += (Position.X < source.X ? -8 : 8);
-        Console.Out.WriteLine("Enemy hit! Health: " + Health);
-    }
-
     protected override void CheckCollisionsHorizontal(Dictionary<Vector2, int> collision)
     {
     }

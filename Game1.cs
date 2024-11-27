@@ -159,7 +159,7 @@ public class Game1 : Game
     {
         foreach (Enemy enemy in _enemies.ToList())
         {
-            if (enemy.Health <= 0)
+            if (enemy.Health <= 0 && !(enemy is Boss1 boss && boss.IsDying))
             {
                 _enemies.Remove(enemy);
             }
