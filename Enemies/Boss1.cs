@@ -26,6 +26,12 @@ public class Boss1(Texture2D texture, Vector2 position, int maxHealth) : Enemy(t
     
     protected override void Animate(Vector2 velocity)
     {
+        if(Health <= 0)
+        {
+            AnimationManager.SetAnimation("death");
+            
+            return;
+        }
         AnimationManager.SetAnimation("fly");
     }
     

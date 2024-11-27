@@ -290,11 +290,18 @@ public class Player : GameObject
         {
             if (Rect.Intersects(enemy.Rect) && Globals.GameTime.TotalGameTime.TotalSeconds - _lastDamageTime > 1)
             {
-                Health -= 20;
-                _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
-                Position.X += attackDirection * 20;
-                Console.Out.WriteLine("Player hit! Health: " + Health);
+                if (enemy is Boss1)
+                {
+                    Health -= 35;
+                }
+                else
+                {
+                    Health -= 20;
+                    _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+                    int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
+                    Position.X += attackDirection * 20;
+                    Console.Out.WriteLine("Player hit! Health: " + Health);
+                }
             }
         }
     }
