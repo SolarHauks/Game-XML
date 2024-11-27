@@ -77,18 +77,6 @@ public class Game1 : Game
         
         // Joueur
         Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
-        
-        /*int[] data = new int[playerTexture.Width * playerTexture.Height];
-        playerTexture.GetData<int>(data);
-        for (int y = 0; y < playerTexture.Height; y++)
-        {
-            for (int x = 0; x < playerTexture.Width; x++)
-            {
-                Console.Write(data[y * playerTexture.Width + x] + " ");
-            }
-            Console.WriteLine();
-        }*/
-        
         _player = new Player(playerTexture, new Vector2(160, 80), _effectsManager);
         
         // Boss

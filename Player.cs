@@ -292,6 +292,10 @@ public class Player : GameObject
             {
                 if (enemy is Boss1)
                 {
+                    if (((Boss1) enemy).IsDying)
+                    {
+                        continue;
+                    }
                     Health -= 35;
                 }
                 else
