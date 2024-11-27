@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animations nbCol="6" largeur="100" hauteur="100">
+    <animation name="attack" type="ponctuel">
+        <frame numFrame="1"/>
+        <frame numFrame="2"/>
+        <frame numFrame="3"/>
+        <frame numFrame="4"/>
+        <frame numFrame="5"/>
+        <frame numFrame="6"/>
+        <frame numFrame="7"/>
+        <frame numFrame="8"/>
+        <frame numFrame="9"/>
+        <frame numFrame="10"/>
+        <frame numFrame="11"/>
+        <frame numFrame="12"/>
+        <frame numFrame="13"/>
+    </animation>
+    <animation name="death" type="ponctuel">
+        <frame numFrame="19"/>
+        <frame numFrame="20"/>
+        <frame numFrame="21"/>
+        <frame numFrame="22"/>
+        <frame numFrame="23"/>
+        <frame numFrame="24"/>
+        <frame numFrame="31"/>
+        <frame numFrame="32"/>
+        <frame numFrame="33"/>
+        <frame numFrame="34"/>
+        <frame numFrame="25"/>
+        <frame numFrame="26"/>
+        <frame numFrame="27"/>
+        <frame numFrame="28"/>
+        <frame numFrame="29"/>
+        <frame numFrame="30"/>
+        <frame numFrame="35"/>
+        <frame numFrame="36"/>
+    </animation>
+    <animation name="idle" type="continu">
+        <frame numFrame="37"/>
+        <frame numFrame="38"/>
+        <frame numFrame="39"/>
+        <frame numFrame="40"/>
+    </animation>
+    <animation name="fly" type="continu">
+        <frame numFrame="43"/>
+        <frame numFrame="44"/>
+        <frame numFrame="45"/>
+        <frame numFrame="46"/>
+        <frame numFrame="49"/>
+        <frame numFrame="50"/>
+        <frame numFrame="51"/>
+        <frame numFrame="52"/>
+    </animation>
+    <animation name="special" type="ponctuel">
+        <frame numFrame="55"/>
+        <frame numFrame="56"/>
+        <frame numFrame="57"/>
+        <frame numFrame="58"/>
+        <frame numFrame="59"/>
+        <frame numFrame="60"/>
+        <frame numFrame="61"/>
+        <frame numFrame="62"/>
+        <frame numFrame="63"/>
+        <frame numFrame="64"/>
+        <frame numFrame="65"/>
+        <frame numFrame="66"/>
+    </animation>
+    <animation name="summon" type="ponctuel">
+        <frame numFrame="67"/>
+        <frame numFrame="68"/>
+        <frame numFrame="69"/>
+        <frame numFrame="70"/>
+        <frame numFrame="71"/>
+    </animation>
+</animations>

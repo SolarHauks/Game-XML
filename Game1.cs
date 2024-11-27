@@ -91,6 +91,11 @@ public class Game1 : Game
         
         _player = new Player(playerTexture, new Vector2(160, 80), _effectsManager);
         
+        // Boss
+        Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss1");
+        Boss1 boss1 = new(bossTexture, new Vector2(400, 300), 100);
+        _enemies.Add(boss1);
+
         // Ennemis
         Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
         Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
@@ -176,6 +181,7 @@ public class Game1 : Game
             {
                 enemy.Draw(offset);   // dessin des ennemis
             }
+        
             
             _player.Draw(offset); // dessin du joueur
             
