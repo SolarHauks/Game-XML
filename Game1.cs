@@ -86,7 +86,7 @@ public class Game1 : Game
         
         // Boss
         Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss1");
-        Boss1 boss1 = new(bossTexture, new Vector2(400, 300), 200);
+        Boss1 boss1 = new(bossTexture, new Vector2(400, 200), 200);
         _enemies.Add(boss1);
 
         // Ennemis

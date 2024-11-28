@@ -292,11 +292,11 @@ public class Player : GameObject
             {
                 if (enemy is Boss1)
                 {
-                    if (((Boss1) enemy).IsDying)
+                    if (((Boss1) enemy).IsAttacking)
                     {
-                        continue;
+                        Health -= 35;
                     }
-                    Health -= 35;
+                    
                 }
                 else
                 {

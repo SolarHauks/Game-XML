@@ -1,8 +1,8 @@
 # Next
-- Différents ennemies
+- Différents ennemies 
 - Upgrade (BIG)
-- UI
-- Boss
+- UI (fonctionne mais à améliorer)
+- Boss (code présent mais ne sert a rien pour l'instant)
 
 # A fix
 
