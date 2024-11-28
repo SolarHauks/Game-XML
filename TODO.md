@@ -1,17 +1,20 @@
 # Next
-- Différents ennemies
+## Important
+- Différents ennemies 
 - Upgrade (BIG)
 - UI
-  - Menu de pause
+  - Menu d'options
   - Menu de jeu (peut etre le meme que la pause)
   - Interface
 - Boss
-- Controle Manette
-  - Ajout du controle manette
-  - modification de l'ui pour refleter l'input method
+
+## Optionnal (si on a le temps)
 - Son
   - Music
   - Sound effects
+- Controle Manette
+  - Ajout du controle manette
+  - modification de l'ui pour refleter l'input method
 
 # A fix
 

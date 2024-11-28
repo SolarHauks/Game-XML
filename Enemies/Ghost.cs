@@ -8,37 +8,49 @@ namespace JeuVideo.Enemies;
 
 public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player player) : Enemy(texture, position, maxHealth)
 {
+
+    private bool isNearPlayer;
+    private int distance = 250;
+    
     protected override void DeplacementHorizontal(double dt)
     {
+        CheckPlayerDistance();
+        if (isNearPlayer)
+        {
+            Debug.WriteLine("Dans l'écran !!");
+            Vector2 directionToPlayer = player.Position - Position;
+            directionToPlayer.Normalize();
+            Velocity.X = directionToPlayer.X * 50 * (float)dt;
+            Position.X += Velocity.X;
+            if (Position.X > player.Position.X)
+            {
+                Direction = -1;
+            }
+            else if (Position.X < player.Position.X)
+            {
+                Direction = 1;
+            }
+        }
         
-        Debug.WriteLine("Dans l'écran !!");
-        Vector2 directionToPlayer = player.Position - Position;
-        directionToPlayer.Normalize();
-        Velocity.X = directionToPlayer.X * 50 * (float)dt;
-        Position.X += Velocity.X;
-        if (Position.X > player.Position.X)
-        {
-            Direction = -1;
-        }
-        else if (Position.X < player.Position.X)
-        {
-            Direction = 1;
-        }
     
     }
 
     protected override void DeplacementVertical(double dt)
-    { 
-        
-        if (Position.Y < player.Position.Y)
+    {
+        CheckPlayerDistance();
+        if (isNearPlayer)
         {
-            Velocity.Y = 25.0f * (float)dt;   
-            Position.Y += Velocity.Y;
-        } else if (Position.Y > player.Position.Y)
-        {
-            Velocity.Y = -25.0f * (float)dt;   
-            Position.Y += Velocity.Y;
+            if (Position.Y < player.Position.Y)
+            {
+                Velocity.Y = 25.0f * (float)dt;   
+                Position.Y += Velocity.Y;
+            } else if (Position.Y > player.Position.Y)
+            {
+                Velocity.Y = -25.0f * (float)dt;   
+                Position.Y += Velocity.Y;
+            }
         }
+        
     }
 
     protected override void Animate(Vector2 velocity)
@@ -53,6 +65,18 @@ public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player pl
     protected override void CheckCollisionsVertical(Dictionary<Vector2, int> collision)
     {
     }
-    
+
+    private void CheckPlayerDistance()
+    {
+        
+        if (Math.Abs(player.Position.X - Position.X) < /*Globals.ScreenSize.X*/ distance && Math.Abs(player.Position.Y - Position.Y) < /*Globals.ScreenSize.Y*/ distance)
+        {
+            isNearPlayer = true;
+        }
+        else
+        {
+            isNearPlayer = false;
+        }
+    }
     
 }
