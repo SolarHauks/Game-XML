@@ -14,10 +14,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+# Player
 /importer:TextureImporter
 /processor:TextureProcessor
 /build:Assets/Character/character.png
 
+# Enemies
 /importer:TextureImporter
 /processor:TextureProcessor
 /build:Assets/Enemies/snake.png
@@ -26,6 +28,11 @@
 /processor:TextureProcessor
 /build:Assets/Enemies/ghost.png
 
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/Enemies/boss1.png
+
+# Tileset
 /importer:TextureImporter
 /processor:TextureProcessor
 /build:Assets/Tileset/tileset.png
@@ -38,10 +45,12 @@
 /processor:TextureProcessor
 /build:Assets/Tileset/collisions.png
 
+# Effects
 /importer:TextureImporter
 /processor:TextureProcessor
 /build:Assets/Effects/slash.png
 
+# GUI
 /importer:TextureImporter
 /processor:TextureProcessor
-/build:Assets/Enemies/boss1.png
+/build:Assets/GUI/gui.png

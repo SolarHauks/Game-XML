@@ -26,8 +26,9 @@ public class Game1 : Game
     private EffectsManager _effectsManager; // classe EffectsManager pour gérer les effets
     
     private readonly Camera _camera; // classe Camera pour gérer la caméra
+
+    private Menu.Menu _menu;
     
-    private bool _isPaused; // variable pour la pause du jeu
     private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
 
     // tell the project how to start, and add key variables
@@ -65,6 +66,10 @@ public class Game1 : Game
         Globals.Content = Content;
         Globals.ScreenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         Globals.GraphicsDevice = GraphicsDevice;
+        
+        // Texture du menu
+        Texture2D menuTexture = Globals.Content.Load<Texture2D>("Assets/GUI/gui");
+        _menu = new Menu.Menu(menuTexture);
         
         // Texture de debug pour les collisions
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -117,9 +122,15 @@ public class Game1 : Game
         
         // Commande de pause du jeu
         if (_currentKeyState.IsKeyDown(Keys.P) && !_previousKeyState.IsKeyDown(Keys.P))
-            _isPaused = !_isPaused;
-        
-        if (_isPaused) return;
+            _menu.IsPaused = !_menu.IsPaused;
+
+        if (_menu.IsPaused)
+        {
+            // Logique du menu
+            _menu.Update(this);
+            // On ne fait rien d'autre car le jeu est en pause
+            return;
+        }
         
         // Logique du joueur
         _player.Update(_tile.GetCollisions(), _enemies);
@@ -169,11 +180,12 @@ public class Game1 : Game
             {
                 enemy.Draw(offset);   // dessin des ennemis
             }
-        
             
             _player.Draw(offset); // dessin du joueur
             
             _effectsManager.Draw(offset);    // dessin des effets
+            
+            _menu.Draw(_spriteBatch);   // dessin du menu
 
         _spriteBatch.End();
 
