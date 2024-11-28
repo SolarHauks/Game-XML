@@ -4,7 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
-public class Spike(Texture2D texture, Vector2 position, Player player) : Enemy(texture, position, 0)
+
+public class Spike(Texture2D texture, Vector2 position, Player player) : Enemy(texture, position, 100)
 {
     protected override void DeplacementHorizontal(double dt)
     {

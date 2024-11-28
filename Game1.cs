@@ -106,7 +106,7 @@ public class Game1 : Game
         
         // Spike
         Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
-        Spike spike = new(spikeTexture, new Vector2(10, 100), _player);
+        Spike spike = new(spikeTexture, new Vector2(192, 272), _player);
         _enemies.Add(spike);
 
         // Texture des tiles
