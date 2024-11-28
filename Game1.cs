@@ -96,13 +96,13 @@ public class Game1 : Game
         _enemies.Add(boss1);
 
         // Ennemis
-        Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
-        Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
-        _enemies.Add(snake);
+        // Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
+        // Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
+        // _enemies.Add(snake);
         
-        Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
-        Ghost ghost = new(ghostTexture, new Vector2(680, 30), 20, _player);
-        _enemies.Add(ghost);
+        // Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
+        // Ghost ghost = new(ghostTexture, new Vector2(680, 30), 20, _player);
+        // _enemies.Add(ghost);
         
         // Spike
         Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
@@ -178,7 +178,7 @@ public class Game1 : Game
     {
         foreach (Enemy enemy in _enemies.ToList())
         {
-            if (enemy.Health <= 0 && !(enemy is Boss1 boss && boss.IsDying))
+            if (enemy.Health <= 0 && !(enemy is Boss1 boss && boss.CurrentState == Boss1.BossState.Dying))
             {
                 _enemies.Remove(enemy);
             }

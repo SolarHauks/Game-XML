@@ -18,11 +18,14 @@ public class Player : GameObject
     
     private readonly EffectsManager _effectsManager; // Gestionnaire des effets
     
+    // Attaques
     private double _lastAttackTime; // Temps de la dernière attaque
     private const double AttackCooldown = 0.5; // Cooldown de l'attaque
     
+    // Reception de dégats
     private double _lastDamageTime; // Temps du dernier dégât
     
+    // Ressources : vie et mana
     private QuantityBar _healthBar; // Barre de vie
     private QuantityBar _manaBar; // Barre de mana
     
@@ -32,7 +35,7 @@ public class Player : GameObject
     private readonly int _maxMana;
     private int _currentMana;
 
-    private double _regenTimer;
+    private double _lastRegenTime;
     private int Health
     {
         get => _currentHealth;
@@ -68,7 +71,7 @@ public class Player : GameObject
         _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
         _lastDamageTime = 0;
         
-        _regenTimer = 0;
+        _lastRegenTime = 0;
     }
     
     /// Met à jour l'état du joueur.
@@ -102,14 +105,7 @@ public class Player : GameObject
         
         TakeDamage(enemies); // Gère les dégâts du joueur
         
-        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-        if (currentTime - _regenTimer > 1)
-        {
-            _regenTimer = currentTime;
-            
-            Health += 2;
-            Mana += 2;
-        }
+        Regen();    // Gère la régénération du joueur
         
         _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
     }
@@ -194,14 +190,13 @@ public class Player : GameObject
     // Attaque du joueur
     private void  Attack(List<Enemy> enemies)
     {
+        // Cooldown de l'attaque
         double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-        if (currentTime - _lastAttackTime < AttackCooldown)
-        {
-            return;
-        }
+        if (currentTime - _lastAttackTime < AttackCooldown) { return; }
         
         _lastAttackTime = currentTime;  // Mise à jour du temps de la dernière attaque
         
+        // Hitbox de l'attaque
         Rectangle hitbox = new Rectangle(
             (int)Position.X + (Direction == 1 ? 16 : -16),
             (int)Position.Y,
@@ -209,6 +204,7 @@ public class Player : GameObject
             32
         );
 
+        // Detection des ennemies touchés et application des dégats
         foreach (var enemy in enemies)
         {
             if (hitbox.Intersects(enemy.Rect))
@@ -217,6 +213,7 @@ public class Player : GameObject
             }
         }
         
+        // Effet visuel de l'attaque
         _effectsManager.PlayEffect("slash", Position, Direction);
         AnimationManager.SetAnimation("slash");
     }
@@ -224,16 +221,15 @@ public class Player : GameObject
     // Attaque spéciale du joueur, plus puissante mais coutant du mana
     private void SpecialAttack(List<Enemy> enemies)
     {
+        // Cooldown de l'attaque
         double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-        if (currentTime - _lastAttackTime < AttackCooldown || _currentMana < 20)
-        {
-            return;
-        }
+        if (currentTime - _lastAttackTime < AttackCooldown || _currentMana < 20) { return; }
         
         _lastAttackTime = currentTime;  // Mise à jour du temps de la dernière attaque
 
-        Mana -= 20;
+        Mana -= 20; // Coût en mana
         
+        // Hitbox de l'attaque
         Rectangle hitbox = new Rectangle(
             (int)Position.X + (Direction == 1 ? 16 : -48),
             (int)Position.Y,
@@ -241,6 +237,7 @@ public class Player : GameObject
             32
         );
 
+        // Detection des ennemies touchés et application des dégats
         foreach (var enemy in enemies)
         {
             if (hitbox.Intersects(enemy.Rect))
@@ -249,8 +246,10 @@ public class Player : GameObject
             }
         }
 
+        // Effet visuel
+        // L'effet visuel est décalé par rapport à la position du joueur pour montrer la différence d'attaque
+        // TODO: A changer une fois l'effet définitif trouvé
         Vector2 decalage = new Vector2((Direction == 1 ? 32 : -32), 0);
-        
         _effectsManager.PlayEffect("slash", Position+decalage, Direction);
         AnimationManager.SetAnimation("slash");
     }
@@ -258,23 +257,18 @@ public class Player : GameObject
     // Gestion des animations du joueur
     protected override void Animate(Vector2 velocity)
     {
-        string currentAnim = AnimationManager.GetCurrentAnimation();
+        string currentAnim = AnimationManager.GetCurrentAnimation();    // Animation en cours de lecture
         
-        if (currentAnim == "slash" && AnimationManager.IsPlaying())
-        {
-            return; // Do not change animation if attack is playing
-        }
+        // On ne change pas d'animation si on est en train de jouer l'attaque
+        if (currentAnim == "slash" && AnimationManager.IsPlaying()) { return; }
 
-        if (_grounded)
-        {
+        if (_grounded) {
             if (velocity.X != 0 && currentAnim != "run") {
                 AnimationManager.SetAnimation("run");
             } else if (velocity.X == 0 && currentAnim != "idle") {
                 AnimationManager.SetAnimation("idle");
             }
-        }
-        else
-        {
+        } else {
             string newAnim = velocity.Y > 1 ? "fall" : "jump";
             if (currentAnim != newAnim) {
                 AnimationManager.SetAnimation(newAnim);
@@ -288,27 +282,41 @@ public class Player : GameObject
     {
         foreach (Enemy enemy in enemies)
         {
-            if (Rect.Intersects(enemy.Rect) && Globals.GameTime.TotalGameTime.TotalSeconds - _lastDamageTime > 1)
+            // On ne prend pas de dégâts si on vient d'en prendre -> instant d'invulnérabilité
+            double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+            if (Rect.Intersects(enemy.Rect) && (currentTime - _lastDamageTime > 1))
             {
-                if (enemy is Boss1)
+                if (enemy is Boss1)     // Cas du boss
                 {
-                    if (((Boss1) enemy).IsAttacking)
+                    if (((Boss1) enemy).CurrentState == Boss1.BossState.Attacking)
                     {
                         Health -= 35;
                         int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
                         Position.X += attackDirection * 20;
+                        _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+                        Console.Out.WriteLine("Player hit! Health: " + Health);
                     }
-                    
                 }
-                else
+                else    // Cas des autres ennemis
                 {
                     Health -= 20;
                     int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
                     Position.X += attackDirection * 20;
+                    _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+                    Console.Out.WriteLine("Player hit! Health: " + Health);
                 }
-                _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                Console.Out.WriteLine("Player hit! Health: " + Health);
             }
+        }
+    }
+
+    private void Regen()
+    {
+        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+        if (currentTime - _lastRegenTime > 1)
+        {
+            _lastRegenTime = currentTime;
+            Health += 2;
+            Mana += 2;
         }
     }
     
