@@ -295,16 +295,18 @@ public class Player : GameObject
                     if (((Boss1) enemy).IsAttacking)
                     {
                         Health -= 35;
+                        int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
+                        Position.X += attackDirection * 20;
                     }
                     
                 }
                 else
                 {
                     Health -= 20;
+                    int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
+                    Position.X += attackDirection * 20;
                 }
                 _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
-                Position.X += attackDirection * 20;
                 Console.Out.WriteLine("Player hit! Health: " + Health);
             }
         }

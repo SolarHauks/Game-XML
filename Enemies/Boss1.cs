@@ -1,16 +1,23 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
-public class Boss1(Texture2D texture, Vector2 position, int maxHealth) : Enemy(texture, position, maxHealth)
+public class Boss1(Texture2D texture, Vector2 position, int maxHealth, Player player) : Enemy(texture, position, maxHealth)
 {
     public bool IsDying { get; private set; }
     public bool IsAttacking { get; private set; }
     public bool IsSpecial { get; private set; }
     private int _deathCounter;
     private int _specialCounter;
+    private int _attackCounter; // Compteur pour l'attaque
     private int _interval=0;    //interval pour le comportement spécial
+    private int distance = 100;
+    private double _time=0;
+
 
 
 
@@ -62,9 +69,11 @@ public class Boss1(Texture2D texture, Vector2 position, int maxHealth) : Enemy(t
                 if (_deathCounter >= 269) //15*nb de frames de l'animation ()
                 {
                     // Fin de l'animation de mort, on supprime le boss de la liste d'ennemis (fait dans Game1.cs)
+                    IsDying = false;
                 }
             }
         } 
+        //On lance l'animation du spécial toutes les 7 secondes
         else if (_interval==7*60) // Comportement spécial
         {
             // Gestion de l'animation spéciale
@@ -83,6 +92,31 @@ public class Boss1(Texture2D texture, Vector2 position, int maxHealth) : Enemy(t
                     IsSpecial = false;
                     _specialCounter = 0;
                     _interval = 0;
+                }
+            }
+        }
+        //Pour l'attaque on fait en sorte qu'il ne la fasse que si le joueur est à portée
+        else if (Math.Abs(player.Position.X - Position.X) < /*Globals.ScreenSize.X*/ distance && Math.Abs(player.Position.Y - Position.Y) < /*Globals.ScreenSize.Y*/ distance)
+        {
+            if (Globals.GameTime.TotalGameTime.TotalSeconds-_time>3)
+            {
+                if (!IsAttacking)
+                {
+                    // Lancement de l'animation d'attaque, stop des autres comportements
+                    AnimationManager.SetAnimation("attack");
+                    IsAttacking = true;
+                    _time = Globals.GameTime.TotalGameTime.TotalSeconds;
+
+                }
+                else
+                {
+                    _attackCounter++;
+                    if (_attackCounter > 15 * 13)
+                    {
+                        IsAttacking = false;
+                        _attackCounter = 0;
+
+                    }
                 }
             }
         }

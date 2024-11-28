@@ -15,7 +15,7 @@
         <frame numFrame="12"/>
         <frame numFrame="13"/>
     </animation>
-    <animation name="death" type="ponctuel" speed="5">
+    <animation name="death" type="ponctuel">
         <frame numFrame="19"/>
         <frame numFrame="20"/>
         <frame numFrame="21"/>
