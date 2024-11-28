@@ -32,6 +32,10 @@
 /processor:TextureProcessor
 /build:Assets/Enemies/boss1.png
 
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/Enemies/spike.png
+
 # Tileset
 /importer:TextureImporter
 /processor:TextureProcessor

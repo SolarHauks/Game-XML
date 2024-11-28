@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animations nbCol="8" largeur="285" hauteur="427">
+    <animation name="idle" type="continu">
+        <frame numFrame="1"/>
+    </animation>
+    <animation name="activate" type="ponctuel" speed="3">
+        <frame numFrame="2"/>
+        <frame numFrame="3"/>
+        <frame numFrame="4"/>
+        <frame numFrame="5"/>
+        <frame numFrame="6"/>
+        <frame numFrame="7"/>
+        <frame numFrame="8"/>
+    </animation>
+</animations>

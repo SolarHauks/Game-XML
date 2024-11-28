@@ -17,7 +17,6 @@ public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player pl
         CheckPlayerDistance();
         if (isNearPlayer)
         {
-            Debug.WriteLine("Dans l'écran !!");
             Vector2 directionToPlayer = player.Position - Position;
             directionToPlayer.Normalize();
             Velocity.X = directionToPlayer.X * 50 * (float)dt;

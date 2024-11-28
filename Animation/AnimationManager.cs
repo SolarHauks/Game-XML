@@ -21,7 +21,7 @@ public class AnimationManager
         _animations = new Dictionary<string, Animation>();
         LoadData(spriteSheet);
     }
-
+    
     private void LoadData(Texture2D spriteSheet)
     {
         string dataFileName = GetFileName(spriteSheet) + ".xml";

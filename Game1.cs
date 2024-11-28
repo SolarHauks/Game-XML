@@ -23,6 +23,7 @@ public class Game1 : Game
     
     private Player _player; // classe Player pour gérer le joueur
     private List<Enemy> _enemies;
+    
     private EffectsManager _effectsManager; // classe EffectsManager pour gérer les effets
     
     private readonly Camera _camera; // classe Camera pour gérer la caméra
@@ -30,6 +31,7 @@ public class Game1 : Game
     private Menu.Menu _menu;
     
     private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
+    
 
     // tell the project how to start, and add key variables
     public Game1()
@@ -97,6 +99,11 @@ public class Game1 : Game
         Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
         Ghost ghost = new(ghostTexture, new Vector2(680, 30), 20, _player);
         _enemies.Add(ghost);
+        
+        // Spike
+        Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
+        Spike spike = new(spikeTexture, new Vector2(10, 100), _player);
+        _enemies.Add(spike);
 
         // Texture des tiles
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
