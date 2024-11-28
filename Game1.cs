@@ -29,6 +29,7 @@ public class Game1 : Game
     private readonly Camera _camera; // classe Camera pour gérer la caméra
 
     private Menu.Menu _menu;
+    private Canvas _canvas;
     
     private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
     
@@ -52,9 +53,12 @@ public class Game1 : Game
         // Paramétrage de la fenètre de jeu
         // Taille actuelle : 480 x 320
         _graphics.IsFullScreen = false;
-        _graphics.PreferredBackBufferWidth = 1280/2;
-        _graphics.PreferredBackBufferHeight = 720/2;
+        _graphics.PreferredBackBufferWidth = 640;
+        _graphics.PreferredBackBufferHeight = 320;
         _graphics.ApplyChanges();
+        
+        _canvas = new Canvas(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+        _canvas.SetDestinationRectangle();
 
         base.Initialize();
     }
@@ -88,7 +92,7 @@ public class Game1 : Game
         
         // Boss
         Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss1");
-        Boss1 boss1 = new(bossTexture, new Vector2(400, 300), 200);
+        Boss1 boss1 = new(bossTexture, new Vector2(400, 200), 200, _player);
         _enemies.Add(boss1);
 
         // Ennemis
@@ -139,12 +143,21 @@ public class Game1 : Game
             return;
         }
         
+        // Commande de taille d'écran
+        if (_currentKeyState.IsKeyDown(Keys.R) && !_previousKeyState.IsKeyDown(Keys.R))
+            SetResolution(320, 640);
+        
+        if (_currentKeyState.IsKeyDown(Keys.T) && !_previousKeyState.IsKeyDown(Keys.T))
+            SetResolution(640, 1280);
+        
+        if (_currentKeyState.IsKeyDown(Keys.Y) && !_previousKeyState.IsKeyDown(Keys.Y))
+            SetFullScreen();
+            
         // Logique du joueur
         _player.Update(_tile.GetCollisions(), _enemies);
         
         // Logique de la caméra
-        // A décommenter si on veut utiliser la caméra
-        _camera.Follow(_player.Rect, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
+        _camera.Follow(_player.Rect, new Vector2(_canvas.Target.Width, _canvas.Target.Height));
         
         // Logique des ennemis
         foreach (Enemy enemy in _enemies)
@@ -171,11 +184,30 @@ public class Game1 : Game
             }
         }
     }
+    
+    private void SetResolution(int height, int width)
+    {
+        _graphics.IsFullScreen = false;
+        _graphics.PreferredBackBufferHeight = height;
+        _graphics.PreferredBackBufferWidth = width;
+        _graphics.ApplyChanges();
+        _canvas.SetDestinationRectangle();
+    }
+
+    private void SetFullScreen()
+    {
+        _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+        _graphics.IsFullScreen = true;
+        _graphics.ApplyChanges();
+        _canvas.SetDestinationRectangle();
+    }
 
     // called on a regular interval to take the current game state and draw the game entities to the screen
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        //GraphicsDevice.Clear(Color.CornflowerBlue);
+        _canvas.Activate();
 
         Vector2 offset = _camera.Position;  // Offset lié à la caméra
         
@@ -195,8 +227,8 @@ public class Game1 : Game
             _menu.Draw(_spriteBatch);   // dessin du menu
 
         _spriteBatch.End();
-
-        base.Draw(gameTime);
+        
+        _canvas.Draw(_spriteBatch);
     }
     
 }
