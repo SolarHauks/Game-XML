@@ -188,14 +188,10 @@ public class Player : GameObject
     }
     
     // Attaque du joueur
-    private void  Attack(List<Enemy> enemies)
+    private void Attack(List<Enemy> enemies)
     {
-        // Cooldown de l'attaque
-        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-        if (currentTime - _lastAttackTime < AttackCooldown) { return; }
-        
-        _lastAttackTime = currentTime;  // Mise à jour du temps de la dernière attaque
-        
+        if (!CanAttack()) return;
+
         // Hitbox de l'attaque
         Rectangle hitbox = new Rectangle(
             (int)Position.X + (Direction == 1 ? 16 : -16),
@@ -204,31 +200,20 @@ public class Player : GameObject
             32
         );
 
-        // Detection des ennemies touchés et application des dégats
-        foreach (var enemy in enemies)
-        {
-            if (hitbox.Intersects(enemy.Rect))
-            {
-                enemy.TakeDamage(20, Position);
-            }
-        }
-        
+        ApplyDamage(enemies, hitbox, 20);
+
         // Effet visuel de l'attaque
         _effectsManager.PlayEffect("slash", Position, Direction);
         AnimationManager.SetAnimation("slash");
     }
-    
-    // Attaque spéciale du joueur, plus puissante mais coutant du mana
+
+// Attaque spéciale du joueur, plus puissante mais coutant du mana
     private void SpecialAttack(List<Enemy> enemies)
     {
-        // Cooldown de l'attaque
-        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-        if (currentTime - _lastAttackTime < AttackCooldown || _currentMana < 20) { return; }
-        
-        _lastAttackTime = currentTime;  // Mise à jour du temps de la dernière attaque
+        if (!CanAttack(20)) return;
 
         Mana -= 20; // Coût en mana
-        
+
         // Hitbox de l'attaque
         Rectangle hitbox = new Rectangle(
             (int)Position.X + (Direction == 1 ? 16 : -48),
@@ -237,21 +222,34 @@ public class Player : GameObject
             32
         );
 
-        // Detection des ennemies touchés et application des dégats
-        foreach (var enemy in enemies)
-        {
-            if (hitbox.Intersects(enemy.Rect))
-            {
-                enemy.TakeDamage(50, Position);
-            }
-        }
+        ApplyDamage(enemies, hitbox, 50);
 
         // Effet visuel
-        // L'effet visuel est décalé par rapport à la position du joueur pour montrer la différence d'attaque
-        // TODO: A changer une fois l'effet définitif trouvé
         Vector2 decalage = new Vector2((Direction == 1 ? 32 : -32), 0);
-        _effectsManager.PlayEffect("slash", Position+decalage, Direction);
+        _effectsManager.PlayEffect("slash", Position + decalage, Direction);
         AnimationManager.SetAnimation("slash");
+    }
+
+    // Vérifie si le joueur peut attaquer
+    private bool CanAttack(int manaCost = 0)
+    {
+        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+        if (currentTime - _lastAttackTime < AttackCooldown || _currentMana < manaCost) return false;
+
+        _lastAttackTime = currentTime;
+        return true;
+    }
+
+    // Applique les dégâts aux ennemis dans la hitbox
+    private void ApplyDamage(List<Enemy> enemies, Rectangle hitbox, int damage)
+    {
+        foreach (var enemy in enemies)
+        {
+            if (enemy is not Spike && hitbox.Intersects(enemy.Rect))
+            {
+                enemy.TakeDamage(damage, Position);
+            }
+        }
     }
 
     // Gestion des animations du joueur
