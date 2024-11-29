@@ -26,8 +26,8 @@ public class Player : GameObject
     private double _lastDamageTime; // Temps du dernier dégât
     
     // Ressources : vie et mana
-    private QuantityBar _healthBar; // Barre de vie
-    private QuantityBar _manaBar; // Barre de mana
+    private readonly QuantityBar _healthBar; // Barre de vie
+    private readonly QuantityBar _manaBar; // Barre de mana
     
     private readonly int _maxHealth;
     private int _currentHealth;

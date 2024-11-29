@@ -1,11 +1,9 @@
-using System;
-using JeuVideo.Animation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
-public class Spike(Texture2D texture, Vector2 position, Player player) : Enemy(texture, position, 100)
+public class Spike(Texture2D texture, Vector2 position) : Enemy(texture, position, 100)
 {
     protected override void DeplacementHorizontal(double dt)
     {
@@ -17,17 +15,7 @@ public class Spike(Texture2D texture, Vector2 position, Player player) : Enemy(t
 
     protected override void Animate(Vector2 velocity)
     {
-        /*string currentAnim = AnimationManager.GetCurrentAnimation();
-
-        float tolerance = 0;
-        if (_player.Position.Y < Position.Y && Math.Abs(_player.Position.X - Position.X) <= tolerance && currentAnim == "idle")
-        {
-            AnimationManager.SetAnimation("activate");
-        }
-        else
-        {*/
         AnimationManager.SetAnimation("idle");
-        /*}*/
     }
 }
 

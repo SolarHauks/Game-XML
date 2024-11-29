@@ -100,14 +100,14 @@ public class Game1 : Game
         // Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
         // _enemies.Add(snake);
         
-        // Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
-        // Ghost ghost = new(ghostTexture, new Vector2(680, 30), 20, _player);
-        // _enemies.Add(ghost);
+        Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
+        Ghost ghost = new(ghostTexture, new Vector2(680, 30), 20, _player);
+        _enemies.Add(ghost);
         
         // Spike
-        Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
-        Spike spike = new(spikeTexture, new Vector2(192, 272), _player);
-        _enemies.Add(spike);
+        // Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
+        // Spike spike = new(spikeTexture, new Vector2(192, 272));
+        // _enemies.Add(spike);
 
         // Texture des tiles
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
