@@ -11,13 +11,15 @@ public class BossSummon : GameObject
     private readonly Vector2 _directionToTarget;
     
     private readonly double _spawnTime;
-    public bool IsAlive => (Globals.GameTime.TotalGameTime.TotalSeconds - _spawnTime < TimeAlive);
+    private bool _isAlive;
+    public bool IsAlive => (Globals.GameTime.TotalGameTime.TotalSeconds - _spawnTime < TimeAlive && _isAlive);
 
     public BossSummon(Texture2D texture, Vector2 position, Vector2 targetPosition) : base(texture, position, true)
     {
         _directionToTarget = Vector2.Normalize(targetPosition - Position);
         AnimationManager.SetAnimation("spawn");
         _spawnTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+        _isAlive = true;
     }
     
     protected override void DeplacementHorizontal(double dt)
@@ -54,6 +56,15 @@ public class BossSummon : GameObject
     // idem
     protected override void WhenVerticalCollisions(Rectangle rect)
     {
+    }
+    
+    public void CheckCollisionWithPlayer(Player player)
+    {
+        if (IsAlive && player.Rect.Intersects(Rect))
+        {
+            player.TakeDamage(20);
+            _isAlive = false; // Le summon disparaît après avoir infligé des dégâts
+        }
     }
     
 }

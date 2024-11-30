@@ -133,6 +133,7 @@ public class Boss(Texture2D texture, Vector2 position, int maxHealth, Player pla
         foreach (BossSummon summon in _summons.ToList())
         {
             summon.Update(collision);
+            summon.CheckCollisionWithPlayer(player);
             if (!summon.IsAlive) { _summons.Remove(summon); }
         }
     }

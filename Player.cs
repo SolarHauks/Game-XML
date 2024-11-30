@@ -306,6 +306,11 @@ public class Player : GameObject
             }
         }
     }
+    
+    public void TakeDamage(int damage)
+    {
+        Health -= damage;
+    }
 
     private void Regen()
     {
