@@ -284,9 +284,9 @@ public class Player : GameObject
             double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
             if (Rect.Intersects(enemy.Rect) && (currentTime - _lastDamageTime > 1))
             {
-                if (enemy is Boss1)     // Cas du boss
+                if (enemy is Boss)     // Cas du boss
                 {
-                    if (((Boss1) enemy).CurrentState == Boss1.BossState.Attacking)
+                    if (((Boss) enemy).CurrentState == Boss.BossState.Attacking)
                     {
                         Health -= 35;
                         int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;

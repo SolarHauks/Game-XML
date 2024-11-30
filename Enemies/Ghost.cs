@@ -12,8 +12,8 @@ public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player pl
     {
         if (CheckPlayerDistance())
         {
-            Vector2 directionToPlayer = Vector2.Normalize(player.Position - Position);
-            Velocity.X = directionToPlayer.X * 50 * (float)dt;
+            Vector2 directionToTarget = Vector2.Normalize(player.Position - Position);
+            Velocity.X = (float)(directionToTarget.X * 50 * dt);
             Position.X += Velocity.X;
             Direction = Position.X > player.Position.X ? -1 : 1;
         }
@@ -23,7 +23,8 @@ public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player pl
     {
         if (CheckPlayerDistance())
         {
-            Velocity.Y = (Position.Y < player.Position.Y ? 25.0f : -25.0f) * (float)dt;
+            Vector2 directionToTarget = Vector2.Normalize(player.Position - Position);
+            Velocity.Y = (float)(directionToTarget.Y * 50 * dt);
             Position.Y += Velocity.Y;
         }
     }

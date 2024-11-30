@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
-public class Boss1(Texture2D texture, Vector2 position, int maxHealth, Player player) : Enemy(texture, position, maxHealth)
+public class Boss(Texture2D texture, Vector2 position, int maxHealth, Player player, Texture2D summonTexture)
+    : Enemy(texture, position, maxHealth)
 {
     private int _counter; // Compteur pour les animations
     private int _interval;    // Interval pour le comportement spécial
@@ -12,6 +15,11 @@ public class Boss1(Texture2D texture, Vector2 position, int maxHealth, Player pl
     private double _lastAttackTime;     // Temps de la dernière attaque
     private bool _isBloqued;    // Indique si le boss est bloqué
     
+    private readonly List<BossSummon> _summons = new(); // Liste des invocations du boss
+    private Texture2D SummonTexture { get; } = summonTexture;
+
+    // Joueur
+
     public enum BossState
     {
         Normal,
@@ -22,7 +30,7 @@ public class Boss1(Texture2D texture, Vector2 position, int maxHealth, Player pl
 
     // On passe par une enum pour éviter que plusieurs états ne puissent etre actifs en meme temps, et par propreté
     public BossState CurrentState { get; private set; }
-    
+
     protected override void DeplacementHorizontal(double dt)
     {
         // Si le boss est en train de mourir, attaque ou fait son spécial => on ne fait rien
@@ -52,7 +60,7 @@ public class Boss1(Texture2D texture, Vector2 position, int maxHealth, Player pl
         {
             DeathAnim();
         }
-        else if (_interval==7*60) // Comportement spécial, lancer toutes les 7 secondes
+        else if (_interval==6*60) // Comportement spécial, lancer toutes les 7 secondes
         {
             SpecialAnim();
         }
@@ -96,9 +104,11 @@ public class Boss1(Texture2D texture, Vector2 position, int maxHealth, Player pl
     private void SpecialAnim()
     {
         // Lancement de l'animation spéciale, stop des autres comportements
-        AnimationManager.SetAnimation("special");
+        AnimationManager.SetAnimation("summon");
         CurrentState = BossState.Special;
         _isBloqued = true;
+        Vector2 position = new Vector2(Position.X + 50, Position.Y);
+        _summons.Add(new BossSummon(SummonTexture, position, player.Position));
     }
 
     private void AttackAnim()
@@ -112,6 +122,29 @@ public class Boss1(Texture2D texture, Vector2 position, int maxHealth, Player pl
             CurrentState = BossState.Attacking;
             _isBloqued = true;
             _lastAttackTime = currentTime;
+        }
+    }
+    
+    public override void Update(Dictionary<Vector2, int> collision)
+    {
+        base.Update(collision);
+        
+        // On update les invocations
+        foreach (BossSummon summon in _summons.ToList())
+        {
+            summon.Update(collision);
+            if (!summon.IsAlive) { _summons.Remove(summon); }
+        }
+    }
+    
+    public override void Draw(Vector2 offset)
+    {
+        base.Draw(offset);
+        
+        // On dessine les invocations
+        foreach (BossSummon summon in _summons)
+        {
+            summon.Draw(offset);
         }
     }
     

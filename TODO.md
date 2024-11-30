@@ -1,7 +1,7 @@
 # Next
 ## Important
 - Différents ennemies 
-- Upgrade (BIG)
+- Upgrade Visuel (BIG)
 - UI
   - Menu d'options
   - Menu de jeu (peut etre le meme que la pause)
@@ -15,6 +15,7 @@
   - Ajout du controle manette
   - modification de l'ui pour refleter l'input method
 - Ameliorer le boss, par exemple avec une phase 2
+- Fix le mega bug d'offset de logique
 
 # A fix
 

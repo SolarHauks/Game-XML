@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JeuVideo.Enemies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,7 +19,7 @@ public abstract class GameObject : Sprite
         _size = Size;
     }
 
-    public void Update(Dictionary<Vector2, int> collision)
+    public virtual void Update(Dictionary<Vector2, int> collision)
     {
         // Delta time, temps depuis la dernière frame
         // Sert pour que le jeu soit indépendant de la vitesse de la machine

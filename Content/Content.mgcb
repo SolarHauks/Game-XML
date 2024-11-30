@@ -30,7 +30,11 @@
 
 /importer:TextureImporter
 /processor:TextureProcessor
-/build:Assets/Enemies/boss1.png
+/build:Assets/Enemies/boss.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/Enemies/summon.png
 
 /importer:TextureImporter
 /processor:TextureProcessor

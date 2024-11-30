@@ -91,9 +91,10 @@ public class Game1 : Game
         _player = new Player(playerTexture, new Vector2(160, 80), _effectsManager);
         
         // Boss
-        Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss1");
-        Boss1 boss1 = new(bossTexture, new Vector2(400, 200), 200, _player);
-        _enemies.Add(boss1);
+        Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss");
+        Texture2D summonTexture = Content.Load<Texture2D>("Assets/Enemies/summon");
+        Boss boss = new(bossTexture, new Vector2(400, 200), 200, _player, summonTexture);
+        _enemies.Add(boss);
 
         // Ennemis
         // Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
@@ -160,29 +161,19 @@ public class Game1 : Game
         _camera.Follow(_player.Rect, new Vector2(_canvas.Target.Width, _canvas.Target.Height));
         
         // Logique des ennemis
-        foreach (Enemy enemy in _enemies)
+        foreach (Enemy enemy in _enemies.ToList())
         {
             enemy.Update(_tile.GetCollisions());
+            if (enemy.Health <= 0 && !(enemy is Boss boss && boss.CurrentState == Boss.BossState.Dying))
+            {
+                _enemies.Remove(enemy);
+            }
         }
-        
-        // Vérifie et supprime les ennemis avec 0 point de vie
-        RemoveDeadEnemies();
         
         // Logique des effets
         _effectsManager.Update();
         
         base.Update(gameTime);
-    }
-
-    private void RemoveDeadEnemies()
-    {
-        foreach (Enemy enemy in _enemies.ToList())
-        {
-            if (enemy.Health <= 0 && !(enemy is Boss1 boss && boss.CurrentState == Boss1.BossState.Dying))
-            {
-                _enemies.Remove(enemy);
-            }
-        }
     }
     
     private void SetResolution(int height, int width)
@@ -223,7 +214,7 @@ public class Game1 : Game
             _player.Draw(offset); // dessin du joueur
             
             _effectsManager.Draw(offset);    // dessin des effets
-            
+        
             _menu.Draw(_spriteBatch);   // dessin du menu
 
         _spriteBatch.End();

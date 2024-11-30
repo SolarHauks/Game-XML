@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animations nbCol="4" largeur="50" hauteur="50">
+    <animation name="idle" type="continu">
+        <frame numFrame="17"/>
+        <frame numFrame="18"/>
+        <frame numFrame="19"/>
+        <frame numFrame="20"/>
+    </animation>
+    <animation name="death" type="ponctuel">
+        <frame numFrame="1"/>
+        <frame numFrame="2"/>
+        <frame numFrame="3"/>
+        <frame numFrame="5"/>
+        <frame numFrame="6"/>
+    </animation>
+    <animation name="spawn" type="ponctuel">
+        <frame numFrame="9"/>
+        <frame numFrame="10"/>
+        <frame numFrame="11"/>
+        <frame numFrame="13"/>
+        <frame numFrame="14"/>
+        <frame numFrame="15"/>
+    </animation>
+</animations>
