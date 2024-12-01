@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
-public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player player) : Enemy(texture, position, maxHealth)
+public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player player) : Enemy(texture, position, maxHealth, 1.0f)
 {
     private const int Distance = 250;
 

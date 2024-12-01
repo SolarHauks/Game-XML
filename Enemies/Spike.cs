@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
-public class Spike(Texture2D texture, Vector2 position) : Enemy(texture, position, 100)
+public class Spike(Texture2D texture, Vector2 position) : Enemy(texture, position, 100, 1.0f)
 {
     protected override void DeplacementHorizontal(double dt)
     {

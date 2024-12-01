@@ -15,7 +15,7 @@ public abstract class Enemy : GameObject
         private set => _currentHealth = Math.Clamp(value, 0, _maxHealth);
     }
 
-    protected Enemy(Texture2D texture, Vector2 position, int maxHealth) : base(texture, position, true) {
+    protected Enemy(Texture2D texture, Vector2 position, int maxHealth, float hitboxRatio) : base(texture, position, true, hitboxRatio) {
         _maxHealth = maxHealth;
         _currentHealth = maxHealth;
         StartPosition = position;

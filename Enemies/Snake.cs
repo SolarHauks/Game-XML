@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
-public class Snake(Texture2D texture, Vector2 position, int maxHealth) : Enemy(texture, position, maxHealth)
+public class Snake(Texture2D texture, Vector2 position, int maxHealth) : Enemy(texture, position, maxHealth, 1.0f)
 {
     protected override void DeplacementHorizontal(double dt)
     {

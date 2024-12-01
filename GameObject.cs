@@ -8,15 +8,38 @@ namespace JeuVideo;
 
 public abstract class GameObject : Sprite
 {
-    protected Vector2 Velocity;
-    private readonly Vector2 _size; // Taille logique de l'objet, sert pour les collisions
+    protected Vector2 Velocity; // Vélocité de l'objet de jeu, servant dans les déplacements et les collisions
     
-    // Hitbox de l'objet, sert pour les collisions
+    // Rectangle de l'objet servant pour les collisions
+    private readonly Vector2 _size; // Taille logique de l'objet, sert pour les collisions
     public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, (int)_size.X, (int)_size.Y);
     
-    protected GameObject(Texture2D texture, Vector2 position, bool isAnimed) : base(texture, position, isAnimed)
+    // Rectangle servant dans les detections de dégats
+    private readonly Vector2 _positionOffset;
+    private readonly float _hitboxRatio;
+    public Rectangle DamageHitbox => new Rectangle(
+        (int)(Position.X + _positionOffset.X), 
+        (int)(Position.Y + _positionOffset.Y), 
+        (int)(_size.X*_hitboxRatio), 
+        (int)(_size.Y*_hitboxRatio));
+    
+    protected GameObject(Texture2D texture, Vector2 position, bool isAnimed, float hitboxRatio) : base(texture, position, isAnimed)
     {
         _size = Size;
+            
+        _hitboxRatio = hitboxRatio;
+        float newWidth = Size.X * hitboxRatio;
+        float newHeight = Size.Y * hitboxRatio;
+        
+        float offsetX = (Size.X - newWidth) / 2;
+        float offsetY = (Size.Y - newHeight) / 2;
+        _positionOffset = new Vector2(offsetX, offsetY);
+        
+        if (this is Boss)
+        {
+            Console.WriteLine("New : " + new Vector2(newWidth, newHeight));
+            Console.WriteLine("Offset : " + new Vector2(offsetX, offsetY));
+        }
     }
 
     public virtual void Update(Dictionary<Vector2, int> collision)

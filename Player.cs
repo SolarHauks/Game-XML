@@ -54,7 +54,7 @@ public class Player : GameObject
         }
     }
     
-    public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position, true) {
+    public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position, true, 1.0f) {
         Velocity = new Vector2();
         _grounded = false;
         _effectsManager = effets;
@@ -282,7 +282,7 @@ public class Player : GameObject
         {
             // On ne prend pas de dégâts si on vient d'en prendre -> instant d'invulnérabilité
             double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-            if (Rect.Intersects(enemy.Rect) && (currentTime - _lastDamageTime > 1))
+            if (DamageHitbox.Intersects(enemy.DamageHitbox) && (currentTime - _lastDamageTime > 1))
             {
                 if (enemy is Boss)     // Cas du boss
                 {

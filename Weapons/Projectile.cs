@@ -12,7 +12,7 @@ public class Projectile : GameObject
     
     public bool IsAlive { get; set; }   // Permet de savoir si le projectile est encore en vie
 
-    public Projectile(Texture2D texture, Vector2 position, int speed, Vector2 angle, int direction) : base(texture, position, false)
+    public Projectile(Texture2D texture, Vector2 position, int speed, Vector2 angle, int direction) : base(texture, position, false, 1.0f)
     {
         Direction = direction;
         this._speed = speed;

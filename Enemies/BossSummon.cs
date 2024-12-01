@@ -14,7 +14,7 @@ public class BossSummon : GameObject
     private bool _isAlive;
     public bool IsAlive => (Globals.GameTime.TotalGameTime.TotalSeconds - _spawnTime < TimeAlive && _isAlive);
 
-    public BossSummon(Texture2D texture, Vector2 position, Vector2 targetPosition) : base(texture, position, true)
+    public BossSummon(Texture2D texture, Vector2 position, Vector2 targetPosition) : base(texture, position, true, 0.4f)
     {
         _directionToTarget = Vector2.Normalize(targetPosition - Position);
         AnimationManager.SetAnimation("spawn");
@@ -60,7 +60,7 @@ public class BossSummon : GameObject
     
     public void CheckCollisionWithPlayer(Player player)
     {
-        if (IsAlive && player.Rect.Intersects(Rect))
+        if (IsAlive && player.DamageHitbox.Intersects(DamageHitbox))
         {
             player.TakeDamage(20);
             _isAlive = false; // Le summon disparaît après avoir infligé des dégâts

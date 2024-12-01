@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace JeuVideo.Enemies;
 
 public class Boss(Texture2D texture, Vector2 position, int maxHealth, Player player, Texture2D summonTexture)
-    : Enemy(texture, position, maxHealth)
+    : Enemy(texture, position, maxHealth, 0.7f)
 {
     private int _counter; // Compteur pour les animations
     private int _interval;    // Interval pour le comportement spécial
