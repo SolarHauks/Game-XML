@@ -19,6 +19,11 @@
 /processor:TextureProcessor
 /build:Assets/Character/character.png
 
+# Shopkeeper
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/NPC/shop.png
+
 # Enemies
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -61,7 +66,20 @@
 # GUI
 /importer:TextureImporter
 /processor:TextureProcessor
-/build:Assets/GUI/gui.png
+/build:Assets/GUI/pauseMenu.png
+
+# Shop Menu
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/GUI/shopMenu.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/GUI/healthPot.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/GUI/manaPot.png
 
 # Text Bubble
 /importer:TextureImporter

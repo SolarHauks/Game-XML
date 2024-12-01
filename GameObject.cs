@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using JeuVideo.Enemies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -35,11 +34,6 @@ public abstract class GameObject : Sprite
         float offsetY = (Size.Y - newHeight) / 2;
         _positionOffset = new Vector2(offsetX, offsetY);
         
-        if (this is Boss)
-        {
-            Console.WriteLine("New : " + new Vector2(newWidth, newHeight));
-            Console.WriteLine("Offset : " + new Vector2(offsetX, offsetY));
-        }
     }
 
     public virtual void Update(Dictionary<Vector2, int> collision)

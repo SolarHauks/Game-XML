@@ -2,6 +2,7 @@
 using System.Linq;
 using JeuVideo.Effects;
 using JeuVideo.Enemies;
+using JeuVideo.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,13 +23,14 @@ public class Game1 : Game
     private Tile _tile; // classe Tile pour gérer les tiles
     
     private Player _player; // classe Player pour gérer le joueur
-    private List<Enemy> _enemies;
+    private readonly List<Enemy> _enemies;
+    private ShopKeeper _shopKeeper;
     
     private EffectsManager _effectsManager; // classe EffectsManager pour gérer les effets
     
     private readonly Camera _camera; // classe Camera pour gérer la caméra
 
-    private Menu.Menu _menu;
+    private Menu.PauseMenu _pauseMenu;
     private Canvas _canvas;
     
     private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
@@ -76,8 +78,8 @@ public class Game1 : Game
         Globals.GraphicsDevice = GraphicsDevice;
         
         // Texture du menu
-        Texture2D menuTexture = Globals.Content.Load<Texture2D>("Assets/GUI/gui");
-        _menu = new Menu.Menu(menuTexture);
+        Texture2D menuTexture = Content.Load<Texture2D>("Assets/GUI/pauseMenu");
+        _pauseMenu = new Menu.PauseMenu(menuTexture);
         
         // Texture de debug pour les collisions
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -92,6 +94,10 @@ public class Game1 : Game
         Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
         _player = new Player(playerTexture, new Vector2(160, 80), _effectsManager);
         
+        // Shop
+        Texture2D shopTexture = Content.Load<Texture2D>("Assets/NPC/shop");
+        _shopKeeper = new ShopKeeper(shopTexture, new Vector2(160, 261), _player);
+        
         // Boss
         Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss");
         Texture2D summonTexture = Content.Load<Texture2D>("Assets/Enemies/summon");
@@ -99,9 +105,9 @@ public class Game1 : Game
         _enemies.Add(boss);
 
         // Ennemis
-        Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
-        Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
-        _enemies.Add(snake);
+        // Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
+        // Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
+        // _enemies.Add(snake);
         
         // Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
         // Ghost ghost = new(ghostTexture, new Vector2(680, 30), 20, _player);
@@ -141,17 +147,32 @@ public class Game1 : Game
         if (_currentKeyState.IsKeyDown(Keys.Escape))
             Exit();
         
+        // --------------------------------- Freeze de la pause ---------------------------------
         // Commande de pause du jeu
         if (_currentKeyState.IsKeyDown(Keys.P) && !_previousKeyState.IsKeyDown(Keys.P))
-            _menu.IsPaused = !_menu.IsPaused;
+            _pauseMenu.IsPaused = !_pauseMenu.IsPaused;
 
-        if (_menu.IsPaused)
+        if (_pauseMenu.IsPaused)
         {
             // Logique du menu
-            _menu.Update(this);
+            _pauseMenu.Update(this);
             // On ne fait rien d'autre car le jeu est en pause
             return;
         }
+        
+        // --------------------------------- Freeze du shop ---------------------------------
+        
+        // Commande du shop
+        if (_currentKeyState.IsKeyDown(Keys.E) && !_previousKeyState.IsKeyDown(Keys.E))
+            _shopKeeper.Interact();
+        
+        // Logique du shop
+        _shopKeeper.Update();
+        
+        // On mets aussi en pause si on interagit avec le shop. Mais ici pas de menu de pause
+        if (_shopKeeper.IsPaused) { return; }
+        
+        // --------------------------------- Resize de l'écran ---------------------------------
         
         // Commande de taille d'écran
         if (_currentKeyState.IsKeyDown(Keys.R) && !_previousKeyState.IsKeyDown(Keys.R))
@@ -162,9 +183,11 @@ public class Game1 : Game
         
         if (_currentKeyState.IsKeyDown(Keys.Y) && !_previousKeyState.IsKeyDown(Keys.Y))
             SetFullScreen();
+        
+        // --------------------------------- Logique du jeu ---------------------------------
             
         // Logique du joueur
-        _player.Update(_tile.GetCollisions(), _enemies);
+        _player.Update(_tile.GetCollisions(), _enemies, _shopKeeper);
         
         // Logique de la caméra
         _camera.Follow(_player.Rect, new Vector2(_canvas.Target.Width, _canvas.Target.Height));
@@ -222,12 +245,14 @@ public class Game1 : Game
             
             _player.Draw(offset); // dessin du joueur
             
+            _shopKeeper.Draw(offset);   // dessin du shop
+            
             _effectsManager.Draw(offset);    // dessin des effets
             
             if (_bubble.Visible)
                 _bubble.Draw();   // dessin de la bulle de dialogue
         
-            _menu.Draw(_spriteBatch);   // dessin du menu
+            _pauseMenu.Draw(_spriteBatch);   // dessin du menu
 
         _spriteBatch.End();
         
