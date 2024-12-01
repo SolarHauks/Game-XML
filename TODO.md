@@ -6,6 +6,8 @@
   - Menu d'options
   - Menu de jeu (peut etre le meme que la pause)
   - Interface
+- Bulles de texte
+- Système pour resize les hitbox
 
 ## Optionnal (si on a le temps)
 - Son

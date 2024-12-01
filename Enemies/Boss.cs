@@ -16,7 +16,6 @@ public class Boss(Texture2D texture, Vector2 position, int maxHealth, Player pla
     private bool _isBloqued;    // Indique si le boss est bloqué
     
     private readonly List<BossSummon> _summons = new(); // Liste des invocations du boss
-    private Texture2D SummonTexture { get; } = summonTexture;
 
     // Joueur
 
@@ -108,7 +107,7 @@ public class Boss(Texture2D texture, Vector2 position, int maxHealth, Player pla
         CurrentState = BossState.Special;
         _isBloqued = true;
         Vector2 position = new Vector2(Position.X + 50, Position.Y);
-        _summons.Add(new BossSummon(SummonTexture, position, player.Position));
+        _summons.Add(new BossSummon(summonTexture, position, player.Position));
     }
 
     private void AttackAnim()

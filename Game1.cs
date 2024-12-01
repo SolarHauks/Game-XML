@@ -33,6 +33,8 @@ public class Game1 : Game
     
     private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
     
+    private BubbleRevamp _bubble; // classe Bubble pour gérer les bulles de dialogue
+    
 
     // tell the project how to start, and add key variables
     public Game1()
@@ -113,6 +115,13 @@ public class Game1 : Game
         // Texture des tiles
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
         _hitboxTexture = Content.Load<Texture2D>("Assets/Tileset/collisions");
+        
+        // Bulle de dialogue
+        Texture2D bubbleTexture = Content.Load<Texture2D>("Assets/GUI/bubble");
+        SpriteFont font = Content.Load<SpriteFont>("Assets/Fonts/font");
+        _bubble = new BubbleRevamp(bubbleTexture, font);
+        _bubble.SetText("Hello Developers!");
+        _bubble.TextColor = Color.Yellow;
 
         // Tile
         _tile = new(_textureAtlas, _hitboxTexture);
@@ -214,6 +223,9 @@ public class Game1 : Game
             _player.Draw(offset); // dessin du joueur
             
             _effectsManager.Draw(offset);    // dessin des effets
+            
+            if (_bubble.Visible)
+                _bubble.Draw();   // dessin de la bulle de dialogue
         
             _menu.Draw(_spriteBatch);   // dessin du menu
 

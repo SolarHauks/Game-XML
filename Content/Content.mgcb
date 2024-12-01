@@ -62,3 +62,13 @@
 /importer:TextureImporter
 /processor:TextureProcessor
 /build:Assets/GUI/gui.png
+
+# Text Bubble
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/GUI/bubble.png
+
+# Fonts
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Assets/Fonts/font.spritefont
