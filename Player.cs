@@ -30,14 +30,15 @@ public class Player : GameObject
     private readonly QuantityBar _healthBar; // Barre de vie
     private readonly QuantityBar _manaBar; // Barre de mana
     
-    private readonly int _maxHealth;
+    private int _maxHealth;
     private int _currentHealth;
     
-    private readonly int _maxMana;
+    private int _maxMana;
     private int _currentMana;
 
     private double _lastRegenTime;
-    public int Health
+
+    private int Health
     {
         get => _currentHealth;
         set {
@@ -45,8 +46,8 @@ public class Player : GameObject
             _healthBar.Set(_currentHealth);
         }
     }
-    
-    public int Mana
+
+    private int Mana
     {
         get => _currentMana;
         set {
@@ -322,6 +323,24 @@ public class Player : GameObject
             _lastRegenTime = currentTime;
             Health += 2;
             Mana += 2;
+        }
+    }
+
+    public void AddMaxHealth(int value)
+    {
+        if (_maxHealth < 200)
+        {
+            _maxHealth += value;
+            Health += 10;   // Actualisation de la barre de vie
+        }
+    }
+    
+    public void AddMaxMana(int value)
+    {
+        if (_maxMana < 200)
+        {
+            _maxMana += value;
+            Mana += 10;   // Actualisation de la barre de mana
         }
     }
     

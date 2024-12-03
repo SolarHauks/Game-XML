@@ -19,8 +19,8 @@ public class ShopMenu : Menu
     {
         base.Update();
 
-        if (Buttons[0].IsClicked) { player.Health += 10; }
+        if (Buttons[0].IsClicked) player.AddMaxHealth(10);
 
-        if (Buttons[1].IsClicked) { player.Mana += 10; }
+        if (Buttons[1].IsClicked) player.AddMaxMana(10);
     }
 }
