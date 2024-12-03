@@ -4,14 +4,22 @@ using Microsoft.Xna.Framework.Input;
 
 namespace JeuVideo.UI;
 
-public class Button(Texture2D texture, Vector2 position) : Sprite(texture, position, false)
+public class Button : Sprite
 {
-    private Rectangle _rectangle = new((int)position.X, (int)position.Y, 16*2, 16*2);
     private MouseState _previousMouseState;
-    private readonly Texture2D _texture = texture;
+    private readonly Texture2D _texture;
+    private Rectangle _rectangle;
 
     public bool IsClicked { get; private set; }
 
+    public Button(Texture2D texture, Vector2 position) : base(texture, position, false)
+    {
+        _texture = texture;
+        int width = _texture.Width;
+        int height = _texture.Height;
+        _rectangle = new Rectangle((int)position.X - width / 2, (int)position.Y - height / 2, width*2, height*2);
+    }
+    
     public void Update()
     {
         MouseState currentMouseState = Mouse.GetState();

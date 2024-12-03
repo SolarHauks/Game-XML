@@ -64,9 +64,19 @@
 /build:Assets/Effects/slash.png
 
 # GUI
+
+# Pause Menu
 /importer:TextureImporter
 /processor:TextureProcessor
 /build:Assets/GUI/pauseMenu.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/GUI/startButton.png
+
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/GUI/exitButton.png
 
 # Shop Menu
 /importer:TextureImporter

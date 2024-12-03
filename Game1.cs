@@ -31,6 +31,7 @@ public class Game1 : Game
     
     private readonly Camera _camera; // classe Camera pour gérer la caméra
 
+    // private PauseMenu _pauseMenu;
     private PauseMenu _pauseMenu;
     private Canvas _canvas;
     
@@ -79,8 +80,8 @@ public class Game1 : Game
         Globals.GraphicsDevice = GraphicsDevice;
         
         // Texture du menu
-        Texture2D menuTexture = Content.Load<Texture2D>("Assets/GUI/pauseMenu");
-        _pauseMenu = new PauseMenu(menuTexture);
+        // Texture2D menuTexture = Content.Load<Texture2D>("Assets/GUI/pauseMenu");
+        _pauseMenu = new PauseMenu();
         
         // Texture de debug pour les collisions
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -151,9 +152,9 @@ public class Game1 : Game
         // --------------------------------- Freeze de la pause ---------------------------------
         // Commande de pause du jeu
         if (_currentKeyState.IsKeyDown(Keys.P) && !_previousKeyState.IsKeyDown(Keys.P))
-            _pauseMenu.IsPaused = !_pauseMenu.IsPaused;
+            _pauseMenu.IsActive = !_pauseMenu.IsActive;
 
-        if (_pauseMenu.IsPaused)
+        if (_pauseMenu.IsActive)
         {
             // Logique du menu
             _pauseMenu.Update(this);
@@ -253,7 +254,7 @@ public class Game1 : Game
             if (_bubble.Visible)
                 _bubble.Draw();   // dessin de la bulle de dialogue
         
-            _pauseMenu.Draw(_spriteBatch);   // dessin du menu
+            _pauseMenu.Draw();   // dessin du menu
 
         _spriteBatch.End();
         
