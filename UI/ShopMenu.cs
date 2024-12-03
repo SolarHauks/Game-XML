@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace JeuVideo.Menu;
+namespace JeuVideo.UI;
 
 public class ShopMenu
 {

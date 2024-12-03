@@ -14,7 +14,7 @@ public class AnimationManager
     
     private readonly Dictionary<string, Animation> _animations; // Dictoinnaire des animations
     
-    private const string XmlFilePathPrefix = "../../../Content/Assets/Animation/";
+    private const string XmlFilePathPrefix = "../../../Content/Data/Animation/";
     
     public AnimationManager(Texture2D spriteSheet)
     {
@@ -34,7 +34,7 @@ public class AnimationManager
         // Cela permet d'etre sur que les noeuds qu'on va utiliser après ne sont pas nul
         // sans avoir besoin de faire des vérifications
         string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/animations";
-        string xsdFilePath = "../../../Content/Assets/Animation/animSchema.xsd";
+        string xsdFilePath = "../../../Content/Data/Animation/animSchema.xsd";
         XmlUtils.ValidateXmlFile(schemaNamespace, xsdFilePath, xmlFilePath);
         
         XmlNode paramNode = doc.DocumentElement; // Sélectionne la racine du document XML

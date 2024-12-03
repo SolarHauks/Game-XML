@@ -3,6 +3,7 @@ using System.Linq;
 using JeuVideo.Effects;
 using JeuVideo.Enemies;
 using JeuVideo.Shop;
+using JeuVideo.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -30,12 +31,12 @@ public class Game1 : Game
     
     private readonly Camera _camera; // classe Camera pour gérer la caméra
 
-    private Menu.PauseMenu _pauseMenu;
+    private PauseMenu _pauseMenu;
     private Canvas _canvas;
     
     private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
     
-    private BubbleRevamp _bubble; // classe Bubble pour gérer les bulles de dialogue
+    private Bubble _bubble; // classe Bubble pour gérer les bulles de dialogue
     
 
     // tell the project how to start, and add key variables
@@ -79,7 +80,7 @@ public class Game1 : Game
         
         // Texture du menu
         Texture2D menuTexture = Content.Load<Texture2D>("Assets/GUI/pauseMenu");
-        _pauseMenu = new Menu.PauseMenu(menuTexture);
+        _pauseMenu = new PauseMenu(menuTexture);
         
         // Texture de debug pour les collisions
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -125,7 +126,7 @@ public class Game1 : Game
         // Bulle de dialogue
         Texture2D bubbleTexture = Content.Load<Texture2D>("Assets/GUI/bubble");
         SpriteFont font = Content.Load<SpriteFont>("Assets/Fonts/font");
-        _bubble = new BubbleRevamp(bubbleTexture, font);
+        _bubble = new Bubble(bubbleTexture, font);
         _bubble.SetText("Hello Developers!");
         _bubble.TextColor = Color.Yellow;
 

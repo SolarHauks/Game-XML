@@ -1,4 +1,4 @@
-using JeuVideo.Menu;
+using JeuVideo.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

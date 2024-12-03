@@ -1,19 +1,16 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace JeuVideo.Menu;
+namespace JeuVideo.UI;
 
-public class ClickableArea
+public class Button(Texture2D texture, Vector2 position) : Sprite(texture, position, false)
 {
-    private Rectangle _rectangle;
+    private Rectangle _rectangle = new((int)position.X, (int)position.Y, 16*2, 16*2);
     private MouseState _previousMouseState;
+    private readonly Texture2D _texture = texture;
 
     public bool IsClicked { get; private set; }
-
-    public ClickableArea(Vector2 position)
-    {
-        _rectangle = new Rectangle((int)position.X, (int)position.Y, 30*2, 14*2);
-    }
 
     public void Update()
     {
@@ -30,6 +27,11 @@ public class ClickableArea
         }
 
         _previousMouseState = currentMouseState;
+    }
+    
+    public void Draw()
+    {
+       Globals.SpriteBatch.Draw(_texture, _rectangle, Color.White);
     }
     
 }

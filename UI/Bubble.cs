@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo;
 
-public class BubbleRevamp
+public class Bubble
 {
     private readonly Texture2D _texture;
     
@@ -20,7 +20,7 @@ public class BubbleRevamp
     private Vector2 _textPosition;
     public Color TextColor { get; set; } = Color.White;
 
-    public BubbleRevamp(Texture2D texture, SpriteFont font)
+    public Bubble(Texture2D texture, SpriteFont font)
     {
         _font = font;
         _texture = texture;

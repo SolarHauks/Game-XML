@@ -43,7 +43,7 @@ public class Tile
     private void Load()
     {
         // chargement du fichier XML du niveau
-        string xmlFilePath = "../../../Content/Assets/Level/level1.tmx"; // Chemin du fichier XML
+        string xmlFilePath = "../../../Content/Data/Level/level1.tmx"; // Chemin du fichier XML
         XmlDocument doc = new XmlDocument();
         doc.Load(xmlFilePath);
         
@@ -51,7 +51,7 @@ public class Tile
         // Cela permet d'etre sur que les noeuds qu'on va utiliser après ne sont pas nul
         // sans avoir besoin de faire des vérifications
         string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/level";
-        string xsdFilePath = "../../../Content/Assets/Level/levelSchema.xsd";
+        string xsdFilePath = "../../../Content/Data/Level/levelSchema.xsd";
         XmlUtils.ValidateXmlFile(schemaNamespace, xsdFilePath, xmlFilePath);
         
         // récupère les valeurs de _displayTilesize, _pixelTilesize et numTilesPerRow
@@ -130,7 +130,7 @@ public class Tile
     
     private void GetNumTilesPerRow()
     {
-        string xmlFilePath = "../../../Content/Assets/Level/Data/Level1/tilesets/tileset.tsx"; // Path to the XML file
+        string xmlFilePath = "../../../Content/Data/Level/Data/Level1/tilesets/tileset.tsx"; // Path to the XML file
 
         using (XmlReader reader = XmlReader.Create(xmlFilePath))
         {
