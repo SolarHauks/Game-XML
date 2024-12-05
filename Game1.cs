@@ -140,7 +140,7 @@ public class Game1 : Game
     // and it is used to update your game state (checking for collisions, gathering input, playing audio, etc.).
     protected override void Update(GameTime gameTime)
     {
-        
+        //que le joueur soit mort ou non, on update le temps et tout le reste 
         Globals.GameTime = gameTime;
 
         _previousKeyState = _currentKeyState;
@@ -175,7 +175,7 @@ public class Game1 : Game
         if (_currentKeyState.IsKeyDown(Keys.Y) && !_previousKeyState.IsKeyDown(Keys.Y))
             SetFullScreen();
         
-        if (_player.Dead() == false)
+        if (!_player.Dead()) // Si le joueur n'est pas mort
         {
 
 
@@ -247,9 +247,13 @@ public class Game1 : Game
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         
-        if(_player.Dead())
+        if(_player.Dead()) // Si le joueur est mort
         {
-            
+            GraphicsDevice.Clear(Color.Black); // Met la couleur du fond en noir pour le game over
+
+            _spriteBatch.DrawString(Globals.Content.Load<SpriteFont>("Assets/Fonts/font"), "Game Over", new Vector2(300, 90), Color.Red);   // Affiche "Game Over" en rouge
+            _spriteBatch.DrawString(Globals.Content.Load<SpriteFont>("Assets/Fonts/font"), "Appuyer sur A pour reapparaitre", new Vector2(220, 100), Color.Red); // Affiche "Appuyer sur A pour reapparaitre" en rouge
+
         }
         else
         {
