@@ -249,6 +249,9 @@ public class Game1 : Game
         if(_player.Dead())
         {
             
+            _spriteBatch.DrawString(Globals.Content.Load<SpriteFont>("Assets/Fonts/font"), "Game Over", new Vector2(300, 90), Color.Red);
+            _spriteBatch.DrawString(Globals.Content.Load<SpriteFont>("Assets/Fonts/font"), "Appuyer sur A pour reapparaitre", new Vector2(220, 100), Color.Red);
+
         }
         else
         {
