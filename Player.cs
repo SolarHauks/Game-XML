@@ -75,42 +75,59 @@ public class Player : GameObject
         
         _lastRegenTime = 0;
     }
-    
+
     /// Met à jour l'état du joueur.
     /// param keystate : L'état actuel du clavier.
     /// param tile : Les informations sur les tiles pour la détection des collisions.
     /// param gameTime : Le temps écoulé depuis la dernière frame.
-    public void Update(Dictionary<Vector2, int> collision, List<Enemy> enemies, ShopKeeper shopKeeper) {
-        
-        KeyboardState keystate = Keyboard.GetState();    // Récupère l'état du clavier (ie : les touches actuellement pressées)
+    public void Update(Dictionary<Vector2, int> collision, List<Enemy> enemies, ShopKeeper shopKeeper)
+    {
+
+        KeyboardState
+            keystate = Keyboard.GetState(); // Récupère l'état du clavier (ie : les touches actuellement pressées)
+
+    if(_currentHealth > 0){
         
         base.Update(collision); // Met à jour la position du joueur
-        
-        // Attaque
-        if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C)) {
-            Attack(enemies);
+
+        if (Position.Y > 1000)
+        {
+            _currentHealth = 0;
         }
         
+        // Attaque
+        if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C))
+        {
+            Attack(enemies);
+        }
+
         // Attaque Spé
-        if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V)) {
+        if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V))
+        {
             SpecialAttack(enemies);
         }
 
-        
-        // Reset de la position du joueur, uniquement pour les tests
-        if (keystate.IsKeyDown(Keys.A) && !_prevKeystate.IsKeyDown(Keys.A))
+        Animate(Velocity); // Gère l'animation du joueur
+
+        TakeDamage(enemies); // Gère les dégâts du joueur
+
+        Regen(); // Gère la régénération du joueur
+
+        _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
+    }
+    
+    // Reset de la position du joueur, uniquement pour les tests
+    else if (keystate.IsKeyDown(Keys.A))
         {
             Position.X = 20;
             Position.Y = 10 ;
+            _maxHealth = 100;
+            _currentHealth = _maxHealth;
+        
+            _maxMana = 100;
+            _currentMana = _maxMana;
         }
         
-        Animate(Velocity); // Gère l'animation du joueur
-        
-        TakeDamage(enemies); // Gère les dégâts du joueur
-        
-        Regen();    // Gère la régénération du joueur
-        
-        _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
     }
 
     // On réimplemente la détection verticales des collisions pour le joueur pour integrer le saut
@@ -349,6 +366,15 @@ public class Player : GameObject
         base.Draw(offset);
         _healthBar.Draw();
         _manaBar.Draw();
+    }
+
+    public bool Dead()
+    {
+        if (_currentHealth <= 0)
+        {
+            return true;
+        }
+        else return false;
     }
     
 }

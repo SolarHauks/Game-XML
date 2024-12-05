@@ -140,15 +140,16 @@ public class Game1 : Game
     // and it is used to update your game state (checking for collisions, gathering input, playing audio, etc.).
     protected override void Update(GameTime gameTime)
     {
+        
         Globals.GameTime = gameTime;
 
         _previousKeyState = _currentKeyState;
         _currentKeyState = Keyboard.GetState();
-        
+
         // Commande de fermeture de la fenêtre
         if (_currentKeyState.IsKeyDown(Keys.Escape))
             Exit();
-        
+
         // --------------------------------- Freeze de la pause ---------------------------------
         // Commande de pause du jeu
         if (_currentKeyState.IsKeyDown(Keys.P) && !_previousKeyState.IsKeyDown(Keys.P))
@@ -162,54 +163,61 @@ public class Game1 : Game
             return;
         }
         
-        // --------------------------------- Freeze du shop ---------------------------------
-        
-        // Commande du shop
-        if (_currentKeyState.IsKeyDown(Keys.E) && !_previousKeyState.IsKeyDown(Keys.E))
-            _shopKeeper.Interact();
-        
-        // Logique du shop
-        _shopKeeper.Update();
-        
-        // On mets aussi en pause si on interagit avec le shop. Mais ici pas de menu de pause
-        if (_shopKeeper.IsPaused) { return; }
-        
         // --------------------------------- Resize de l'écran ---------------------------------
-        
+
         // Commande de taille d'écran
         if (_currentKeyState.IsKeyDown(Keys.R) && !_previousKeyState.IsKeyDown(Keys.R))
             SetResolution(320, 640);
-        
+
         if (_currentKeyState.IsKeyDown(Keys.T) && !_previousKeyState.IsKeyDown(Keys.T))
             SetResolution(640, 1280);
-        
+
         if (_currentKeyState.IsKeyDown(Keys.Y) && !_previousKeyState.IsKeyDown(Keys.Y))
             SetFullScreen();
         
-        // --------------------------------- Logique du jeu ---------------------------------
-            
-        // Logique du joueur
-        _player.Update(_tile.GetCollisions(), _enemies, _shopKeeper);
-        
-        // Logique de la caméra
-        _camera.Follow(_player.Rect, new Vector2(_canvas.Target.Width, _canvas.Target.Height));
-        
-        // Logique des ennemis
-        foreach (Enemy enemy in _enemies.ToList())
+        if (_player.Dead() == false)
         {
-            enemy.Update(_tile.GetCollisions());
-            if (enemy.Health <= 0 && !(enemy is Boss boss && boss.CurrentState == Boss.BossState.Dying))
+
+
+            // --------------------------------- Freeze du shop ---------------------------------
+
+            // Commande du shop
+            if (_currentKeyState.IsKeyDown(Keys.E) && !_previousKeyState.IsKeyDown(Keys.E))
+                _shopKeeper.Interact();
+
+            // Logique du shop
+            _shopKeeper.Update();
+
+            // On mets aussi en pause si on interagit avec le shop. Mais ici pas de menu de pause
+            if (_shopKeeper.IsPaused)
             {
-                _enemies.Remove(enemy);
+                return;
             }
+
+            // --------------------------------- Logique du jeu ---------------------------------
+
+            // Logique de la caméra
+            _camera.Follow(_player.Rect, new Vector2(_canvas.Target.Width, _canvas.Target.Height));
+
+            // Logique des ennemis
+            foreach (Enemy enemy in _enemies.ToList())
+            {
+                enemy.Update(_tile.GetCollisions());
+                if (enemy.Health <= 0 && !(enemy is Boss boss && boss.CurrentState == Boss.BossState.Dying))
+                {
+                    _enemies.Remove(enemy);
+                }
+            }
+
+            // Logique des effets
+            _effectsManager.Update();
+
+            base.Update(gameTime);
         }
         
-        // Logique des effets
-        _effectsManager.Update();
-        
-        base.Update(gameTime);
+        // Logique du joueur
+        _player.Update(_tile.GetCollisions(), _enemies, _shopKeeper);
     }
-    
     private void SetResolution(int height, int width)
     {
         _graphics.IsFullScreen = false;
@@ -237,27 +245,36 @@ public class Game1 : Game
         Vector2 offset = _camera.Position;  // Offset lié à la caméra
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
-            _tile.Draw(_spriteBatch, offset);   // dessin des tiles
+        
+        if(_player.Dead())
+        {
             
+        }
+        else
+        {
+
+            _tile.Draw(_spriteBatch, offset); // dessin des tiles
+
             foreach (Enemy enemy in _enemies)
             {
-                enemy.Draw(offset);   // dessin des ennemis
+                enemy.Draw(offset); // dessin des ennemis
             }
-            
+
             _player.Draw(offset); // dessin du joueur
-            
-            _shopKeeper.Draw(offset);   // dessin du shop
-            
-            _effectsManager.Draw(offset);    // dessin des effets
-            
+
+            _shopKeeper.Draw(offset); // dessin du shop
+
+            _effectsManager.Draw(offset); // dessin des effets
+
             if (_bubble.Visible)
-                _bubble.Draw();   // dessin de la bulle de dialogue
-        
-            _pauseMenu.Draw();   // dessin du menu
+                _bubble.Draw(); // dessin de la bulle de dialogue
+
+           
+        }
+        _pauseMenu.Draw(); // dessin du menu
 
         _spriteBatch.End();
-        
+
         _canvas.Draw(_spriteBatch);
     }
     
