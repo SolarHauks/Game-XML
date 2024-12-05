@@ -38,6 +38,7 @@ public class Game1 : Game
     private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
     
     private Bubble _bubble; // classe Bubble pour gérer les bulles de dialogue
+    private Timer _timer; // classe Timer pour gérer le timer
     
 
     // tell the project how to start, and add key variables
@@ -82,6 +83,7 @@ public class Game1 : Game
         // Texture du menu
         // Texture2D menuTexture = Content.Load<Texture2D>("Assets/GUI/pauseMenu");
         _pauseMenu = new PauseMenu();
+        _timer = new Timer();
         
         // Texture de debug pour les collisions
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -177,6 +179,8 @@ public class Game1 : Game
         
         // --------------------------------- Logique du jeu ---------------------------------
         
+        _timer.Update();    // Update du timer
+        
         if (!_player.IsDead) // Si le joueur n'est pas mort
         {
             // --------------------------------- Freeze du shop ---------------------------------
@@ -202,6 +206,8 @@ public class Game1 : Game
                 {
                     _enemies.Remove(enemy);
                     _player.AddMoney(5);
+                    
+                    if (enemy is Boss) _timer.Stop();  // On stop le timer à la mort du boss
                 }
             }
 
@@ -271,6 +277,8 @@ public class Game1 : Game
             }
             
             _pauseMenu.Draw(); // dessin du menu
+            
+            _timer.Draw();  // dessin du timer
 
         _spriteBatch.End();
 
