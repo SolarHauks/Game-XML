@@ -206,6 +206,7 @@ public class Game1 : Game
                 if (enemy.Health <= 0 && !(enemy is Boss boss && boss.CurrentState == Boss.BossState.Dying))
                 {
                     _enemies.Remove(enemy);
+                    _player.AddMoney(enemy,5);
                 }
             }
 
