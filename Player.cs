@@ -9,8 +9,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace JeuVideo;
 
-/// Représente un joueur dans le jeu.
-/// Hérite de la classe GameObject.
+// Représente un joueur dans le jeu.
+// Hérite de la classe GameObject.
 public class Player : GameObject
 {
     private bool _grounded; // Si le joueur est au sol
@@ -61,15 +61,11 @@ public class Player : GameObject
     public int Money
     {
         get => _money;
-        set
-        {
-            if(_money >= 0)
-            {
-                _money = value;
-            }
-        }
+        private set => _money = value >= 0 ? value : _money;
     }
     
+    public bool IsDead => _currentHealth <= 0;
+
     public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position, true, 1.0f) {
         Velocity = new Vector2();
         _grounded = false;
@@ -99,51 +95,39 @@ public class Player : GameObject
     public void Update(Dictionary<Vector2, int> collision, List<Enemy> enemies, ShopKeeper shopKeeper)
     {
 
-        KeyboardState
-            keystate = Keyboard.GetState(); // Récupère l'état du clavier (ie : les touches actuellement pressées)
+        KeyboardState keystate = Keyboard.GetState(); // Récupère l'état du clavier (ie : les touches actuellement pressées)
 
-    if(_currentHealth > 0){
-        
-        base.Update(collision); // Met à jour la position du joueur
+        if(!IsDead){
+            
+            base.Update(collision); // Met à jour la position du joueur
 
-        if (Position.Y > 1000)
-        {
-            _currentHealth = 0;
+            if (Position.Y > 1000) _currentHealth = 0;  // Si le joueur tombe dans le vide, il meurt
+            
+            // Attaque
+            if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C))
+            {
+                Attack(enemies);
+            }
+
+            // Attaque Spé
+            if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V))
+            {
+                SpecialAttack(enemies);
+            }
+
+            Animate(Velocity); // Gère l'animation du joueur
+
+            TakeDamage(enemies); // Gère les dégâts du joueur
+
+            Regen(); // Gère la régénération du joueur
+
+            _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
         }
         
-        // Attaque
-        if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C))
+        else if (keystate.IsKeyDown(Keys.A))    // Réapparition du joueur (en cas de mort)
         {
-            Attack(enemies);
+            Respawn();
         }
-
-        // Attaque Spé
-        if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V))
-        {
-            SpecialAttack(enemies);
-        }
-
-        Animate(Velocity); // Gère l'animation du joueur
-
-        TakeDamage(enemies); // Gère les dégâts du joueur
-
-        Regen(); // Gère la régénération du joueur
-
-        _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
-    }
-    
-    // Reset de la position du joueur, uniquement pour les tests
-    else if (keystate.IsKeyDown(Keys.A))
-        {
-            Position.X = 20;
-            Position.Y = 10 ;
-            _maxHealth = 100;
-            _currentHealth = _maxHealth;
-        
-            _maxMana = 100;
-            _currentMana = _maxMana;
-        }
-        
     }
 
     // On réimplemente la détection verticales des collisions pour le joueur pour integrer le saut
@@ -343,10 +327,7 @@ public class Player : GameObject
         }
     }
     
-    public void TakeDamage(int damage)
-    {
-        Health -= damage;
-    }
+    public void TakeDamage(int damage) => Health -= damage;
 
     private void Regen()
     {
@@ -361,38 +342,19 @@ public class Player : GameObject
 
     public void AddMaxHealth(int value)
     {
-        if (_maxHealth < 200)
-        {
-            _maxHealth += value;
-            Health += 10;   // Actualisation de la barre de vie
-        }
+        _maxHealth = Math.Min(_maxHealth + value, 200);
+        Health += Math.Min(Health + value, _maxHealth);   // Actualisation de la barre de vie
     }
     
     public void AddMaxMana(int value)
     {
-        if (_maxMana < 200)
-        {
-            _maxMana += value;
-            Mana += 10;   // Actualisation de la barre de mana
-        }
+        _maxMana = Math.Min(_maxMana + value, 200);
+        Mana += Math.Min(Mana + value, _maxMana);   // Actualisation de la barre de vie
     }
     
-    public void AddMoney(Enemy enemy,int value)
-    {
-        if (enemy is Boss)
-        {
-            Money += (int) Math.Pow(value,3);
-        }
-        else
-        {        
-            Money += value;
-        }
-    }
+    public void AddMoney(int value) => Money += value;
 
-    public void RemoveMoney(int value)
-    {
-        Money -= value;
-    }
+    public void RemoveMoney(int value) => Money -= value;
     
     public override void Draw(Vector2 offset)
     {
@@ -401,13 +363,15 @@ public class Player : GameObject
         _manaBar.Draw();
     }
 
-    public bool Dead()
+    private void Respawn()
     {
-        if (_currentHealth <= 0)
-        {
-            return true;
-        }
-        else return false;
+        Position = new Vector2(20, 10);
+        
+        _maxHealth = 100;
+        _currentHealth = _maxHealth;
+        
+        _maxMana = 100;
+        _currentMana = _maxMana;
     }
     
 }

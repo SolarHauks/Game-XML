@@ -175,10 +175,10 @@ public class Game1 : Game
         if (_currentKeyState.IsKeyDown(Keys.Y) && !_previousKeyState.IsKeyDown(Keys.Y))
             SetFullScreen();
         
-        if (!_player.Dead()) // Si le joueur n'est pas mort
+        // --------------------------------- Logique du jeu ---------------------------------
+        
+        if (!_player.IsDead) // Si le joueur n'est pas mort
         {
-
-
             // --------------------------------- Freeze du shop ---------------------------------
 
             // Commande du shop
@@ -189,12 +189,7 @@ public class Game1 : Game
             _shopKeeper.Update();
 
             // On mets aussi en pause si on interagit avec le shop. Mais ici pas de menu de pause
-            if (_shopKeeper.IsPaused)
-            {
-                return;
-            }
-
-            // --------------------------------- Logique du jeu ---------------------------------
+            if (_shopKeeper.IsPaused) return;
 
             // Logique de la caméra
             _camera.Follow(_player.Rect, new Vector2(_canvas.Target.Width, _canvas.Target.Height));
@@ -206,7 +201,7 @@ public class Game1 : Game
                 if (enemy.Health <= 0 && !(enemy is Boss boss && boss.CurrentState == Boss.BossState.Dying))
                 {
                     _enemies.Remove(enemy);
-                    _player.AddMoney(enemy,5);
+                    _player.AddMoney(5);
                 }
             }
 
@@ -240,43 +235,42 @@ public class Game1 : Game
     // called on a regular interval to take the current game state and draw the game entities to the screen
     protected override void Draw(GameTime gameTime)
     {
-        //GraphicsDevice.Clear(Color.CornflowerBlue);
         _canvas.Activate();
 
         Vector2 offset = _camera.Position;  // Offset lié à la caméra
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         
-        if(_player.Dead()) // Si le joueur est mort
-        {
-            GraphicsDevice.Clear(Color.Black); // Met la couleur du fond en noir pour le game over
-
-            _spriteBatch.DrawString(Globals.Content.Load<SpriteFont>("Assets/Fonts/font"), "Game Over", new Vector2(300, 90), Color.Red);   // Affiche "Game Over" en rouge
-            _spriteBatch.DrawString(Globals.Content.Load<SpriteFont>("Assets/Fonts/font"), "Appuyer sur A pour reapparaitre", new Vector2(220, 100), Color.Red); // Affiche "Appuyer sur A pour reapparaitre" en rouge
-
-        }
-        else
-        {
-
-            _tile.Draw(_spriteBatch, offset); // dessin des tiles
-
-            foreach (Enemy enemy in _enemies)
+            if(_player.IsDead) // Si le joueur est mort
             {
-                enemy.Draw(offset); // dessin des ennemis
+                GraphicsDevice.Clear(Color.Black); // Met la couleur du fond en noir pour le game over
+                
+                SpriteFont font = Globals.Content.Load<SpriteFont>("Assets/Fonts/font");
+                Color color = Color.Red;
+
+                _spriteBatch.DrawString(font, "Game Over", new Vector2(300, 90), color);   // Affiche "Game Over" en rouge
+                _spriteBatch.DrawString(font, "Appuyer sur A pour reapparaitre", new Vector2(220, 100), color); // Affiche "Appuyer sur A pour reapparaitre" en rouge
             }
+            else
+            {
+                _tile.Draw(_spriteBatch, offset); // dessin des tiles
 
-            _player.Draw(offset); // dessin du joueur
+                foreach (Enemy enemy in _enemies)
+                {
+                    enemy.Draw(offset); // dessin des ennemis
+                }
 
-            _shopKeeper.Draw(offset); // dessin du shop
+                _player.Draw(offset); // dessin du joueur
 
-            _effectsManager.Draw(offset); // dessin des effets
+                _shopKeeper.Draw(offset); // dessin du shop
 
-            if (_bubble.Visible)
-                _bubble.Draw(); // dessin de la bulle de dialogue
+                _effectsManager.Draw(offset); // dessin des effets
 
-           
-        }
-        _pauseMenu.Draw(); // dessin du menu
+                if (_bubble.Visible)
+                    _bubble.Draw(); // dessin de la bulle de dialogue
+            }
+            
+            _pauseMenu.Draw(); // dessin du menu
 
         _spriteBatch.End();
 
