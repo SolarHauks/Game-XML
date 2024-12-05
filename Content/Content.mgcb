@@ -91,6 +91,10 @@
 /processor:TextureProcessor
 /build:Assets/GUI/manaPot.png
 
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:Assets/GUI/coin.png
+
 # Text Bubble
 /importer:TextureImporter
 /processor:TextureProcessor

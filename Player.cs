@@ -38,6 +38,8 @@ public class Player : GameObject
 
     private double _lastRegenTime;
 
+    private int _money;
+
     private int Health
     {
         get => _currentHealth;
@@ -53,6 +55,18 @@ public class Player : GameObject
         set {
             _currentMana = Math.Clamp(value, 0, _maxMana);
             _manaBar.Set(_currentMana);
+        }
+    }
+
+    public int Money
+    {
+        get => _money;
+        set
+        {
+            if(_money >= 0)
+            {
+                _money = value;
+            }
         }
     }
     
@@ -74,6 +88,8 @@ public class Player : GameObject
         _lastDamageTime = 0;
         
         _lastRegenTime = 0;
+
+        _money = 0;
     }
 
     /// Met à jour l'état du joueur.
@@ -359,6 +375,23 @@ public class Player : GameObject
             _maxMana += value;
             Mana += 10;   // Actualisation de la barre de mana
         }
+    }
+    
+    public void AddMoney(Enemy enemy,int value)
+    {
+        if (enemy is Boss)
+        {
+            Money += (int) Math.Pow(value,3);
+        }
+        else
+        {        
+            Money += value;
+        }
+    }
+
+    public void RemoveMoney(int value)
+    {
+        Money -= value;
     }
     
     public override void Draw(Vector2 offset)

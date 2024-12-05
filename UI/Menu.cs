@@ -10,6 +10,7 @@ public abstract class Menu
     public bool IsActive { get; set; }  // Etat du menu. Active -> affiché et logique qui tourne
     protected readonly Vector2 ScreenSize;   // Taille de l'écran
     protected readonly List<Button> Buttons; // Liste des boutons du menu
+    protected readonly List<Image> Images; // Liste des images du menu
 
     // Rectangle de destination du sprite du menu
     protected Rectangle DestRectangle => new((int)(ScreenSize.X / 2 - 64), (int)(ScreenSize.Y / 2 - 64), 128, 128);
@@ -21,6 +22,7 @@ public abstract class Menu
         IsActive = false;   // Menu désactivé par défaut
         ScreenSize = Globals.ScreenSize;
         Buttons = new List<Button>();
+        Images = new List<Image>();
     }
 
     protected virtual void Update()
@@ -49,5 +51,13 @@ public abstract class Menu
         {
             button.Draw();
         }
+
+        // Dessin des images
+        foreach (var image  in Images)
+        {
+            image.Draw();
+        }
+        
+        
     }
 }
