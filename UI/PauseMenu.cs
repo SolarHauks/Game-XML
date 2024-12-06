@@ -15,9 +15,9 @@ public class PauseMenu : Menu
         Buttons.Add(new Button(exitButtonTexture, new Vector2(ScreenSize.X / 2 - 15, DestRectangle.Y + 25 * 3 + 7)));
     }
 
-    public void Update(Game1 game)
+    public void Update(Game1 game, Vector2 scale)
     {
-        base.Update();
+        base.Update(scale);
         
         if (Buttons[0].IsClicked) { IsActive = false; }
 

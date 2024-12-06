@@ -11,6 +11,7 @@ public class Canvas
     private readonly GraphicsDevice _graphicsDevice;
     private Rectangle _destinationRectangle;
     public readonly RenderTarget2D Target;
+    public Vector2 MenuScale { get; private set; }
 
     public Canvas(GraphicsDevice graphicsDevice, int width, int height)
     {
@@ -25,6 +26,7 @@ public class Canvas
 
         float scaleX = (float)screenSize.Width / Target.Width;
         float scaleY = (float)screenSize.Height / Target.Height;
+        MenuScale = new Vector2(scaleX, scaleY);
         float scale = Math.Min(scaleX, scaleY);
 
         int newWidth = (int)(Target.Width * scale);

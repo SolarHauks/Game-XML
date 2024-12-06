@@ -1,12 +1,4 @@
 # Next
-## Important
-- Différents ennemies 
-- Upgrade Visuel (BIG)
-- UI
-  - Menu d'options
-  - Menu de jeu (peut etre le meme que la pause)
-  - Interface
-
 ## Optionnal (si on a le temps)
 - Son
   - Music
@@ -15,6 +7,12 @@
   - Ajout du controle manette
   - modification de l'ui pour refleter l'input method
 - Ameliorer le boss, par exemple avec une phase 2
+- Différents ennemies
+- Upgrade Visuel (BIG)
+- UI
+  - Menu d'options
+  - Menu de jeu (peut etre le meme que la pause)
+  - Interface
 
 # A fix
 

@@ -15,9 +15,9 @@ public class ShopMenu : Menu
         Buttons.Add(new Button(manaButtonTexture, new Vector2(DestRectangle.X + 16 * 5, ScreenSize.Y / 2 - 8)));
     }
 
-    public void Update(Player player)
+    public void Update(Player player, Vector2 scale)
     {
-        base.Update();
+        base.Update(scale);
 
         if (Buttons[0].IsClicked && player.Money >= 10)
         {

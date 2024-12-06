@@ -22,10 +22,10 @@ public class ShopKeeper : Sprite
     }
     
     // Juste pour update l'animation
-    public void Update()
+    public void Update(Vector2 scale)
     {
         AnimationManager.Update();
-        _shopMenu.Update(_player);
+        _shopMenu.Update(_player, scale);
     }
     
     public void Interact()

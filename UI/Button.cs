@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,12 +21,17 @@ public class Button : Sprite
         _rectangle = new Rectangle((int)position.X - width / 2, (int)position.Y - height / 2, width*2, height*2);
     }
     
-    public void Update()
+    public void Update(Vector2 scale)
     {
         MouseState currentMouseState = Mouse.GetState();
         Point mousePosition = new Point(currentMouseState.X, currentMouseState.Y);
-
-        if (_rectangle.Contains(mousePosition) && currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+        
+        // Ajuster la position de la souris en fonction de la caméra et de l'échelle
+        Vector2 adjustedMousePosition = new Vector2(mousePosition.X, mousePosition.Y) / scale;
+        
+        Console.WriteLine(adjustedMousePosition);
+        
+        if (_rectangle.Contains(adjustedMousePosition) && currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
         {
             IsClicked = true;
         }
@@ -40,6 +46,10 @@ public class Button : Sprite
     public void Draw()
     {
        Globals.SpriteBatch.Draw(_texture, _rectangle, Color.White);
+       
+       Globals.DrawRectHollow(_rectangle);
+       
+       Console.WriteLine(_rectangle);
     }
     
 }
