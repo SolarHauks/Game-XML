@@ -19,14 +19,14 @@ public class Timer {
         // On réutilise la texture du shopMenu pour le timer, par soucis de simplicité
         _texture = Globals.Content.Load<Texture2D>("Assets/GUI/shopMenu");
         
+        _font = Globals.Content.Load<SpriteFont>("Assets/Fonts/font");
+        _text = "00:00:00";    // Texte de base uniquement là pour centrer le texte dans le menu
+        
         // Set des positions
         Vector2 screenSize = Globals.ScreenSize;
-        Vector2 position = new Vector2(screenSize.X - _texture.Width * 2, 0);
-        _textPosition = new(position.X, position.Y + 2);
+        Vector2 position = new Vector2(screenSize.X - _texture.Width * 3, 0);
+        _textPosition = new(position.X + (_texture.Width*3 - _font.MeasureString(_text).X) / 2, position.Y + (_texture.Height - _font.MeasureString(_text).Y) / 2);
         _destRect = new Rectangle((int)position.X, (int)position.Y, _texture.Width * 3, _texture.Height);
-        
-        _font = Globals.Content.Load<SpriteFont>("Assets/Fonts/font");
-        
     }
     
     public void Update()
