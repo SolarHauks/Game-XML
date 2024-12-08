@@ -29,8 +29,6 @@ public class Button : Sprite
         // Ajuster la position de la souris en fonction de la caméra et de l'échelle
         Vector2 adjustedMousePosition = new Vector2(mousePosition.X, mousePosition.Y) / scale;
         
-        Console.WriteLine(adjustedMousePosition);
-        
         if (_rectangle.Contains(adjustedMousePosition) && currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
         {
             IsClicked = true;
@@ -46,10 +44,6 @@ public class Button : Sprite
     public void Draw()
     {
        Globals.SpriteBatch.Draw(_texture, _rectangle, Color.White);
-       
-       Globals.DrawRectHollow(_rectangle);
-       
-       Console.WriteLine(_rectangle);
     }
     
 }

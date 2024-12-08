@@ -18,7 +18,12 @@ public class Tile
     private readonly double _onScreenMultiplier = 1.0; // WIP
 
     // liste des tiles de collision, qu'on sépare par soucis de simplicité
-    private Dictionary<Vector2, int> Collisions { set; get; }
+    public Dictionary<Vector2, int> Collisions { get; private set; }
+    
+    // liste des entités, qu'on sépare par soucis de simplicité
+    public Dictionary<Vector2, int> Entities { get; private set; }
+    
+    public int CollisionTilesetThreshold { get; private set; }
     
 
     public Tile(Texture2D textureAtlas, Texture2D hitboxTexture)
@@ -32,11 +37,6 @@ public class Tile
         _hitboxTexture = hitboxTexture;
         
         Load();
-    }
-    
-    public Dictionary<Vector2, int> GetCollisions()
-    {
-        return Collisions;
     }
 
     // Charge le niveau à partir des données XML
@@ -59,58 +59,39 @@ public class Tile
         
         // récupère les layers
         GetLayers(doc);
+        
+        // récupère le seuil pour détecter le layer de collision
+        CollisionTilesetThreshold = GetTilesetThreshold(doc);
     }
     
     // Récupère les layers du document XML et les sépare en layers d'affichage et layer de collision.
     // param : doc - Le document XML contenant les données des layers.
     private void GetLayers(XmlDocument doc)
     {
-        int threshold = GetTilesetThreshold(doc);   // Récupère la valeur de seuil pour détecter le layer de collision
-
         // traitement des layers
-        XmlNodeList layerNodes = doc.SelectNodes("//layer/data"); // Selectionne toutes les données des noeuds layer
+        XmlNodeList layerNodes = doc.SelectNodes("//layer"); // Selectionne toutes les données des noeuds layer
         
         foreach (XmlNode layerNode in layerNodes)
         {
-            string nodeContent = layerNode.InnerText;   // Données du layer
+            string nodeContent = layerNode.SelectSingleNode("data").InnerText;   // Données du layer
             Dictionary<Vector2, int> layer = LoadMap(nodeContent);  // Charge les données du layer dans un dictionnaire
             
-            // On regarde si le layer qu'on vient de charger est le layer de collision
+            // On regarde si le layer qu'on vient de charger est le layer de collision ou le layer d'entité
             // Si oui on le sépare des autres car on ne veut pas l'afficher, on s'en sert just pour la logique
-            bool containsGreaterValue = false;
-
-            foreach (int value in layer.Values)
+            string layerName = layerNode.Attributes["name"].Value; // Récupère la valeur de l'attribut name
+            switch (layerName)
             {
-                if (value >= threshold)
-                {
-                    containsGreaterValue = true;
+                case "collision":
+                    Collisions = layer;
                     break;
-                }
-            }
-            
-            if (containsGreaterValue) {
-                Collisions = layer;
-            } else {
-                _layerList.Add(layer);
-            }
-        }
-    }
-    
-    // Récupère la valeur de seuil pour détecter le layer de collision
-    private int GetTilesetThreshold(XmlDocument doc)
-    {
-        int threshold = 0;
-        XmlNodeList tilesetNodes = doc.SelectNodes("//tileset"); // Selectionne tous les noeuds tileset
-
-        foreach (XmlNode tilesetNode in tilesetNodes)
-        {
-            if (tilesetNode.Attributes["source"].Value.EndsWith("collision.tsx"))
-            {
-                threshold = int.Parse(tilesetNode.Attributes["firstgid"].Value);
+                case "entities":
+                    Entities = layer;
+                    break;
+                default:
+                    _layerList.Add(layer);
+                    break;
             }
         }
-
-        return threshold;
     }
     
     // Récupère les valeurs de _displayTilesize, _pixelTilesize et numTilesPerRow
@@ -144,6 +125,23 @@ public class Tile
                 }
             }
         }
+    }
+    
+    // Récupère la valeur de seuil pour détecter le layer de collision
+    private int GetTilesetThreshold(XmlDocument doc)
+    {
+        int threshold = 0;
+        XmlNodeList tilesetNodes = doc.SelectNodes("//tileset"); // Selectionne tous les noeuds tileset
+
+        foreach (XmlNode tilesetNode in tilesetNodes)
+        {
+            if (tilesetNode.Attributes["source"].Value.EndsWith("collision.tsx"))
+            {
+                threshold = int.Parse(tilesetNode.Attributes["firstgid"].Value);
+            }
+        }
+
+        return threshold - 1; // -1 car les tiles commencent à 1
     }
     
     // Charge les données d'un layer dans un dictionnaire

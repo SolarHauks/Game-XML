@@ -10,11 +10,11 @@ public class Snake(Texture2D texture, Vector2 position, int maxHealth) : Enemy(t
         // On passe par la velocité car on en a besoin pour les collisions
         Velocity.X = Direction * 50 * (float)dt;
         Position.X += Velocity.X;
-        if (Position.X > StartPosition.X + 50)
+        if (Position.X > StartPosition.X + 48)  // 48 = 3 tiles
         {
             Direction = -1;
         }
-        else if (Position.X < StartPosition.X - 50)
+        else if (Position.X < StartPosition.X - 48)
         {
             Direction = 1;
         }

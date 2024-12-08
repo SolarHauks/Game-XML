@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JeuVideo.Effects;
 using JeuVideo.Enemies;
@@ -81,11 +82,10 @@ public class Game1 : Game
         Globals.GraphicsDevice = GraphicsDevice;
         
         // Texture du menu
-        // Texture2D menuTexture = Content.Load<Texture2D>("Assets/GUI/pauseMenu");
         _pauseMenu = new PauseMenu();
         _timer = new Timer();
         
-        // Texture de debug pour les collisions
+        // Texture de debug pour afficher les hitbox
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
         debugTexture.SetData(new Color[] { new(255, 0, 0, 255) });
         Globals.DebugTexture = debugTexture;
@@ -94,47 +94,72 @@ public class Game1 : Game
         _effectsManager = new EffectsManager();
         _effectsManager.AddEffect("slash");
         
-        // Joueur
-        Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
-        _player = new Player(playerTexture, new Vector2(160, 80), _effectsManager);
-        
-        // Shop
-        Texture2D shopTexture = Content.Load<Texture2D>("Assets/NPC/shop");
-        _shopKeeper = new ShopKeeper(shopTexture, new Vector2(160, 261), _player);
-        
-        // Boss
-        Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss");
-        Texture2D summonTexture = Content.Load<Texture2D>("Assets/Enemies/summon");
-        Boss boss = new(bossTexture, new Vector2(400, 200), 200, _player, summonTexture);
-        _enemies.Add(boss);
-
-        // Ennemis
-        // Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
-        // Snake snake = new(snakeTexture, new Vector2(192, 270), 100);
-        // _enemies.Add(snake);
-        
-        // Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
-        // Ghost ghost = new(ghostTexture, new Vector2(680, 30), 20, _player);
-        // _enemies.Add(ghost);
-        
-        // Spike
-        // Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
-        // Spike spike = new(spikeTexture, new Vector2(192, 272));
-        // _enemies.Add(spike);
-
-        // Texture des tiles
-        _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
-        _hitboxTexture = Content.Load<Texture2D>("Assets/Tileset/collisions");
-        
         // Bulle de dialogue
         Texture2D bubbleTexture = Content.Load<Texture2D>("Assets/GUI/bubble");
         SpriteFont font = Content.Load<SpriteFont>("Assets/Fonts/font");
         _bubble = new Bubble(bubbleTexture, font);
         _bubble.SetText("Hello Developers!");
         _bubble.TextColor = Color.Yellow;
+        
+        // Joueur
+        // Il est chargé ici et pas dans EntitiesProcessed car on a besoin qu'il soit initialisé avant les ennemis
+        Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
+        _player = new Player(playerTexture, new Vector2(160, 80), _effectsManager);
+        
+        // Shop
+        // A terme, il sera chargé dans EntitiesProcessed
+        Texture2D shopTexture = Content.Load<Texture2D>("Assets/NPC/shop");
+        _shopKeeper = new ShopKeeper(shopTexture, new Vector2(160, 261), _player);
 
         // Tile
+        _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");  // Texture du terrain
+        _hitboxTexture = Content.Load<Texture2D>("Assets/Tileset/collisions");  // Texture de debug pour les collisions et les entités
+        
         _tile = new(_textureAtlas, _hitboxTexture);
+        EntitiesProcessed(_tile.Entities);  // Chargement des entités
+    }
+
+    private void EntitiesProcessed(Dictionary<Vector2, int> entities)
+    {
+        // Chargement des différentes textures, fait ici pour ne pas le faire à chaque entité
+        Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
+        Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
+        Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
+        Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss");
+        Texture2D summonTexture = Content.Load<Texture2D>("Assets/Enemies/summon");
+
+        int collisionTilesetThreshold = _tile.CollisionTilesetThreshold;    // Décalage des valeurs des tiles d'entités
+        
+        foreach (KeyValuePair<Vector2, int> entity in entities)
+        {
+            Vector2 position = entity.Key * 16; // Position de l'entité
+            switch (entity.Value - collisionTilesetThreshold)
+            {
+                case 3:
+                    Console.WriteLine("Spike");
+                    Spike spike = new(spikeTexture, position);
+                    _enemies.Add(spike);
+                    break;
+                case 4:
+                    Console.WriteLine("Snake");
+                    Snake snake = new(snakeTexture, position, 100);
+                    _enemies.Add(snake);
+                    break;
+                case 5:
+                    Console.WriteLine("Ghost");
+                    Ghost ghost = new(ghostTexture, position, 20, _player);
+                    _enemies.Add(ghost);
+                    break;
+                case 6:
+                    Console.WriteLine("Boss");
+                    Boss boss = new(bossTexture, position, 200, _player, summonTexture);
+                    _enemies.Add(boss);
+                    break;
+                default:
+                    Console.Error.WriteLine("Entity not recognized : " + (entity.Value - collisionTilesetThreshold));
+                    break;
+            }
+        }
     }
 
     // called on a regular interval to update the game state, e.g. take player inputs, move ships, or animate entities
@@ -201,7 +226,7 @@ public class Game1 : Game
             // Logique des ennemis
             foreach (Enemy enemy in _enemies.ToList())
             {
-                enemy.Update(_tile.GetCollisions());
+                enemy.Update(_tile.Collisions);
                 if (enemy.Health <= 0 && !(enemy is Boss boss && boss.CurrentState == Boss.BossState.Dying))
                 {
                     _enemies.Remove(enemy);
@@ -218,7 +243,7 @@ public class Game1 : Game
         }
         
         // Logique du joueur
-        _player.Update(_tile.GetCollisions(), _enemies, _shopKeeper);
+        _player.Update(_tile.Collisions, _enemies, _shopKeeper);
     }
     private void SetResolution(int height, int width)
     {
