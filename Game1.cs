@@ -160,7 +160,7 @@ public class Game1 : Game
         if (_pauseMenu.IsActive)
         {
             // Logique du menu
-            _pauseMenu.Update(this);
+            _pauseMenu.Update(this, _canvas.MenuScale);
             // On ne fait rien d'autre car le jeu est en pause
             return;
         }
@@ -190,7 +190,7 @@ public class Game1 : Game
                 _shopKeeper.Interact();
 
             // Logique du shop
-            _shopKeeper.Update();
+            _shopKeeper.Update(_canvas.MenuScale);
 
             // On mets aussi en pause si on interagit avec le shop. Mais ici pas de menu de pause
             if (_shopKeeper.IsPaused) return;
