@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using JeuVideo.Effects;
 using JeuVideo.Enemies;
-using JeuVideo.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -92,7 +91,7 @@ public class Player : GameObject
     /// param keystate : L'état actuel du clavier.
     /// param tile : Les informations sur les tiles pour la détection des collisions.
     /// param gameTime : Le temps écoulé depuis la dernière frame.
-    public void Update(Dictionary<Vector2, int> collision, List<Enemy> enemies, ShopKeeper shopKeeper)
+    public void Update(Dictionary<Vector2, int> collision, List<Enemy> enemies)
     {
 
         KeyboardState keystate = Keyboard.GetState(); // Récupère l'état du clavier (ie : les touches actuellement pressées)

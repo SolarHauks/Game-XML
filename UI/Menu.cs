@@ -23,14 +23,14 @@ public abstract class Menu
         Buttons = new List<Button>();
     }
 
-    protected void Update(Vector2 scale)
+    protected void Update()
     {
         if (!IsActive) { return; }  // Si le menu n'est pas actif, on ne le met pas à jour
         
         // Update des boutons
         foreach (var button in Buttons)
         {
-            button.Update(scale);
+            button.Update(Globals.Scale);
         }
     }
 

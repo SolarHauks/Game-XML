@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JeuVideo.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,13 +8,13 @@ namespace JeuVideo.Shop;
 // Classe ShopKeeper pour gérer le marchand
 // On la dérive ici de Sprite et pas de GO car on n'a pas besoin de toute la logique lourde de GO.
 // On recode juste une simple méthode Update pour gérer l'animation
-public class ShopKeeper : Sprite
+public class ShopKeeper : GameObject
 {
     private readonly ShopMenu _shopMenu;
     private readonly Player _player;
     public bool IsPaused;
     
-    public ShopKeeper(Texture2D texture, Vector2 position, Player player) : base(texture, position, true)
+    public ShopKeeper(Texture2D texture, Vector2 position, Player player) : base(texture, position, true, 1.0f)
     {
         AnimationManager.SetAnimation("idle");
         _shopMenu = new ShopMenu();
@@ -22,10 +23,11 @@ public class ShopKeeper : Sprite
     }
     
     // Juste pour update l'animation
-    public void Update(Vector2 scale)
+    public override void Update(Dictionary<Vector2, int> collision)
     {
-        AnimationManager.Update();
-        _shopMenu.Update(_player, scale);
+        base.Update(collision);
+        
+        _shopMenu.Update(_player);
     }
     
     public void Interact()
@@ -49,5 +51,17 @@ public class ShopKeeper : Sprite
         base.Draw(offset);
         
         _shopMenu.Draw();
+    }
+
+    protected override void DeplacementHorizontal(double dt)
+    {
+    }
+
+    protected override void DeplacementVertical(double dt)
+    {
+    }
+
+    protected override void Animate(Vector2 velocity)
+    {
     }
 }

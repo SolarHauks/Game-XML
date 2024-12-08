@@ -14,6 +14,8 @@ public static class Globals
     public static GraphicsDevice GraphicsDevice { get; set; }  // Pour les textures
     public static Vector2 ScreenSize { get; set; }  // Taille de l'écran
     
+    public static Vector2 Scale { get; set; } // Echelle du jeu, nécessaire pour les menus
+    
     // Texture utilisée pour le debug, reglangle rouge
     // Sert seulement pour la fonction DrawRectHollow
     public static Texture2D DebugTexture { get; set; }  

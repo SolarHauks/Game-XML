@@ -105,11 +105,6 @@ public class Game1 : Game
         // Il est chargé ici et pas dans EntitiesProcessed car on a besoin qu'il soit initialisé avant les ennemis
         Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
         _player = new Player(playerTexture, new Vector2(160, 80), _effectsManager);
-        
-        // Shop
-        // A terme, il sera chargé dans EntitiesProcessed
-        Texture2D shopTexture = Content.Load<Texture2D>("Assets/NPC/shop");
-        _shopKeeper = new ShopKeeper(shopTexture, new Vector2(160, 261), _player);
 
         // Tile
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");  // Texture du terrain
@@ -127,6 +122,7 @@ public class Game1 : Game
         Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
         Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss");
         Texture2D summonTexture = Content.Load<Texture2D>("Assets/Enemies/summon");
+        Texture2D shopTexture = Content.Load<Texture2D>("Assets/NPC/shop");
 
         int collisionTilesetThreshold = _tile.CollisionTilesetThreshold;    // Décalage des valeurs des tiles d'entités
         
@@ -135,23 +131,23 @@ public class Game1 : Game
             Vector2 position = entity.Key * 16; // Position de l'entité
             switch (entity.Value - collisionTilesetThreshold)
             {
+                case 2:
+                    position.Y += 5;    // Décalage pour le shopkeeper
+                    _shopKeeper = new ShopKeeper(shopTexture, position, _player);
+                    break;
                 case 3:
-                    Console.WriteLine("Spike");
                     Spike spike = new(spikeTexture, position);
                     _enemies.Add(spike);
                     break;
                 case 4:
-                    Console.WriteLine("Snake");
                     Snake snake = new(snakeTexture, position, 100);
                     _enemies.Add(snake);
                     break;
                 case 5:
-                    Console.WriteLine("Ghost");
                     Ghost ghost = new(ghostTexture, position, 20, _player);
                     _enemies.Add(ghost);
                     break;
                 case 6:
-                    Console.WriteLine("Boss");
                     Boss boss = new(bossTexture, position, 200, _player, summonTexture);
                     _enemies.Add(boss);
                     break;
@@ -169,6 +165,7 @@ public class Game1 : Game
     {
         //que le joueur soit mort ou non, on update le temps et tout le reste 
         Globals.GameTime = gameTime;
+        Globals.Scale = _canvas.MenuScale;
 
         _previousKeyState = _currentKeyState;
         _currentKeyState = Keyboard.GetState();
@@ -185,7 +182,7 @@ public class Game1 : Game
         if (_pauseMenu.IsActive)
         {
             // Logique du menu
-            _pauseMenu.Update(this, _canvas.MenuScale);
+            _pauseMenu.Update(this);
             // On ne fait rien d'autre car le jeu est en pause
             return;
         }
@@ -215,7 +212,7 @@ public class Game1 : Game
                 _shopKeeper.Interact();
 
             // Logique du shop
-            _shopKeeper.Update(_canvas.MenuScale);
+            _shopKeeper.Update(_tile.Collisions);
 
             // On mets aussi en pause si on interagit avec le shop. Mais ici pas de menu de pause
             if (_shopKeeper.IsPaused) return;
@@ -243,7 +240,7 @@ public class Game1 : Game
         }
         
         // Logique du joueur
-        _player.Update(_tile.Collisions, _enemies, _shopKeeper);
+        _player.Update(_tile.Collisions, _enemies);
     }
     private void SetResolution(int height, int width)
     {
