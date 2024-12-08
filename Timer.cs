@@ -1,4 +1,5 @@
 using System;
+using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -38,7 +39,7 @@ public class Timer {
     }
 
     public void Stop() => _active = false;
-        
+    
     /*
     public void Save()
     {
@@ -55,7 +56,7 @@ public class Timer {
         // XmlUtils.ValidateXmlFile(schemaNamespace, xsdFilePath, xmlFilePath);
         
         // Création d'un nouvel élément pour le timer
-        XmlElement newScore = doc.CreateElement("Temps");
+        XmlElement newScore = doc.CreateElement("temps");
         newScore.InnerText = _time.ToString("F2"); // Format du temps en secondes avec 2 décimales
 
         // Ajout du nouvel élément au document
@@ -63,8 +64,10 @@ public class Timer {
 
         // Sauvegarde du document
         doc.Save(xmlFilePath);
+
+        String result = "../../../Content/Data/Highscore/test.xml";
         
-        XmlUtils.XslTransform(xmlFilePath, "../../../Content/Data/Highscore/best_score.xslt", xmlFilePath);
+        // XmlUtils.XslTransform(xmlFilePath, "../../../Content/Data/Highscore/best_score.xslt", result);
     }
     */
     
