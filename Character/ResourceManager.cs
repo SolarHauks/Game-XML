@@ -7,10 +7,13 @@ public class ResourceManager
 {
     private int _maxHealth;
     private int _currentHealth;
+    private readonly QuantityBar _healthBar;
+    
     private int _maxMana;
     private int _currentMana;
-    private readonly QuantityBar _healthBar;
     private readonly QuantityBar _manaBar;
+    
+    public GoldCounter GoldCounter;
 
     public int Health
     {
@@ -40,6 +43,7 @@ public class ResourceManager
         _currentMana = maxMana;
         _healthBar = new QuantityBar(_maxHealth, Color.Red, new Vector2(10, 10));
         _manaBar = new QuantityBar(_maxMana, Color.Blue, new Vector2(10, 30));
+        GoldCounter = new GoldCounter(new Vector2(10, 50));
     }
 
     public void AddMaxHealth(int value)
@@ -61,11 +65,14 @@ public class ResourceManager
         
         _maxMana = 100;
         _currentMana = _maxMana;
+        
+        GoldCounter.Reset();
     }
 
     public void Draw()
     {
         _healthBar.Draw();
         _manaBar.Draw();
+        GoldCounter.Draw();
     }
 }

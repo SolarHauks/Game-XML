@@ -14,29 +14,19 @@ public class Player : GameObject
 {
     private bool _grounded; // Si le joueur est au sol
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
-    private readonly EffectsManager _effectsManager; // Gestionnaire des effets
     private readonly AttackManager _attackManager; // Gestionnaire des attaques
-    public readonly ResourceManager _resourceManager; // Gestionnaire des ressources
+    public readonly ResourceManager ResourceManager; // Gestionnaire des ressources
 
     private double _lastDamageTime; // Temps du dernier dégât
     private double _lastRegenTime;
-
-    private int _money;
-
-    public int Money
-    {
-        get => _money;
-        private set => _money = value >= 0 ? value : _money;
-    }
     
-    public bool IsDead => _resourceManager.IsDead;
+    public bool IsDead => ResourceManager.IsDead;
 
     public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position, true, 1.0f) {
         Velocity = new Vector2();
         _grounded = false;
-        _effectsManager = effets;
-        _attackManager = new AttackManager(_effectsManager, AnimationManager);
-        _resourceManager = new ResourceManager(100, 100);
+        _attackManager = new AttackManager(effets, AnimationManager);
+        ResourceManager = new ResourceManager(100, 100);
         _lastDamageTime = 0;
         _lastRegenTime = 0;
     }
@@ -54,7 +44,7 @@ public class Player : GameObject
             
             base.Update(collision); // Met à jour la position du joueur
 
-            if (Position.Y > 1000) _resourceManager.Health = 0;  // Si le joueur tombe dans le vide, il meurt
+            if (Position.Y > 1000) ResourceManager.Health = 0;  // Si le joueur tombe dans le vide, il meurt
             
             // Attaque
             if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C))
@@ -63,9 +53,9 @@ public class Player : GameObject
             }
 
             // Attaque Spé
-            if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V) && _resourceManager.Mana > 20 && _attackManager.CanAttack())
+            if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V) && ResourceManager.Mana > 20 && _attackManager.CanAttack())
             {
-                _resourceManager.Mana -= 20;
+                ResourceManager.Mana -= 20;
                 _attackManager.SpecialAttack(enemies, Position, Direction);
             }
 
@@ -197,26 +187,26 @@ public class Player : GameObject
                 {
                     if (((Boss) enemy).CurrentState == Boss.BossState.Attacking)
                     {
-                        _resourceManager.Health -= 35;
+                        ResourceManager.Health -= 35;
                         int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
                         Position.X += attackDirection * 20;
                         _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                        Console.Out.WriteLine("Player hit! Health: " + _resourceManager.Health);
+                        Console.Out.WriteLine("Player hit! Health: " + ResourceManager.Health);
                     }
                 }
                 else    // Cas des autres ennemis
                 {
-                    _resourceManager.Health -= 20;
+                    ResourceManager.Health -= 20;
                     int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
                     Position.X += attackDirection * 20;
                     _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                    Console.Out.WriteLine("Player hit! Health: " + _resourceManager.Health);
+                    Console.Out.WriteLine("Player hit! Health: " + ResourceManager.Health);
                 }
             }
         }
     }
     
-    public void TakeDamage(int damage) => _resourceManager.Health -= damage;
+    public void TakeDamage(int damage) => ResourceManager.Health -= damage;
 
     private void Regen()
     {
@@ -224,25 +214,21 @@ public class Player : GameObject
         if (currentTime - _lastRegenTime > 1)
         {
             _lastRegenTime = currentTime;
-            _resourceManager.Health += 2;
-            _resourceManager.Mana += 2;
+            ResourceManager.Health += 2;
+            ResourceManager.Mana += 2;
         }
     }
-    
-    public void AddMoney(int value) => Money += value;
-
-    public void RemoveMoney(int value) => Money -= value;
     
     public override void Draw(Vector2 offset)
     {
         base.Draw(offset);
-        _resourceManager.Draw();
+        ResourceManager.Draw();
     }
 
     private void Respawn()
     {
         Position = new Vector2(20, 10);
-        _resourceManager.ResetRessource();
+        ResourceManager.ResetRessource();
     }
     
 }

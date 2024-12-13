@@ -228,7 +228,7 @@ public class Game1 : Game
                 if (enemy.Health <= 0 && !(enemy is Boss boss && boss.CurrentState == Boss.BossState.Dying))
                 {
                     _enemies.Remove(enemy);
-                    _player.AddMoney(5);
+                    _player.ResourceManager.GoldCounter.AddMoney(5);
                     
                     if (enemy is Boss) _timer.Stop();  // On stop le timer à la mort du boss
                 }

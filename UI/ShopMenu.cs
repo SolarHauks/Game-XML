@@ -20,16 +20,16 @@ public class ShopMenu : Menu
     {
         base.Update();
 
-        if (Buttons[0].IsClicked && player.Money >= 10)
+        if (Buttons[0].IsClicked && player.ResourceManager.GoldCounter.Money >= 10)
         {
-            player._resourceManager.AddMaxHealth(10);
-            player.RemoveMoney(10);
+            player.ResourceManager.AddMaxHealth(10);
+            player.ResourceManager.GoldCounter.RemoveMoney(10);
         }
 
-        if (Buttons[1].IsClicked && player.Money >= 15)
+        if (Buttons[1].IsClicked && player.ResourceManager.GoldCounter.Money >= 15)
         {
-            player._resourceManager.AddMaxMana(10);
-            player.RemoveMoney(15);
+            player.ResourceManager.AddMaxMana(10);
+            player.ResourceManager.GoldCounter.RemoveMoney(15);
         }
     }
 }
