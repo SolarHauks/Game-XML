@@ -1,3 +1,4 @@
+using JeuVideo.Character;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

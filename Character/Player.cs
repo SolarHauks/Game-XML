@@ -6,56 +6,22 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace JeuVideo;
+namespace JeuVideo.Character;
 
 // Représente un joueur dans le jeu.
 // Hérite de la classe GameObject.
 public class Player : GameObject
 {
     private bool _grounded; // Si le joueur est au sol
-    
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
-    
     private readonly EffectsManager _effectsManager; // Gestionnaire des effets
-    
-    // Attaques
-    private double _lastAttackTime; // Temps de la dernière attaque
-    private const double AttackCooldown = 0.5; // Cooldown de l'attaque
-    
-    // Reception de dégats
-    private double _lastDamageTime; // Temps du dernier dégât
-    
-    // Ressources : vie et mana
-    private readonly QuantityBar _healthBar; // Barre de vie
-    private readonly QuantityBar _manaBar; // Barre de mana
-    
-    private int _maxHealth;
-    private int _currentHealth;
-    
-    private int _maxMana;
-    private int _currentMana;
+    private readonly AttackManager _attackManager; // Gestionnaire des attaques
+    public readonly ResourceManager _resourceManager; // Gestionnaire des ressources
 
+    private double _lastDamageTime; // Temps du dernier dégât
     private double _lastRegenTime;
 
     private int _money;
-
-    private int Health
-    {
-        get => _currentHealth;
-        set {
-            _currentHealth = Math.Clamp(value, 0, _maxHealth);
-            _healthBar.Set(_currentHealth);
-        }
-    }
-
-    private int Mana
-    {
-        get => _currentMana;
-        set {
-            _currentMana = Math.Clamp(value, 0, _maxMana);
-            _manaBar.Set(_currentMana);
-        }
-    }
 
     public int Money
     {
@@ -63,28 +29,16 @@ public class Player : GameObject
         private set => _money = value >= 0 ? value : _money;
     }
     
-    public bool IsDead => _currentHealth <= 0;
+    public bool IsDead => _resourceManager.IsDead;
 
     public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position, true, 1.0f) {
         Velocity = new Vector2();
         _grounded = false;
         _effectsManager = effets;
-        
-        _maxHealth = 100;
-        _currentHealth = _maxHealth;
-        
-        _maxMana = 100;
-        _currentMana = _maxMana;
-        
-        _healthBar = new QuantityBar(_maxHealth, Color.Red, new Vector2(10, 10));
-        _manaBar = new QuantityBar(_maxMana, Color.Blue, new Vector2(10, 30));
-        
-        _lastAttackTime = -AttackCooldown; // Initialise le temps de la dernière attaque pour pouvoir attaquer dès le début
+        _attackManager = new AttackManager(_effectsManager, AnimationManager);
+        _resourceManager = new ResourceManager(100, 100);
         _lastDamageTime = 0;
-        
         _lastRegenTime = 0;
-
-        _money = 0;
     }
 
     /// Met à jour l'état du joueur.
@@ -100,18 +54,19 @@ public class Player : GameObject
             
             base.Update(collision); // Met à jour la position du joueur
 
-            if (Position.Y > 1000) _currentHealth = 0;  // Si le joueur tombe dans le vide, il meurt
+            if (Position.Y > 1000) _resourceManager.Health = 0;  // Si le joueur tombe dans le vide, il meurt
             
             // Attaque
             if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C))
             {
-                Attack(enemies);
+                _attackManager.Attack(enemies, Position, Direction);
             }
 
             // Attaque Spé
-            if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V))
+            if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V) && _resourceManager.Mana > 20 && _attackManager.CanAttack())
             {
-                SpecialAttack(enemies);
+                _resourceManager.Mana -= 20;
+                _attackManager.SpecialAttack(enemies, Position, Direction);
             }
 
             Animate(Velocity); // Gère l'animation du joueur
@@ -205,71 +160,6 @@ public class Player : GameObject
         
         Position.Y += (int)Velocity.Y; // Déplacement vertical
     }
-    
-    // Attaque du joueur
-    private void Attack(List<Enemy> enemies)
-    {
-        if (!CanAttack()) return;
-
-        // Hitbox de l'attaque
-        Rectangle hitbox = new Rectangle(
-            (int)Position.X + (Direction == 1 ? 16 : -16),
-            (int)Position.Y,
-            32,
-            32
-        );
-
-        ApplyDamage(enemies, hitbox, 20);
-
-        // Effet visuel de l'attaque
-        _effectsManager.PlayEffect("slash", Position, Direction);
-        AnimationManager.SetAnimation("slash");
-    }
-
-// Attaque spéciale du joueur, plus puissante mais coutant du mana
-    private void SpecialAttack(List<Enemy> enemies)
-    {
-        if (!CanAttack(20)) return;
-
-        Mana -= 20; // Coût en mana
-
-        // Hitbox de l'attaque
-        Rectangle hitbox = new Rectangle(
-            (int)Position.X + (Direction == 1 ? 16 : -48),
-            (int)Position.Y,
-            64,
-            32
-        );
-
-        ApplyDamage(enemies, hitbox, 50);
-
-        // Effet visuel
-        Vector2 decalage = new Vector2((Direction == 1 ? 32 : -32), 0);
-        _effectsManager.PlayEffect("slash", Position + decalage, Direction);
-        AnimationManager.SetAnimation("slash");
-    }
-
-    // Vérifie si le joueur peut attaquer
-    private bool CanAttack(int manaCost = 0)
-    {
-        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-        if (currentTime - _lastAttackTime < AttackCooldown || _currentMana < manaCost) return false;
-
-        _lastAttackTime = currentTime;
-        return true;
-    }
-
-    // Applique les dégâts aux ennemis dans la hitbox
-    private void ApplyDamage(List<Enemy> enemies, Rectangle hitbox, int damage)
-    {
-        foreach (var enemy in enemies)
-        {
-            if (enemy is not Spike && hitbox.Intersects(enemy.Rect))
-            {
-                enemy.TakeDamage(damage, Position);
-            }
-        }
-    }
 
     // Gestion des animations du joueur
     protected override void Animate(Vector2 velocity)
@@ -307,26 +197,26 @@ public class Player : GameObject
                 {
                     if (((Boss) enemy).CurrentState == Boss.BossState.Attacking)
                     {
-                        Health -= 35;
+                        _resourceManager.Health -= 35;
                         int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
                         Position.X += attackDirection * 20;
                         _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                        Console.Out.WriteLine("Player hit! Health: " + Health);
+                        Console.Out.WriteLine("Player hit! Health: " + _resourceManager.Health);
                     }
                 }
                 else    // Cas des autres ennemis
                 {
-                    Health -= 20;
+                    _resourceManager.Health -= 20;
                     int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
                     Position.X += attackDirection * 20;
                     _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                    Console.Out.WriteLine("Player hit! Health: " + Health);
+                    Console.Out.WriteLine("Player hit! Health: " + _resourceManager.Health);
                 }
             }
         }
     }
     
-    public void TakeDamage(int damage) => Health -= damage;
+    public void TakeDamage(int damage) => _resourceManager.Health -= damage;
 
     private void Regen()
     {
@@ -334,21 +224,9 @@ public class Player : GameObject
         if (currentTime - _lastRegenTime > 1)
         {
             _lastRegenTime = currentTime;
-            Health += 2;
-            Mana += 2;
+            _resourceManager.Health += 2;
+            _resourceManager.Mana += 2;
         }
-    }
-
-    public void AddMaxHealth(int value)
-    {
-        _maxHealth = Math.Min(_maxHealth + value, 200);
-        Health += Math.Min(Health + value, _maxHealth);   // Actualisation de la barre de vie
-    }
-    
-    public void AddMaxMana(int value)
-    {
-        _maxMana = Math.Min(_maxMana + value, 200);
-        Mana += Math.Min(Mana + value, _maxMana);   // Actualisation de la barre de vie
     }
     
     public void AddMoney(int value) => Money += value;
@@ -358,19 +236,13 @@ public class Player : GameObject
     public override void Draw(Vector2 offset)
     {
         base.Draw(offset);
-        _healthBar.Draw();
-        _manaBar.Draw();
+        _resourceManager.Draw();
     }
 
     private void Respawn()
     {
         Position = new Vector2(20, 10);
-        
-        _maxHealth = 100;
-        _currentHealth = _maxHealth;
-        
-        _maxMana = 100;
-        _currentMana = _maxMana;
+        _resourceManager.ResetRessource();
     }
     
 }

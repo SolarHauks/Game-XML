@@ -4,6 +4,7 @@ using System.Linq;
 using JeuVideo.Effects;
 using JeuVideo.Enemies;
 using JeuVideo.Shop;
+using JeuVideo.Character;
 using JeuVideo.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

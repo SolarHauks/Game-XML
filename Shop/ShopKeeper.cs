@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JeuVideo.Character;
 using JeuVideo.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

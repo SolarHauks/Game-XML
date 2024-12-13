@@ -1,3 +1,4 @@
+using JeuVideo.Character;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -21,13 +22,13 @@ public class ShopMenu : Menu
 
         if (Buttons[0].IsClicked && player.Money >= 10)
         {
-            player.AddMaxHealth(10);
+            player._resourceManager.AddMaxHealth(10);
             player.RemoveMoney(10);
         }
 
         if (Buttons[1].IsClicked && player.Money >= 15)
         {
-            player.AddMaxMana(10);
+            player._resourceManager.AddMaxMana(10);
             player.RemoveMoney(15);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JeuVideo.Character;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -16,8 +17,6 @@ public class Boss(Texture2D texture, Vector2 position, int maxHealth, Player pla
     private bool _isBloqued;    // Indique si le boss est bloqué
     
     private readonly List<BossSummon> _summons = new(); // Liste des invocations du boss
-
-    // Joueur
 
     public enum BossState
     {
