@@ -22,7 +22,7 @@ public class Player : GameObject
 
     private double _lastDamageTime; // Temps du dernier dégât
 
-    [XmlElement("hitboxRatio")] public float HitboxRatio;
+    [XmlElement("hitboxRatio")] public float HitboxRatio;   // Ratio de la hitbox du joueur, textureSize * ratio = hitbox
     
     public bool IsDead => ResourceManager.IsDead;
     

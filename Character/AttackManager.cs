@@ -14,7 +14,7 @@ public class AttackManager
 {
     [XmlIgnore] private double _lastAttackTime;
     [XmlIgnore] public EffectsManager EffectsManager;   // Public car doit etre set de player
-    [XmlIgnore] public AnimationManager AnimationManager;
+    [XmlIgnore] private AnimationManager _animationManager;
     
     [XmlElement("attackCooldown")] public float AttackCooldown;
     [XmlElement("attackHitbox")] public int AttackHitbox;
@@ -25,7 +25,7 @@ public class AttackManager
     
     public void Load(AnimationManager animationManager, EffectsManager effectsManager)
     {
-        AnimationManager = animationManager;
+        _animationManager = animationManager;
         EffectsManager = effectsManager;
         _lastAttackTime = -AttackCooldown;
     }
@@ -49,8 +49,7 @@ public class AttackManager
 
         ApplyDamage(enemies, hitbox, AttackDamage);
         EffectsManager.PlayEffect("slash", position, direction);
-        Console.WriteLine(AnimationManager == null);
-        AnimationManager.SetAnimation("slash");
+        _animationManager.SetAnimation("slash");
         _lastAttackTime = Globals.GameTime.TotalGameTime.TotalSeconds;
     }
 
@@ -66,7 +65,7 @@ public class AttackManager
         ApplyDamage(enemies, hitbox, SpecialDamage);
         Vector2 decalage = new Vector2((direction == 1 ? 32 : -32), 0); // décalage de l'effet de slash
         EffectsManager.PlayEffect("slash", position + decalage, direction);
-        AnimationManager.SetAnimation("slash");
+        _animationManager.SetAnimation("slash");
         _lastAttackTime = Globals.GameTime.TotalGameTime.TotalSeconds;
     }
 

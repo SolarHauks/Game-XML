@@ -54,13 +54,13 @@ public class ResourceManager
 
     public void AddMaxHealth(int value)
     {
-        MaxHealth = Math.Min(MaxHealth + value, 200);
+        MaxHealth = Math.Min(MaxHealth + value, 200);   // Cap de la vie à 200
         Health += Math.Min(Health + value, MaxHealth);
     }
 
     public void AddMaxMana(int value)
     {
-        MaxMana = Math.Min(MaxMana + value, 200);
+        MaxMana = Math.Min(MaxMana + value, 200);   // Cap du mana à 200
         Mana += Math.Min(Mana + value, MaxMana);
     }
     

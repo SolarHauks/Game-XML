@@ -3,26 +3,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Character;
 
-public class GoldCounter
+public class GoldCounter(Vector2 position)
 {
-    private Texture2D _coinTexture;
-    private Vector2 _position;
+    private readonly Texture2D _coinTexture = Globals.Content.Load<Texture2D>("Assets/GUI/coin");
     private int _money;
-    private SpriteFont _font;
+    private readonly SpriteFont _font = Globals.Content.Load<SpriteFont>("Assets/Fonts/font");
 
     public int Money
     {
         get => _money;
         private set => _money = value >= 0 ? value : _money;
     }
-    
-    public GoldCounter(Vector2 position)
-    {
-        _coinTexture = Globals.Content.Load<Texture2D>("Assets/GUI/coin");
-        _font = Globals.Content.Load<SpriteFont>("Assets/Fonts/font");
-        _position = position;
-    }
-    
+
     public void AddMoney(int value) => Money += value;
 
     public void RemoveMoney(int value) => Money -= value;
@@ -32,9 +24,9 @@ public class GoldCounter
     public void Draw()
     {
         string text = Money.ToString();
-        Vector2 textPosition = _position + new Vector2(20, 0);
+        Vector2 textPosition = position + new Vector2(20, 0);
         
-        Globals.SpriteBatch.Draw(_coinTexture, _position, Color.White);
+        Globals.SpriteBatch.Draw(_coinTexture, position, Color.White);
         Globals.SpriteBatch.DrawString(_font, text, textPosition, Color.White);
     }
 }
