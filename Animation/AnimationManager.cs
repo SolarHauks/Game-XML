@@ -14,8 +14,6 @@ public class AnimationManager
     
     private readonly Dictionary<string, Animation> _animations; // Dictoinnaire des animations
     
-    private const string XmlFilePathPrefix = "../../../Content/Data/Animation/";
-    
     public AnimationManager(Texture2D spriteSheet)
     {
         _animations = new Dictionary<string, Animation>();
@@ -25,7 +23,7 @@ public class AnimationManager
     private void LoadData(Texture2D spriteSheet)
     {
         string dataFileName = GetFileName(spriteSheet) + ".xml";
-        string xmlFilePath = XmlFilePathPrefix + dataFileName;
+        string xmlFilePath = "../../../Content/Data/Animation/" + dataFileName;
         
         XmlDocument doc = new XmlDocument();
         doc.Load(xmlFilePath);
@@ -55,17 +53,17 @@ public class AnimationManager
             
             int[] frames = GetFramesArray(numFrames, animationNode);
             
-            if (type == "continu")
+            switch (type)
             {
-                _animations.Add(nom, new Animation(frames, AnimationType.Continuous, speed));
-            }
-            else if (type == "ponctuel")
-            {
-                _animations.Add(nom, new Animation(frames, AnimationType.OneTime, speed));
-            }
-            else
-            {
-                Console.WriteLine("Erreur : le type d'animation " + type + " n'existe pas");
+                case "continu":
+                    _animations.Add(nom, new Animation(frames, AnimationType.Continuous, speed));
+                    break;
+                case "ponctuel":
+                    _animations.Add(nom, new Animation(frames, AnimationType.OneTime, speed));
+                    break;
+                default:
+                    Console.WriteLine("Erreur : le type d'animation " + type + " n'existe pas");
+                    break;
             }
         }
             
