@@ -12,6 +12,8 @@ public abstract class Enemy : GameObject
     [XmlIgnore] private int _currentHealth;
     [XmlElement("hitboxRatio")] public float HitboxRatio;
     [XmlElement("health")] public int MaxHealth;
+    [XmlElement("damage")] public int DamageDealt;  // Dégâts infligés par l'ennemi au joueur
+
     [XmlIgnore] public int Health
     {
         get => _currentHealth;
@@ -44,7 +46,6 @@ public abstract class Enemy : GameObject
     {
         Health -= damage;
         Position.X += (Position.X < source.X ? -8 : 8);
-        Console.Out.WriteLine("Enemy hit! Health: " + Health);
     }
     
 }

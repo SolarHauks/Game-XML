@@ -186,28 +186,15 @@ public class Player : GameObject
     {
         foreach (Enemy enemy in enemies)
         {
-            // On ne prend pas de dégâts si on vient d'en prendre -> instant d'invulnérabilité
             double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
             if (DamageHitbox.Intersects(enemy.DamageHitbox) && (currentTime - _lastDamageTime > 1))
             {
-                if (enemy is Boss)     // Cas du boss
+                if (!(enemy is Boss boss) || boss.CurrentState == Boss.BossState.Attacking)
                 {
-                    if (((Boss) enemy).CurrentState == Boss.BossState.Attacking)
-                    {
-                        ResourceManager.Health -= 35;
-                        int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
-                        Position.X += attackDirection * 20;
-                        _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                        Console.Out.WriteLine("Player hit! Health: " + ResourceManager.Health);
-                    }
-                }
-                else    // Cas des autres ennemis
-                {
-                    ResourceManager.Health -= 20;
+                    ResourceManager.Health -= enemy.DamageDealt;
                     int attackDirection = Position.X < enemy.Rect.X ? -1 : 1;
                     Position.X += attackDirection * 20;
                     _lastDamageTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-                    Console.Out.WriteLine("Player hit! Health: " + ResourceManager.Health);
                 }
             }
         }

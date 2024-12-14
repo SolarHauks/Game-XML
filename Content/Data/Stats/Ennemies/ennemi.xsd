@@ -15,6 +15,7 @@
             <xs:element name="speed" type="xs:int"/>
             <xs:element name="distance" type="xs:int"/>
             <xs:element name="hitboxRatio" type="xs:float"/>
+            <xs:element name="damage" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -24,6 +25,7 @@
             <xs:element name="speed" type="xs:int"/>
             <xs:element name="distance" type="xs:int"/>
             <xs:element name="hitboxRatio" type="xs:float"/>
+            <xs:element name="damage" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -31,6 +33,7 @@
         <xs:sequence>
             <xs:element name="health" type="xs:int"/>
             <xs:element name="hitboxRatio" type="xs:float"/>
+            <xs:element name="damage" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -46,6 +49,7 @@
             <xs:element name="summonSpeed" type="xs:int"/>
             <xs:element name="summonTime" type="xs:int"/>
             <xs:element name="summonDamage" type="xs:int"/>
+            <xs:element name="damage" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
     

@@ -12,4 +12,5 @@
     <summonSpeed>100</summonSpeed>
     <summonTime>5</summonTime>
     <summonDamage>20</summonDamage>
+    <damage>35</damage>
 </boss>

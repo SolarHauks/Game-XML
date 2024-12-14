@@ -6,4 +6,5 @@
     <speed>50</speed>
     <distance>48</distance>
     <hitboxRatio>1.0</hitboxRatio>
+    <damage>20</damage>
 </snake>
