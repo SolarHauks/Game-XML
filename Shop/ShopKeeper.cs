@@ -9,13 +9,15 @@ namespace JeuVideo.Shop;
 // Classe ShopKeeper pour gérer le marchand
 // On la dérive ici de Sprite et pas de GO car on n'a pas besoin de toute la logique lourde de GO.
 // On recode juste une simple méthode Update pour gérer l'animation
+// Il n'est pas désérialiser car il n'y en a pas besoin
 public class ShopKeeper : GameObject
 {
     private readonly ShopMenu _shopMenu;
     private readonly Player _player;
     public bool IsPaused;
     
-    public ShopKeeper(Texture2D texture, Vector2 position, Player player) : base(texture, position, true, 1.0f)
+    public ShopKeeper(Vector2 position, Player player) : 
+        base(Globals.Content.Load<Texture2D>("Assets/NPC/shop"), position, true, 1.0f)
     {
         AnimationManager.SetAnimation("idle");
         _shopMenu = new ShopMenu();

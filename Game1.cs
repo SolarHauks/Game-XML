@@ -117,9 +117,6 @@ public class Game1 : Game
 
     private void EntitiesProcessed(Dictionary<Vector2, int> entities)
     {
-        // Chargement des différentes textures, fait ici pour ne pas le faire à chaque entité
-        Texture2D shopTexture = Content.Load<Texture2D>("Assets/NPC/shop");
-        
         // Loaders des entités pour la désérialisation
         XmlManager<Ghost> ghostLoader = new XmlManager<Ghost>();
         XmlManager<Snake> snakeLoader = new XmlManager<Snake>();
@@ -135,8 +132,8 @@ public class Game1 : Game
             switch (entity.Value - collisionTilesetThreshold)
             {
                 case 2:
-                    position.Y += 5;    // Décalage pour le shopkeeper
-                    _shopKeeper = new ShopKeeper(shopTexture, position, _player);
+                    position.Y += 5;    // Décalage vertical pour le shopkeeper
+                    _shopKeeper = new ShopKeeper(position, _player);
                     break;
                 case 3:
                     Spike spike = spikeLoader.Load(pathPrefix + "spike.xml");
