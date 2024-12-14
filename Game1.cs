@@ -20,28 +20,28 @@ public class Game1 : Game
     // attributs : provide easy access to the various components of MonoGame
     private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    
-    private Texture2D _textureAtlas;    // texture pour le tileset
-    private Texture2D _hitboxTexture;   // texture de debug servant à afficher les collisions
+
+    private Texture2D _textureAtlas; // texture pour le tileset
+    private Texture2D _hitboxTexture; // texture de debug servant à afficher les collisions
     private Tile _tile; // classe Tile pour gérer les tiles
-    
+
     private Player _player; // classe Player pour gérer le joueur
     private readonly List<Enemy> _enemies;
     private ShopKeeper _shopKeeper;
-    
+
     private EffectsManager _effectsManager; // classe EffectsManager pour gérer les effets
-    
+
     private readonly Camera _camera; // classe Camera pour gérer la caméra
 
     // private PauseMenu _pauseMenu;
     private PauseMenu _pauseMenu;
     private Canvas _canvas;
-    
+
     private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
-    
+
     private Bubble _bubble; // classe Bubble pour gérer les bulles de dialogue
     private Timer _timer; // classe Timer pour gérer le timer
-    
+
 
     // tell the project how to start, and add key variables
     public Game1()
@@ -65,7 +65,7 @@ public class Game1 : Game
         _graphics.PreferredBackBufferWidth = 640;
         _graphics.PreferredBackBufferHeight = 320;
         _graphics.ApplyChanges();
-        
+
         _canvas = new Canvas(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         _canvas.SetDestinationRectangle();
 
@@ -81,38 +81,39 @@ public class Game1 : Game
         Globals.Content = Content;
         Globals.ScreenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         Globals.GraphicsDevice = GraphicsDevice;
-        
+
         // Texture du menu
         _pauseMenu = new PauseMenu();
         _timer = new Timer();
-        
+
         // Texture de debug pour afficher les hitbox
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
         debugTexture.SetData(new Color[] { new(255, 0, 0, 255) });
         Globals.DebugTexture = debugTexture;
-        
+
         // Effets
         _effectsManager = new EffectsManager();
         _effectsManager.AddEffect("slash");
-        
+
         // Bulle de dialogue
         Texture2D bubbleTexture = Content.Load<Texture2D>("Assets/GUI/bubble");
         SpriteFont font = Content.Load<SpriteFont>("Assets/Fonts/font");
         _bubble = new Bubble(bubbleTexture, font);
         _bubble.SetText("Hello Developers!");
         _bubble.TextColor = Color.Yellow;
-        
+
         // Joueur
         // Il est chargé ici et pas dans EntitiesProcessed car on a besoin qu'il soit initialisé avant les ennemis
         _player = new XmlManager<Player>().Load("../../../Content/Data/Stats/Player/character.xml");
         _player.Load(new Vector2(100, 100), _effectsManager);
 
         // Tile
-        _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");  // Texture du terrain
-        _hitboxTexture = Content.Load<Texture2D>("Assets/Tileset/collisions");  // Texture de debug pour les collisions et les entités
-        
+        _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset"); // Texture du terrain
+        _hitboxTexture =
+            Content.Load<Texture2D>("Assets/Tileset/collisions"); // Texture de debug pour les collisions et les entités
+
         _tile = new(_textureAtlas, _hitboxTexture);
-        EntitiesProcessed(_tile.Entities);  // Chargement des entités
+        EntitiesProcessed(_tile.Entities); // Chargement des entités
     }
 
     private void EntitiesProcessed(Dictionary<Vector2, int> entities)
@@ -123,16 +124,16 @@ public class Game1 : Game
         XmlManager<Spike> spikeLoader = new XmlManager<Spike>();
         XmlManager<Boss> bossLoader = new XmlManager<Boss>();
 
-        int collisionTilesetThreshold = _tile.CollisionTilesetThreshold;    // Décalage des valeurs des tiles d'entités
+        int collisionTilesetThreshold = _tile.CollisionTilesetThreshold; // Décalage des valeurs des tiles d'entités
         string pathPrefix = "../../../Content/Data/Stats/Ennemies/"; // Chemin des fichiers de stats des ennemis
-        
+
         foreach (KeyValuePair<Vector2, int> entity in entities)
         {
             Vector2 position = entity.Key * 16; // Position de l'entité
             switch (entity.Value - collisionTilesetThreshold)
             {
                 case 2:
-                    position.Y += 5;    // Décalage vertical pour le shopkeeper
+                    position.Y += 5; // Décalage vertical pour le shopkeeper
                     _shopKeeper = new ShopKeeper(position, _player);
                     break;
                 case 3:
@@ -190,7 +191,7 @@ public class Game1 : Game
             // On ne fait rien d'autre car le jeu est en pause
             return;
         }
-        
+
         // --------------------------------- Resize de l'écran ---------------------------------
 
         // Commande de taille d'écran
@@ -202,11 +203,11 @@ public class Game1 : Game
 
         if (_currentKeyState.IsKeyDown(Keys.Y) && !_previousKeyState.IsKeyDown(Keys.Y))
             SetFullScreen();
-        
+
         // --------------------------------- Logique du jeu ---------------------------------
-        
-        _timer.Update();    // Update du timer
-        
+
+        _timer.Update(); // Update du timer
+
         if (!_player.IsDead) // Si le joueur n'est pas mort
         {
             // --------------------------------- Freeze du shop ---------------------------------
@@ -232,8 +233,8 @@ public class Game1 : Game
                 {
                     _enemies.Remove(enemy);
                     _player.ResourceManager.GoldCounter.AddMoney(5);
-                    
-                    if (enemy is Boss) _timer.Stop();  // On stop le timer à la mort du boss
+
+                    if (enemy is Boss) _timer.Stop(); // On stop le timer à la mort du boss
                 }
             }
 
@@ -242,10 +243,11 @@ public class Game1 : Game
 
             base.Update(gameTime);
         }
-        
+
         // Logique du joueur
         _player.Update(_tile.Collisions, _enemies);
     }
+
     private void SetResolution(int height, int width)
     {
         _graphics.IsFullScreen = false;
@@ -269,46 +271,46 @@ public class Game1 : Game
     {
         _canvas.Activate();
 
-        Vector2 offset = _camera.Position;  // Offset lié à la caméra
-        
+        Vector2 offset = _camera.Position; // Offset lié à la caméra
+
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        
-            if(_player.IsDead) // Si le joueur est mort
+
+        if (_player.IsDead) // Si le joueur est mort
+        {
+            GraphicsDevice.Clear(Color.Black); // Met la couleur du fond en noir pour le game over
+
+            SpriteFont font = Globals.Content.Load<SpriteFont>("Assets/Fonts/font");
+            Color color = Color.Red;
+
+            _spriteBatch.DrawString(font, "Game Over", new Vector2(300, 90), color); // Affiche "Game Over" en rouge
+            _spriteBatch.DrawString(font, "Appuyer sur A pour reapparaitre", new Vector2(220, 100),
+                color); // Affiche "Appuyer sur A pour reapparaitre" en rouge
+        }
+        else
+        {
+            _tile.Draw(_spriteBatch, offset); // dessin des tiles
+
+            foreach (Enemy enemy in _enemies)
             {
-                GraphicsDevice.Clear(Color.Black); // Met la couleur du fond en noir pour le game over
-                
-                SpriteFont font = Globals.Content.Load<SpriteFont>("Assets/Fonts/font");
-                Color color = Color.Red;
-
-                _spriteBatch.DrawString(font, "Game Over", new Vector2(300, 90), color);   // Affiche "Game Over" en rouge
-                _spriteBatch.DrawString(font, "Appuyer sur A pour reapparaitre", new Vector2(220, 100), color); // Affiche "Appuyer sur A pour reapparaitre" en rouge
+                enemy.Draw(offset); // dessin des ennemis
             }
-            else
-            {
-                _tile.Draw(_spriteBatch, offset); // dessin des tiles
 
-                foreach (Enemy enemy in _enemies)
-                {
-                    enemy.Draw(offset); // dessin des ennemis
-                }
+            _player.Draw(offset); // dessin du joueur
 
-                _player.Draw(offset); // dessin du joueur
+            _shopKeeper.Draw(offset); // dessin du shop
 
-                _shopKeeper.Draw(offset); // dessin du shop
+            _effectsManager.Draw(offset); // dessin des effets
 
-                _effectsManager.Draw(offset); // dessin des effets
+            if (_bubble.Visible)
+                _bubble.Draw(); // dessin de la bulle de dialogue
+        }
 
-                if (_bubble.Visible)
-                    _bubble.Draw(); // dessin de la bulle de dialogue
-            }
-            
-            _pauseMenu.Draw(); // dessin du menu
-            
-            _timer.Draw();  // dessin du timer
+        _pauseMenu.Draw(); // dessin du menu
+
+        _timer.Draw(); // dessin du timer
 
         _spriteBatch.End();
 
         _canvas.Draw(_spriteBatch);
     }
-    
 }

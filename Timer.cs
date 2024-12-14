@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -38,26 +39,27 @@ public class Timer {
         _text = TimeSpan.FromSeconds(_time).ToString(@"mm\:ss\.ff");    // On le convertit en minutes:secondes:centièmes
     }
 
-    public void Stop() => _active = false;
-    
-    /*
-    public void Save()
+    public void Stop()
     {
-        string xmlFilePath = "../../../Content/Data/Highscore/highscore.xml";
+        _active = false;
+        Save();
+    }
+
+    private void Save()
+    {
+        String filePrefix = "../../../Content/Data/Highscore/";
+        string xmlFilePath = filePrefix + "score.xml";
+        
         XmlDocument doc = new XmlDocument();
         doc.Load(xmlFilePath);
         
-        // TODO : A RAJOUTER
-        // Validation du fichier XML
-        // Cela permet d'etre sur que les noeuds qu'on va utiliser après ne sont pas nul
-        // sans avoir besoin de faire des vérifications
-        // string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/level";
-        // string xsdFilePath = "../../../Content/Data/Level/levelSchema.xsd";
-        // XmlUtils.ValidateXmlFile(schemaNamespace, xsdFilePath, xmlFilePath);
-        
         // Création d'un nouvel élément pour le timer
         XmlElement newScore = doc.CreateElement("temps");
-        newScore.InnerText = _time.ToString("F2"); // Format du temps en secondes avec 2 décimales
+        
+        // Format du temps en secondes avec 2 décimales
+        // CultureInfo.InvariantCulture -> utilisation du point pour les décimales au lieu de virgule,
+        // nécessaire pour les transformations XSLT
+        newScore.InnerText = _time.ToString("F2", CultureInfo.InvariantCulture);
 
         // Ajout du nouvel élément au document
         doc.DocumentElement?.AppendChild(newScore);
@@ -65,11 +67,16 @@ public class Timer {
         // Sauvegarde du document
         doc.Save(xmlFilePath);
 
-        String result = "../../../Content/Data/Highscore/test.xml";
+        // Première transformation pour trier les scores
+        xmlFilePath = filePrefix + "score.xml";
+        var result = filePrefix + "sorted_score.xml";
+        XmlUtils.XslTransform(xmlFilePath, filePrefix + "sort_score.xslt", result);
         
-        // XmlUtils.XslTransform(xmlFilePath, "../../../Content/Data/Highscore/best_score.xslt", result);
+        // Seconde transformation pour ne garder que le meilleur score
+        xmlFilePath = filePrefix + "sorted_score.xml";
+        result = filePrefix + "min_score.xml";
+        XmlUtils.XslTransform(xmlFilePath, filePrefix + "min_score.xslt", result);
     }
-    */
     
     public void Draw()
     {
