@@ -24,7 +24,6 @@ public class Boss : Enemy
     [XmlElement("moveDistance")] public int Distance;    // Distance minimal du joueur pour lancer l'attaque
     [XmlElement("attackRange")] public int AttackRange;    // Distance d'attaque
     [XmlElement("speed")] public int Speed;  // Vitesse de déplacement
-    [XmlElement("hitboxRatio")] public float HitboxRatio;  // Vitesse de déplacement
     
     // Attributs des invocations
     [XmlElement("summonSpeed")] public int SummonSpeed;  // Vitesse de déplacement
@@ -52,7 +51,7 @@ public class Boss : Enemy
         _summonTexture = Globals.Content.Load<Texture2D>("Assets/Enemies/summon");
         
         Texture2D texture = Globals.Content.Load<Texture2D>("Assets/Enemies/boss"); // Texture du boss
-        base.Load(texture, position, HitboxRatio);
+        base.Load(texture, position);
     }
 
     protected override void DeplacementHorizontal(double dt)

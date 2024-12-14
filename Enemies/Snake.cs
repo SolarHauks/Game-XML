@@ -9,14 +9,13 @@ namespace JeuVideo.Enemies;
 [XmlRoot("snake", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/ennemi")]
 public class Snake : Enemy
 {
-    [XmlElement("hitboxRatio")] public float HitboxRatio;
     [XmlElement("speed")] public int Speed;
     [XmlElement("distance")] public int Distance;
     
     public void Load(Vector2 position)
     {
         Texture2D texture = Globals.Content.Load<Texture2D>("Assets/Enemies/snake");
-        base.Load(texture, position, HitboxRatio);
+        base.Load(texture, position);
     }
     
     protected override void DeplacementHorizontal(double dt)

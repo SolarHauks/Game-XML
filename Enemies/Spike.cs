@@ -9,21 +9,15 @@ namespace JeuVideo.Enemies;
 [XmlRoot("spike", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/ennemi")]
 public class Spike : Enemy
 {
-    [XmlElement("hitboxRatio")] public float HitboxRatio;
-    
     public void Load(Vector2 position)
     {
         Texture2D texture = Globals.Content.Load<Texture2D>("Assets/Enemies/spike");
-        base.Load(texture, position, HitboxRatio);
+        base.Load(texture, position);
     }
 
-    protected override void DeplacementHorizontal(double dt)
-    {
-    }
+    protected override void DeplacementHorizontal(double dt) { }
 
-    protected override void DeplacementVertical(double dt)
-    {
-    }
+    protected override void DeplacementVertical(double dt) { }
 
     protected override void Animate(Vector2 velocity)
     {

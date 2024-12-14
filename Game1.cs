@@ -118,19 +118,16 @@ public class Game1 : Game
     private void EntitiesProcessed(Dictionary<Vector2, int> entities)
     {
         // Chargement des différentes textures, fait ici pour ne pas le faire à chaque entité
-        // Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
-        // Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
-        // Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
-        // Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss");
-        // Texture2D summonTexture = Content.Load<Texture2D>("Assets/Enemies/summon");
         Texture2D shopTexture = Content.Load<Texture2D>("Assets/NPC/shop");
         
+        // Loaders des entités pour la désérialisation
         XmlManager<Ghost> ghostLoader = new XmlManager<Ghost>();
         XmlManager<Snake> snakeLoader = new XmlManager<Snake>();
         XmlManager<Spike> spikeLoader = new XmlManager<Spike>();
         XmlManager<Boss> bossLoader = new XmlManager<Boss>();
 
         int collisionTilesetThreshold = _tile.CollisionTilesetThreshold;    // Décalage des valeurs des tiles d'entités
+        string pathPrefix = "../../../Content/Data/Stats/Ennemies/"; // Chemin des fichiers de stats des ennemis
         
         foreach (KeyValuePair<Vector2, int> entity in entities)
         {
@@ -142,22 +139,22 @@ public class Game1 : Game
                     _shopKeeper = new ShopKeeper(shopTexture, position, _player);
                     break;
                 case 3:
-                    Spike spike = spikeLoader.Load("../../../Serialization/spike.xml");
+                    Spike spike = spikeLoader.Load(pathPrefix + "spike.xml");
                     spike.Load(position);
                     _enemies.Add(spike);
                     break;
                 case 4:
-                    Snake snake = snakeLoader.Load("../../../Serialization/snake.xml");
+                    Snake snake = snakeLoader.Load(pathPrefix + "snake.xml");
                     snake.Load(position);
                     _enemies.Add(snake);
                     break;
                 case 5:
-                    Ghost ghost = ghostLoader.Load("../../../Serialization/ghost.xml");
+                    Ghost ghost = ghostLoader.Load(pathPrefix + "ghost.xml");
                     ghost.Load(position, _player);
                     _enemies.Add(ghost);
                     break;
                 case 6:
-                    Boss boss = bossLoader.Load("../../../Serialization/boss.xml");
+                    Boss boss = bossLoader.Load(pathPrefix + "boss.xml");
                     boss.Load(position, _player);
                     _enemies.Add(boss);
                     break;

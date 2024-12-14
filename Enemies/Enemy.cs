@@ -9,27 +9,28 @@ namespace JeuVideo.Enemies;
 public abstract class Enemy : GameObject
 {
     [XmlIgnore] protected Vector2 StartPosition;    // Position de départ, milieu de la zone de déplacement
-    [XmlElement("health")] public int _maxHealth;
     [XmlIgnore] private int _currentHealth;
+    [XmlElement("hitboxRatio")] public float HitboxRatio;
+    [XmlElement("health")] public int MaxHealth;
     [XmlIgnore] public int Health
     {
         get => _currentHealth;
-        private set => _currentHealth = Math.Clamp(value, 0, _maxHealth);
+        private set => _currentHealth = Math.Clamp(value, 0, MaxHealth);
     }
 
     protected Enemy(Texture2D texture, Vector2 position, int maxHealth, float hitboxRatio) : base(texture, position, true, hitboxRatio) {
-        _maxHealth = maxHealth;
+        MaxHealth = maxHealth;
         _currentHealth = maxHealth;
         StartPosition = position;
     }
     
-    // Constructeur sans paramètre pour la sérialisation
-    protected Enemy() { }
+    protected Enemy() { } // Constructeur sans paramètre pour la sérialisation
     
-    public void Load(Texture2D texture, Vector2 position, float hitboxRatio)
+    // Méthode de chargement de l'ennemi pour tout ce qui doit être fait après la désérialisation
+    public void Load(Texture2D texture, Vector2 position)
     {
-        base.Load(texture, position, true, hitboxRatio);
-        _currentHealth = _maxHealth;
+        base.Load(texture, position, true, HitboxRatio);
+        _currentHealth = MaxHealth;
         StartPosition = position;
     }
 
@@ -38,7 +39,7 @@ public abstract class Enemy : GameObject
     protected abstract override void DeplacementVertical(double dt);
 
     protected abstract override void Animate(Vector2 velocity);
-
+    
     public virtual void TakeDamage(int damage, Vector2 source)
     {
         Health -= damage;

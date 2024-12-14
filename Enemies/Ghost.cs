@@ -13,7 +13,6 @@ public class Ghost : Enemy
 {
     [XmlElement("distance")] public int Distance;
     [XmlElement("speed")] public int Speed;
-    [XmlElement("hitboxRatio")] public float HitboxRatio;
     
     [XmlIgnore] private Player _player;
     
@@ -22,7 +21,7 @@ public class Ghost : Enemy
         _player = player;
         
         Texture2D texture = Globals.Content.Load<Texture2D>("Assets/Enemies/ghost");
-        base.Load(texture, position, HitboxRatio);
+        base.Load(texture, position);
     }
 
     protected override void DeplacementHorizontal(double dt)
@@ -46,23 +45,13 @@ public class Ghost : Enemy
         }
     }
     
-    private bool CheckPlayerDistance()
-    {
-        return (Vector2.Distance(_player.Position, Position) < Distance);
-    }
+    private bool CheckPlayerDistance() => (Vector2.Distance(_player.Position, Position) < Distance);
 
-    protected override void Animate(Vector2 velocity)
-    {
-        AnimationManager.SetAnimation("fly");
-    }
+    protected override void Animate(Vector2 velocity) { AnimationManager.SetAnimation("fly"); }
     
     // On reimplemente ces deux méthodes pour éviter les collisions
-    protected override void CheckCollisionsHorizontal(Dictionary<Vector2, int> collision)
-    {
-    }
+    protected override void CheckCollisionsHorizontal(Dictionary<Vector2, int> collision) { }
     
-    protected override void CheckCollisionsVertical(Dictionary<Vector2, int> collision)
-    {
-    }
+    protected override void CheckCollisionsVertical(Dictionary<Vector2, int> collision) { }
     
 }
