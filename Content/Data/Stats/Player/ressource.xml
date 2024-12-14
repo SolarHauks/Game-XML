@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ressource xmlns='https://www.univ-grenoble-alpes.fr/jeu/character'>
+    
+    <!-- Ressource -->
+    <health>100</health>
+    <mana>100</mana>
+    <regenTime>1.0</regenTime>
+    <regenAmount>2</regenAmount>
+    
+</ressource>

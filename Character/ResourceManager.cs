@@ -1,25 +1,32 @@
 using System;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 
 namespace JeuVideo.Character;
 
+[Serializable]
+[XmlRoot("ressource", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/character")]
 public class ResourceManager
 {
-    private int _maxHealth;
-    private int _currentHealth;
-    private readonly QuantityBar _healthBar;
+    [XmlElement("health")] public int MaxHealth;
+    [XmlIgnore] private int _currentHealth;
+    [XmlIgnore] private QuantityBar _healthBar;
     
-    private int _maxMana;
-    private int _currentMana;
-    private readonly QuantityBar _manaBar;
+    [XmlElement("mana")] public int MaxMana;
+    [XmlIgnore] private int _currentMana;
+    [XmlIgnore] private QuantityBar _manaBar;
     
-    public GoldCounter GoldCounter;
+    [XmlIgnore] public GoldCounter GoldCounter;
+    [XmlIgnore] private double _lastRegenTime;
+    
+    [XmlElement("regenTime")] public float RegenTime;
+    [XmlElement("regenAmount")] public int RegenAmount;
 
     public int Health
     {
         get => _currentHealth;
         set {
-            _currentHealth = Math.Clamp(value, 0, _maxHealth);
+            _currentHealth = Math.Clamp(value, 0, MaxHealth);
             _healthBar.Set(_currentHealth);
         }
     }
@@ -28,43 +35,53 @@ public class ResourceManager
     {
         get => _currentMana;
         set {
-            _currentMana = Math.Clamp(value, 0, _maxMana);
+            _currentMana = Math.Clamp(value, 0, MaxMana);
             _manaBar.Set(_currentMana);
         }
     }
 
     public bool IsDead => _currentHealth <= 0;
 
-    public ResourceManager(int maxHealth, int maxMana)
+    // On ne note pas cette méthode [OnDeserialized] par soucis de cohérence
+    public void Load()
     {
-        _maxHealth = maxHealth;
-        _currentHealth = maxHealth;
-        _maxMana = maxMana;
-        _currentMana = maxMana;
-        _healthBar = new QuantityBar(_maxHealth, Color.Red, new Vector2(10, 10));
-        _manaBar = new QuantityBar(_maxMana, Color.Blue, new Vector2(10, 30));
+        _currentHealth = MaxHealth;
+        _currentMana = MaxMana;
+        _healthBar = new QuantityBar(MaxHealth, Color.Red, new Vector2(10, 10));
+        _manaBar = new QuantityBar(MaxMana, Color.Blue, new Vector2(10, 30));
         GoldCounter = new GoldCounter(new Vector2(10, 50));
     }
 
     public void AddMaxHealth(int value)
     {
-        _maxHealth = Math.Min(_maxHealth + value, 200);
-        Health += Math.Min(Health + value, _maxHealth);
+        MaxHealth = Math.Min(MaxHealth + value, 200);
+        Health += Math.Min(Health + value, MaxHealth);
     }
 
     public void AddMaxMana(int value)
     {
-        _maxMana = Math.Min(_maxMana + value, 200);
-        Mana += Math.Min(Mana + value, _maxMana);
+        MaxMana = Math.Min(MaxMana + value, 200);
+        Mana += Math.Min(Mana + value, MaxMana);
+    }
+    
+    public void Regen()
+    {
+        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
+        if (currentTime - _lastRegenTime > RegenTime)
+        {
+            _lastRegenTime = currentTime;
+            Health += RegenAmount;
+            Mana += RegenAmount;
+        }
     }
 
     public void ResetRessource()
     {
-        _maxHealth = 100;
-        _currentHealth = _maxHealth;
+        MaxHealth = 100;
+        _currentHealth = MaxHealth;
         
-        _maxMana = 100;
-        _currentMana = _maxMana;
+        MaxMana = 100;
+        _currentMana = MaxMana;
         
         GoldCounter.Reset();
     }

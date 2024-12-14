@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using JeuVideo.Effects;
 using JeuVideo.Enemies;
 using Microsoft.Xna.Framework;
@@ -10,25 +11,31 @@ namespace JeuVideo.Character;
 
 // Représente un joueur dans le jeu.
 // Hérite de la classe GameObject.
+[Serializable]
+[XmlRoot("character", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/character")]
 public class Player : GameObject
 {
     private bool _grounded; // Si le joueur est au sol
     private KeyboardState _prevKeystate; // Etat du clavier à la frame d'avant
-    private readonly AttackManager _attackManager; // Gestionnaire des attaques
-    public readonly ResourceManager ResourceManager; // Gestionnaire des ressources
+    private AttackManager _attackManager; // Gestionnaire des attaques
+    public ResourceManager ResourceManager; // Gestionnaire des ressources
 
     private double _lastDamageTime; // Temps du dernier dégât
-    private double _lastRegenTime;
+
+    [XmlElement("hitboxRatio")] public float HitboxRatio;
     
     public bool IsDead => ResourceManager.IsDead;
-
-    public Player(Texture2D texture, Vector2 position, EffectsManager effets) : base(texture, position, true, 1.0f) {
-        Velocity = new Vector2();
-        _grounded = false;
-        _attackManager = new AttackManager(effets, AnimationManager);
-        ResourceManager = new ResourceManager(100, 100);
-        _lastDamageTime = 0;
-        _lastRegenTime = 0;
+    
+    public void Load(Vector2 position, EffectsManager effets)
+    {
+        Texture2D texture = Globals.Content.Load<Texture2D>("Assets/Character/character");
+        base.Load(texture, position, true, HitboxRatio);
+        
+        _attackManager = new XmlManager<AttackManager>().Load("../../../Content/Data/Stats/Player/attack.xml");
+        _attackManager.Load(AnimationManager, effets);
+        
+        ResourceManager = new XmlManager<ResourceManager>().Load("../../../Content/Data/Stats/Player/ressource.xml");
+        ResourceManager.Load();
     }
 
     /// Met à jour l'état du joueur.
@@ -53,7 +60,7 @@ public class Player : GameObject
             }
 
             // Attaque Spé
-            if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V) && ResourceManager.Mana > 20 && _attackManager.CanAttack())
+            if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V) && _attackManager.CanAttack())
             {
                 ResourceManager.Mana -= 20;
                 _attackManager.SpecialAttack(enemies, Position, Direction);
@@ -63,7 +70,7 @@ public class Player : GameObject
 
             TakeDamage(enemies); // Gère les dégâts du joueur
 
-            Regen(); // Gère la régénération du joueur
+            ResourceManager.Regen(); // Gère la régénération du joueur
 
             _prevKeystate = keystate; // Sauvegarde l'état du clavier pour la frame suivante
         }
@@ -207,17 +214,6 @@ public class Player : GameObject
     }
     
     public void TakeDamage(int damage) => ResourceManager.Health -= damage;
-
-    private void Regen()
-    {
-        double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
-        if (currentTime - _lastRegenTime > 1)
-        {
-            _lastRegenTime = currentTime;
-            ResourceManager.Health += 2;
-            ResourceManager.Mana += 2;
-        }
-    }
     
     public override void Draw(Vector2 offset)
     {

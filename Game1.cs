@@ -104,8 +104,8 @@ public class Game1 : Game
         
         // Joueur
         // Il est chargé ici et pas dans EntitiesProcessed car on a besoin qu'il soit initialisé avant les ennemis
-        Texture2D playerTexture = Content.Load<Texture2D>("Assets/Character/character");
-        _player = new Player(playerTexture, new Vector2(160, 80), _effectsManager);
+        _player = new XmlManager<Player>().Load("../../../Content/Data/Stats/Player/character.xml");
+        _player.Load(new Vector2(100, 100), _effectsManager);
 
         // Tile
         _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");  // Texture du terrain

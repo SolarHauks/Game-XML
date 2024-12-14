@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<attack xmlns='https://www.univ-grenoble-alpes.fr/jeu/character'>
+    
+    <!-- Attack -->
+    <attackCooldown>0.5</attackCooldown>
+    <attackHitbox>32</attackHitbox>
+    <attackDamage>20</attackDamage>
+    <specialHitbox>64</specialHitbox>
+    <specialDamage>50</specialDamage>
+    <specialCost>20</specialCost>
+    
+</attack>

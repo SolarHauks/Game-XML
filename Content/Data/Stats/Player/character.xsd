@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns="https://www.univ-grenoble-alpes.fr/jeu/character"
+           targetNamespace="https://www.univ-grenoble-alpes.fr/jeu/character"
+           elementFormDefault="qualified">
+
+    <xs:element name="character" type="Character"/>
+    <xs:element name="ressource" type="Ressource"/>
+    <xs:element name="attack" type="Attack"/>
+        
+    <xs:complexType name="Character">
+        <xs:sequence>
+            <xs:element name="hitboxRatio" type="xs:float"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Ressource">
+        <xs:sequence>
+            <xs:element name="health" type="xs:int"/>
+            <xs:element name="mana" type="xs:int"/>
+            <xs:element name="regenTime" type="xs:float"/>
+            <xs:element name="regenAmount" type="xs:float"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Attack">
+        <xs:sequence>
+            <xs:element name="attackCooldown" type="xs:float"/>
+            <xs:element name="attackHitbox" type="xs:int"/>
+            <xs:element name="attackDamage" type="xs:int"/>
+            <xs:element name="specialHitbox" type="xs:int"/>
+            <xs:element name="specialDamage" type="xs:int"/>
+            <xs:element name="specialCost" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<character xmlns='https://www.univ-grenoble-alpes.fr/jeu/character'>
+    
+    <!-- Player -->
+    <hitboxRatio>1.0</hitboxRatio>
+    
+</character>
