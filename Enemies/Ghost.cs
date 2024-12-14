@@ -1,22 +1,38 @@
+using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using JeuVideo.Character;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
-public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player player) : Enemy(texture, position, maxHealth, 1.0f)
+[Serializable]
+[XmlRoot("ghost", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/ennemi")]
+public class Ghost : Enemy
 {
-    private const int Distance = 250;
+    [XmlElement("distance")] public int Distance;
+    [XmlElement("speed")] public int Speed;
+    [XmlElement("hitboxRatio")] public float HitboxRatio;
+    
+    [XmlIgnore] private Player _player;
+    
+    public void Load(Vector2 position, Player player)
+    {
+        _player = player;
+        
+        Texture2D texture = Globals.Content.Load<Texture2D>("Assets/Enemies/ghost");
+        base.Load(texture, position, HitboxRatio);
+    }
 
     protected override void DeplacementHorizontal(double dt)
     {
         if (CheckPlayerDistance())
         {
-            Vector2 directionToTarget = Vector2.Normalize(player.Position - Position);
-            Velocity.X = (float)(directionToTarget.X * 50 * dt);
+            Vector2 directionToTarget = Vector2.Normalize(_player.Position - Position);
+            Velocity.X = (float)(directionToTarget.X * Speed * dt);
             Position.X += Velocity.X;
-            Direction = Position.X > player.Position.X ? -1 : 1;
+            Direction = Position.X > _player.Position.X ? -1 : 1;
         }
     }
 
@@ -24,7 +40,7 @@ public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player pl
     {
         if (CheckPlayerDistance())
         {
-            Vector2 directionToTarget = Vector2.Normalize(player.Position - Position);
+            Vector2 directionToTarget = Vector2.Normalize(_player.Position - Position);
             Velocity.Y = (float)(directionToTarget.Y * 50 * dt);
             Position.Y += Velocity.Y;
         }
@@ -32,7 +48,7 @@ public class Ghost(Texture2D texture, Vector2 position, int maxHealth, Player pl
     
     private bool CheckPlayerDistance()
     {
-        return (Vector2.Distance(player.Position, Position) < Distance);
+        return (Vector2.Distance(_player.Position, Position) < Distance);
     }
 
     protected override void Animate(Vector2 velocity)

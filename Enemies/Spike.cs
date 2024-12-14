@@ -1,10 +1,22 @@
+using System;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
-public class Spike(Texture2D texture, Vector2 position) : Enemy(texture, position, 100, 1.0f)
+[Serializable]
+[XmlRoot("spike", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/ennemi")]
+public class Spike : Enemy
 {
+    [XmlElement("hitboxRatio")] public float HitboxRatio;
+    
+    public void Load(Vector2 position)
+    {
+        Texture2D texture = Globals.Content.Load<Texture2D>("Assets/Enemies/spike");
+        base.Load(texture, position, HitboxRatio);
+    }
+
     protected override void DeplacementHorizontal(double dt)
     {
     }

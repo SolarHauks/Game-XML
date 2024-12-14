@@ -1,23 +1,32 @@
+using System;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
-public class Snake(Texture2D texture, Vector2 position, int maxHealth) : Enemy(texture, position, maxHealth, 1.0f)
+[Serializable]
+[XmlRoot("snake", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/ennemi")]
+public class Snake : Enemy
 {
+    [XmlElement("hitboxRatio")] public float HitboxRatio;
+    [XmlElement("speed")] public int Speed;
+    [XmlElement("distance")] public int Distance;
+    
+    public void Load(Vector2 position)
+    {
+        Texture2D texture = Globals.Content.Load<Texture2D>("Assets/Enemies/snake");
+        base.Load(texture, position, HitboxRatio);
+    }
+    
     protected override void DeplacementHorizontal(double dt)
     {
         // On passe par la velocité car on en a besoin pour les collisions
-        Velocity.X = Direction * 50 * (float)dt;
+        Velocity.X = Direction * Speed * (float)dt;
         Position.X += Velocity.X;
-        if (Position.X > StartPosition.X + 48)  // 48 = 3 tiles
-        {
-            Direction = -1;
-        }
-        else if (Position.X < StartPosition.X - 48)
-        {
-            Direction = 1;
-        }
+        
+        // Si on atteint la distance max, on change de direction
+        if (Math.Abs(Position.X - StartPosition.X) > Distance) { Direction *= -1; }
     }
 
     protected override void DeplacementVertical(double dt)

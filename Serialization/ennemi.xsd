@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns="https://www.univ-grenoble-alpes.fr/jeu/ennemi"
+           targetNamespace="https://www.univ-grenoble-alpes.fr/jeu/ennemi"
+           elementFormDefault="qualified">
+
+    <xs:element name="ghost" type="Ghost"/>
+    <xs:element name="snake" type="Snake"/>
+    <xs:element name="spike" type="Spike"/>
+    <xs:element name="boss" type="Boss"/>
+        
+    <xs:complexType name="Ghost">
+        <xs:sequence>
+            <xs:element name="health" type="xs:int"/>
+            <xs:element name="speed" type="xs:int"/>
+            <xs:element name="distance" type="xs:int"/>
+            <xs:element name="hitboxRatio" type="xs:float"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Snake">
+        <xs:sequence>
+            <xs:element name="health" type="xs:int"/>
+            <xs:element name="speed" type="xs:int"/>
+            <xs:element name="distance" type="xs:int"/>
+            <xs:element name="hitboxRatio" type="xs:float"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Spike">
+        <xs:sequence>
+            <xs:element name="health" type="xs:int"/>
+            <xs:element name="hitboxRatio" type="xs:float"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Boss">
+        <xs:sequence>
+            <xs:element name="health" type="xs:int"/>
+            <xs:element name="speed" type="xs:int"/>
+            <xs:element name="moveDistance" type="xs:int"/>
+            <xs:element name="attackRange" type="xs:int"/>
+            <xs:element name="attackCooldown" type="xs:int"/>
+            <xs:element name="specialCooldown" type="xs:int"/>
+            <xs:element name="hitboxRatio" type="xs:float"/>
+            <xs:element name="summonSpeed" type="xs:int"/>
+            <xs:element name="summonTime" type="xs:int"/>
+            <xs:element name="summonDamage" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>

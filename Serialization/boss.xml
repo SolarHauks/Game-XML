@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<boss xmlns='https://www.univ-grenoble-alpes.fr/jeu/ennemi'
+       xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+       xsi:schemaLocation='https://www.univ-grenoble-alpes.fr/jeu/ennemi Serialization/ennemi.xsd'>
+    <health>200</health>
+    <speed>20</speed>
+    <moveDistance>48</moveDistance>
+    <attackRange>50</attackRange>
+    <attackCooldown>3</attackCooldown>
+    <specialCooldown>6</specialCooldown>
+    <hitboxRatio>0.7</hitboxRatio>
+    <summonSpeed>100</summonSpeed>
+    <summonTime>5</summonTime>
+    <summonDamage>20</summonDamage>
+</boss>

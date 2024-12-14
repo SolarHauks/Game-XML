@@ -118,12 +118,17 @@ public class Game1 : Game
     private void EntitiesProcessed(Dictionary<Vector2, int> entities)
     {
         // Chargement des différentes textures, fait ici pour ne pas le faire à chaque entité
-        Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
-        Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
-        Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
-        Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss");
-        Texture2D summonTexture = Content.Load<Texture2D>("Assets/Enemies/summon");
+        // Texture2D spikeTexture = Content.Load<Texture2D>("Assets/Enemies/spike");
+        // Texture2D snakeTexture = Content.Load<Texture2D>("Assets/Enemies/snake");
+        // Texture2D ghostTexture = Content.Load<Texture2D>("Assets/Enemies/ghost");
+        // Texture2D bossTexture = Content.Load<Texture2D>("Assets/Enemies/boss");
+        // Texture2D summonTexture = Content.Load<Texture2D>("Assets/Enemies/summon");
         Texture2D shopTexture = Content.Load<Texture2D>("Assets/NPC/shop");
+        
+        XmlManager<Ghost> ghostLoader = new XmlManager<Ghost>();
+        XmlManager<Snake> snakeLoader = new XmlManager<Snake>();
+        XmlManager<Spike> spikeLoader = new XmlManager<Spike>();
+        XmlManager<Boss> bossLoader = new XmlManager<Boss>();
 
         int collisionTilesetThreshold = _tile.CollisionTilesetThreshold;    // Décalage des valeurs des tiles d'entités
         
@@ -137,19 +142,23 @@ public class Game1 : Game
                     _shopKeeper = new ShopKeeper(shopTexture, position, _player);
                     break;
                 case 3:
-                    Spike spike = new(spikeTexture, position);
+                    Spike spike = spikeLoader.Load("../../../Serialization/spike.xml");
+                    spike.Load(position);
                     _enemies.Add(spike);
                     break;
                 case 4:
-                    Snake snake = new(snakeTexture, position, 100);
+                    Snake snake = snakeLoader.Load("../../../Serialization/snake.xml");
+                    snake.Load(position);
                     _enemies.Add(snake);
                     break;
                 case 5:
-                    Ghost ghost = new(ghostTexture, position, 20, _player);
+                    Ghost ghost = ghostLoader.Load("../../../Serialization/ghost.xml");
+                    ghost.Load(position, _player);
                     _enemies.Add(ghost);
                     break;
                 case 6:
-                    Boss boss = new(bossTexture, position, 200, _player, summonTexture);
+                    Boss boss = bossLoader.Load("../../../Serialization/boss.xml");
+                    boss.Load(position, _player);
                     _enemies.Add(boss);
                     break;
                 default:

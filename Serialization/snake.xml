@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<snake xmlns='https://www.univ-grenoble-alpes.fr/jeu/ennemi'
+       xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+       xsi:schemaLocation='https://www.univ-grenoble-alpes.fr/jeu/ennemi Serialization/ennemi.xsd'>
+    <health>100</health>
+    <speed>50</speed>
+    <distance>48</distance>
+    <hitboxRatio>1.0</hitboxRatio>
+</snake>

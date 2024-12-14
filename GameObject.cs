@@ -10,12 +10,12 @@ public abstract class GameObject : Sprite
     protected Vector2 Velocity; // Vélocité de l'objet de jeu, servant dans les déplacements et les collisions
     
     // Rectangle de l'objet servant pour les collisions
-    private readonly Vector2 _size; // Taille logique de l'objet, sert pour les collisions
+    private Vector2 _size; // Taille logique de l'objet, sert pour les collisions
     public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, (int)_size.X, (int)_size.Y);
     
     // Rectangle servant dans les detections de dégats
-    private readonly Vector2 _positionOffset;
-    private readonly float _hitboxRatio;
+    private Vector2 _positionOffset;
+    private float _hitboxRatio;
     public Rectangle DamageHitbox => new Rectangle(
         (int)(Position.X + _positionOffset.X), 
         (int)(Position.Y + _positionOffset.Y), 
@@ -33,9 +33,26 @@ public abstract class GameObject : Sprite
         float offsetX = (Size.X - newWidth) / 2;
         float offsetY = (Size.Y - newHeight) / 2;
         _positionOffset = new Vector2(offsetX, offsetY);
-        
     }
-
+    
+    // Constructeur sans paramètre pour la sérialisation
+    protected GameObject() { }
+    
+    protected void Load(Texture2D texture, Vector2 position, bool isAnimed, float hitboxRatio)
+    {
+        base.Load(texture, position, isAnimed); // Appel du "constructeur" de la classe mère
+        
+        _size = Size;
+            
+        _hitboxRatio = hitboxRatio;
+        float newWidth = Size.X * hitboxRatio;
+        float newHeight = Size.Y * hitboxRatio;
+        
+        float offsetX = (Size.X - newWidth) / 2;
+        float offsetY = (Size.Y - newHeight) / 2;
+        _positionOffset = new Vector2(offsetX, offsetY);
+    }
+    
     public virtual void Update(Dictionary<Vector2, int> collision)
     {
         // Delta time, temps depuis la dernière frame
