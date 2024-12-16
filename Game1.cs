@@ -90,6 +90,16 @@ public class Game1 : Game
         Texture2D debugTexture = new Texture2D(GraphicsDevice, 1, 1);
         debugTexture.SetData(new Color[] { new(255, 0, 0, 255) });
         Globals.DebugTexture = debugTexture;
+        
+        // Vérification des fichiers de données des animations
+        // On le fait ici pour que cela ne soit fait qu'une fois
+        // et pas à chaque instanciation d'une entité
+        // Cela permet d'etre sur que les noeuds qu'on va utiliser après ne sont pas nul
+        // sans avoir besoin de faire des vérifications
+        string folderPath = "../../../Content/Data/Animation/";    // Chemin des fichiers de stats des ennemis
+        string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/animations"; // Namespace du schéma XSD
+        string xsdFilePath = "../../../Content/Data/Animation/animation.xsd"; // Chemin du fichier XSD
+        XmlUtils.ValidateXmlFiles(folderPath, schemaNamespace, xsdFilePath);
 
         // Effets
         _effectsManager = new EffectsManager();
@@ -104,9 +114,9 @@ public class Game1 : Game
 
         // Joueur
         // Il est chargé ici et pas dans EntitiesProcessed car on a besoin qu'il soit initialisé avant les ennemis
-        string folderPath = "../../../Content/Data/Stats/Player/";    // Chemin des fichiers de stats des ennemis
-        string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/character"; // Namespace du schéma XSD
-        string xsdFilePath = "../../../Content/Data/Stats/Player/character.xsd"; // Chemin du fichier XSD
+        folderPath = "../../../Content/Data/Stats/Player/";    // Chemin des fichiers de stats des ennemis
+        schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/character"; // Namespace du schéma XSD
+        xsdFilePath = "../../../Content/Data/Stats/Player/character.xsd"; // Chemin du fichier XSD
         XmlUtils.ValidateXmlFiles(folderPath, schemaNamespace, xsdFilePath); // Validation des fichiers XML
         
         _player = new XmlManager<Player>().Load("../../../Content/Data/Stats/Player/character.xml");

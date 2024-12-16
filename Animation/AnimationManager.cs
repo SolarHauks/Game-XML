@@ -28,12 +28,8 @@ public class AnimationManager
         XmlDocument doc = new XmlDocument();
         doc.Load(xmlFilePath);
         
-        // Validation du fichier XML
-        // Cela permet d'etre sur que les noeuds qu'on va utiliser après ne sont pas nul
-        // sans avoir besoin de faire des vérifications
-        string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/animations";
-        string xsdFilePath = "../../../Content/Data/Animation/animSchema.xsd";
-        XmlUtils.ValidateXmlFile(schemaNamespace, xsdFilePath, xmlFilePath);
+        // La validation du fichier XML se fait dans Game1 pour que ce ne soit fait qu'une fois
+        // et pas à chaque isntanciation d'une entité
         
         XmlNode paramNode = doc.DocumentElement; // Sélectionne la racine du document XML
 
