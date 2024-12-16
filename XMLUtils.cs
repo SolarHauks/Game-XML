@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
@@ -10,26 +11,44 @@ namespace JeuVideo;
 // Tous est en static pour éviter d'avoir à instancier un objet pour les utiliser
 public static class XmlUtils
 {
-    // Méthode permettant de valider un fichier XML par rapport à un schéma XSD
-    public static void ValidateXmlFile (string schemaNamespace, string xsdFilePath, string xmlFilePath) {
-        var settings = new XmlReaderSettings();
-        settings.Schemas.Add (schemaNamespace, xsdFilePath);
-        settings.ValidationType = ValidationType.Schema;
-        settings.ValidationEventHandler += ValidationCallBack;
-        var readItems = XmlReader.Create(xmlFilePath, settings);
-        while (readItems.Read()) { }
+    public static void ValidateXmlFiles(string folderPath, string schemaNamespace, string xsdFilePath)
+    {
+        XmlSchemaSet schemaSet = new XmlSchemaSet();
+        schemaSet.Add(schemaNamespace, xsdFilePath);
+
+        foreach (string xmlFilePath in Directory.GetFiles(folderPath, "*.xml"))
+        {
+            ValidateXmlFile(xmlFilePath, schemaSet);
+        }
     }
 
-    // Méthode annexe affichant les erreurs et warning rencontrées lors de la validation ci dessus
-    private static void ValidationCallBack(object sender, ValidationEventArgs e) {
-        if (e.Severity.Equals(XmlSeverityType.Warning)) {
-            Console.Write("WARNING: ");
-            Console.WriteLine(e.Message);
-        }
-        else if (e.Severity.Equals(XmlSeverityType.Error)) {
-            Console.Write("ERROR: ");
-            Console.WriteLine(e.Message);
-        }
+    public static void ValidateXmlFile(string schemaNamespace, string xsdFilePath, string xmlFilePath)
+    {
+        XmlSchemaSet schemaSet = new XmlSchemaSet();
+        schemaSet.Add(schemaNamespace, xsdFilePath);
+
+        ValidateXmlFile(xmlFilePath, schemaSet);
+    }
+
+    private static void ValidateXmlFile(string xmlFilePath, XmlSchemaSet schemaSet)
+    {
+        XmlDocument doc = new XmlDocument();
+        doc.Schemas.Add(schemaSet);
+        doc.Load(xmlFilePath);
+
+        doc.Validate((sender, e) =>
+        {
+            if (e.Severity == XmlSeverityType.Warning)
+            {
+                Console.WriteLine($"Warning: {e.Message}");
+            }
+            else if (e.Severity == XmlSeverityType.Error)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+            }
+        });
+
+        Console.WriteLine($"{xmlFilePath} is valid.");
     }
     
     // Méthode pemettant d'appliquer une transformation XSLT sur un fichier XML,

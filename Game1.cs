@@ -104,6 +104,11 @@ public class Game1 : Game
 
         // Joueur
         // Il est chargé ici et pas dans EntitiesProcessed car on a besoin qu'il soit initialisé avant les ennemis
+        string folderPath = "../../../Content/Data/Stats/Player/";    // Chemin des fichiers de stats des ennemis
+        string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/character"; // Namespace du schéma XSD
+        string xsdFilePath = "../../../Content/Data/Stats/Player/character.xsd"; // Chemin du fichier XSD
+        XmlUtils.ValidateXmlFiles(folderPath, schemaNamespace, xsdFilePath); // Validation des fichiers XML
+        
         _player = new XmlManager<Player>().Load("../../../Content/Data/Stats/Player/character.xml");
         _player.Load(new Vector2(100, 100), _effectsManager);
 
@@ -118,6 +123,11 @@ public class Game1 : Game
 
     private void EntitiesProcessed(Dictionary<Vector2, int> entities)
     {
+        string folderPath = "../../../Content/Data/Stats/Ennemies/";    // Chemin des fichiers de stats des ennemis
+        string schemaNamespace = "https://www.univ-grenoble-alpes.fr/jeu/ennemi"; // Namespace du schéma XSD
+        string xsdFilePath = "../../../Content/Data/Stats/Ennemies/ennemi.xsd"; // Chemin du fichier XSD
+        XmlUtils.ValidateXmlFiles(folderPath, schemaNamespace, xsdFilePath); // Validation des fichiers XML
+        
         // Loaders des entités pour la désérialisation
         XmlManager<Ghost> ghostLoader = new XmlManager<Ghost>();
         XmlManager<Snake> snakeLoader = new XmlManager<Snake>();
@@ -125,7 +135,6 @@ public class Game1 : Game
         XmlManager<Boss> bossLoader = new XmlManager<Boss>();
 
         int collisionTilesetThreshold = _tile.CollisionTilesetThreshold; // Décalage des valeurs des tiles d'entités
-        string pathPrefix = "../../../Content/Data/Stats/Ennemies/"; // Chemin des fichiers de stats des ennemis
 
         foreach (KeyValuePair<Vector2, int> entity in entities)
         {
@@ -137,22 +146,22 @@ public class Game1 : Game
                     _shopKeeper = new ShopKeeper(position, _player);
                     break;
                 case 3:
-                    Spike spike = spikeLoader.Load(pathPrefix + "spike.xml");
+                    Spike spike = spikeLoader.Load(folderPath + "spike.xml");
                     spike.Load(position);
                     _enemies.Add(spike);
                     break;
                 case 4:
-                    Snake snake = snakeLoader.Load(pathPrefix + "snake.xml");
+                    Snake snake = snakeLoader.Load(folderPath + "snake.xml");
                     snake.Load(position);
                     _enemies.Add(snake);
                     break;
                 case 5:
-                    Ghost ghost = ghostLoader.Load(pathPrefix + "ghost.xml");
+                    Ghost ghost = ghostLoader.Load(folderPath + "ghost.xml");
                     ghost.Load(position, _player);
                     _enemies.Add(ghost);
                     break;
                 case 6:
-                    Boss boss = bossLoader.Load(pathPrefix + "boss.xml");
+                    Boss boss = bossLoader.Load(folderPath + "boss.xml");
                     boss.Load(position, _player);
                     _enemies.Add(boss);
                     break;
