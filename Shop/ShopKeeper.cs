@@ -12,9 +12,9 @@ namespace JeuVideo.Shop;
 // Il n'est pas désérialiser car il n'y en a pas besoin
 public class ShopKeeper : GameObject
 {
-    private readonly ShopMenu _shopMenu;
-    private readonly Player _player;
-    public bool IsPaused;
+    private readonly ShopMenu _shopMenu;    // Menu du marchand
+    private readonly Player _player;    // Référence au joueur, utile pour l'interaction
+    public bool IsPaused;   // Booléen pour savoir si le jeu est en pause
     
     public ShopKeeper(Vector2 position, Player player) : 
         base(Globals.Content.Load<Texture2D>("Assets/NPC/shop"), position, true, 1.0f)
@@ -25,7 +25,7 @@ public class ShopKeeper : GameObject
         IsPaused = false;
     }
     
-    // Juste pour update l'animation
+    // Juste pour update le menu du shop
     public override void Update(Dictionary<Vector2, int> collision)
     {
         base.Update(collision);
@@ -33,6 +33,7 @@ public class ShopKeeper : GameObject
         _shopMenu.Update(_player);
     }
     
+    // Gère l'interaction avec le joueur
     public void Interact()
     {
         Rectangle shopHitbox = new Rectangle(
@@ -49,12 +50,15 @@ public class ShopKeeper : GameObject
         }
     }
     
+    // Dessine le npc
     public override void Draw(Vector2 offset)
     {
         base.Draw(offset);
         
         _shopMenu.Draw();
     }
+    
+    // Vu qu'on hérite de GO, on doit réimplémenter ces méthodes meme si on ne les utilises pas
 
     protected override void DeplacementHorizontal(double dt)
     {
