@@ -1,6 +1,7 @@
 using System;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
+using JeuVideo.UI;
 
 namespace JeuVideo.Character;
 
