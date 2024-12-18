@@ -1,0 +1,667 @@
+@startuml
+
+    package http://www-univ-grenoble-alpes-fr/jeu {
+    
+        class Game1 {
+            - GraphicsDeviceManager _graphics
+            - SpriteBatch _spriteBatch
+            - Texture2D _textureAtlas
+            - Texture2D _hitboxTexture
+            - Tile _tile
+            - Player _player
+            - List<Enemy> _enemies
+            - ShopKeeper _shopKeeper
+            - EffectsManager _effectsManager
+            - Camera _camera
+            - PauseMenu _pauseMenu
+            - Canvas _canvas
+            - KeyboardState _previousKeyState
+            - KeyboardState _currentKeyState
+            - Bubble _bubble
+            - Timer _timer
+            + Game1()
+            + Initialize() : void
+            + LoadContent() : void
+            + EntitiesProcessed(Dictionary<Vector2, int> entities) : void
+            + Update(GameTime gameTime) : void
+            + SetResolution(int height, int width) : void
+            + SetFullScreen() : void
+            + Draw(GameTime gameTime) : void
+        }
+        
+        class Sprite {
+            - Vector2 _displaySize
+            + Vector2 Position
+            # bool IsAnimed
+            - Texture2D _texture
+            # AnimationManager AnimationManager
+            # int Direction
+            # Vector2 Size
+            + Sprite()
+            + Sprite(Texture2D texture, Vector2 position, bool isAnimed)
+            + void Load(Texture2D texture, Vector2 position, bool isAnimed)
+            + void Draw(Vector2 offset)
+        }
+        
+        class GameObject {
+            - Vector2 Velocity
+            - Vector2 _size
+            + Rectangle Rect
+            - Vector2 _positionOffset
+            - float _hitboxRatio
+            + Rectangle DamageHitbox
+            + GameObject(Texture2D texture, Vector2 position, bool isAnimed, float hitboxRatio)
+            + GameObject()
+            + void Load(Texture2D texture, Vector2 position, bool isAnimed, float hitboxRatio)
+            + void Update(Dictionary<Vector2, int> collision)
+            + void DeplacementHorizontal(double dt)
+            + void DeplacementVertical(double dt)
+            + void CheckCollisionsHorizontal(Dictionary<Vector2, int> collision)
+            + void CheckCollisionsVertical(Dictionary<Vector2, int> collision)
+            + void WhenHorizontalCollisions(Rectangle rect)
+            + void WhenVerticalCollisions(Rectangle rect)
+            + List<Rectangle> GetIntersectingTilesHorizontal(Rectangle target)
+            + List<Rectangle> GetIntersectingTilesVertical(Rectangle target)
+            + void Animate(Vector2 velocity)
+        }
+        
+        class Camera {
+            + Vector2 Position
+            + Camera(Vector2 position)
+            + void Follow(Rectangle target, Vector2 screenSize)
+        }
+        
+        class Canvas {
+            - GraphicsDevice _graphicsDevice
+            - Rectangle _destinationRectangle
+            + RenderTarget2D Target
+            + Vector2 MenuScale { get; private set; }
+            + Canvas(GraphicsDevice graphicsDevice, int width, int height)
+            + void SetDestinationRectangle()
+            + void Activate()
+            + void Draw(SpriteBatch spriteBatch)
+        }
+        
+        class Globals {
+            + {static} ContentManager Content
+            + {static} SpriteBatch SpriteBatch
+            + {static} GameTime GameTime
+            + {static} GraphicsDevice GraphicsDevice
+            + {static} Vector2 ScreenSize
+            + {static} Vector2 Scale
+            + {static} Texture2D DebugTexture
+            + {static} void DrawRectHollow(Rectangle rect)
+        }
+        
+        class Tile {
+            - List<Dictionary<Vector2, int>> _layerList
+            - Texture2D _textureAtlas
+            - Texture2D _hitboxTexture
+            - int _displayTilesize
+            - int _pixelTilesize
+            - int _numTilesPerRow
+            - double _onScreenMultiplier
+            + Dictionary<Vector2, int> Collisions { get; private set; }
+            + Dictionary<Vector2, int> Entities { get; private set; }
+            + int CollisionTilesetThreshold { get; private set; }
+            + Tile(Texture2D textureAtlas, Texture2D hitboxTexture)
+            - void Load()
+            - void GetLayers(XmlDocument doc)
+            - void GetNumbers(XmlDocument doc)
+            - void GetPixelTileSize(XmlDocument doc)
+            - void GetNumTilesPerRow()
+            - int GetTilesetThreshold(XmlDocument doc)
+            - Dictionary<Vector2, int> LoadMap(string data)
+            + void Draw(SpriteBatch spriteBatch, Vector2 offset)
+            - void DrawMap(Dictionary<Vector2, int> data, SpriteBatch spriteBatch, Texture2D texture, Vector2 offset)
+        }
+        
+        class Timer {
+            - Texture2D _texture
+            - SpriteFont _font
+            - Vector2 _textPosition
+            - string _text
+            - double _time
+            - Rectangle _destRect
+            - bool _active
+            + Timer()
+            + void Update()
+            + void Stop()
+            - void Save()
+            + void Draw()
+        }
+        
+        class XmlManager<T> {
+            + T Load(string path)
+            + void Save(string path, object obj)
+            + void Save(string path, object obj, XmlSerializerNamespaces ns)
+        }
+        
+        class XmlUtils {
+            + static void ValidateXmlFiles(string folderPath, string schemaNamespace, string xsdFilePath)
+            + static void ValidateXmlFile(string schemaNamespace, string xsdFilePath, string xmlFilePath)
+            + static void XslTransform(string xmlFilePath, string xsltFilePath, string outputFilePath)
+            - static void ValidateXmlFile(string xmlFilePath, XmlSchemaSet schemaSet)
+        }
+           
+    }
+    
+    package http://www-univ-grenoble-alpes-fr/jeu/ui {
+    
+        class Bubble {
+            - Texture2D _texture
+            - Rectangle[] _sourceRectangles
+            - Rectangle[] _destinationRectangles
+            + bool Visible
+            - int Width
+            - int Height
+            - const int CornerSize
+            - SpriteFont _font
+            - string _text
+            - Vector2 _textPosition
+            + Color TextColor
+            + Bubble(Texture2D texture, SpriteFont font)
+            - void CalculateDestinationRectangles()
+            + void SetText(string text)
+            + void Draw()
+        }
+        
+        class Button {
+            - MouseState _previousMouseState
+            - readonly Texture2D _texture
+            - Rectangle _rectangle
+            + bool IsClicked { get; private set; }
+            + Button(Texture2D texture, Vector2 position)
+            + void Update(Vector2 scale)
+            + void Draw()
+        }
+        
+        abstract class Menu {
+            - Texture2D _bgTexture
+            + bool IsActive
+            - Vector2 ScreenSize
+            - List<Button> Buttons
+            - Rectangle DestRectangle
+            + Menu(string bgTextureName)
+            - void Update()
+            + void Draw()
+        }
+        
+        class PauseMenu {
+            + PauseMenu()
+            + void Update(Game1 game)
+        }
+        
+        class QuantityBar {
+            - int _currentValue
+            - readonly Vector2 _position
+            - readonly Texture2D Bar
+            + QuantityBar(int value, Color color, Vector2 position)
+            + void Set(int value)
+            + void Draw()
+        }
+        
+        class ShopMenu {
+            + ShopMenu()
+            + void Update(Player player)
+        }
+    
+    }
+    
+    package http://www-univ-grenoble-alpes-fr/jeu/shop {
+    
+        class ShopKeeper {
+            - readonly ShopMenu _shopMenu
+            - readonly Player _player
+            + bool IsPaused
+            + ShopKeeper(Vector2 position, Player player)
+            + void Update(Dictionary<Vector2, int> collision)
+            + void Interact()
+            + void Draw(Vector2 offset)
+            - void DeplacementHorizontal(double dt)
+            - void DeplacementVertical(double dt)
+            - void Animate(Vector2 velocity)
+        }
+        
+    }
+    
+    package http://www-univ-grenoble-alpes-fr/jeu/ennemies {
+    
+        class Boss {
+            - int _counter
+            - double _lastAttackTime
+            - bool _isBloqued
+            - Player _player
+            - Texture2D _summonTexture
+            - int _interval
+            + int Interval
+            + int AttackCooldown
+            + int Distance
+            + int AttackRange
+            + int Speed
+            + int SummonSpeed
+            + int SummonTime
+            + int SummonDamage
+            - List<BossSummon> _summons
+            + BossState CurrentState { get; private set; }
+            + void Load(Vector2 position, Player player)
+            - void DeplacementHorizontal(double dt)
+            - void DeplacementVertical(double dt)
+            - void Animate(Vector2 velocity)
+            - void Bloqued()
+            - void DeathAnim()
+            - void SpecialAnim()
+            - void AttackAnim()
+            + void Update(Dictionary<Vector2, int> collision)
+            + void Draw(Vector2 offset)
+        }
+        
+        enum BossState {
+            Normal
+            Special
+            Dying
+            Attacking
+        }
+        
+        class BossSummon {
+            - readonly float _speed
+            - readonly int _timeAlive
+            - readonly int _damage
+            - readonly Vector2 _directionToTarget
+            - readonly double _spawnTime
+            - bool _isAlive
+            + bool IsAlive { get; }
+            + BossSummon(Texture2D texture, Vector2 position, Vector2 targetPosition, int speed, int timeAlive, int damage)
+            - void DeplacementHorizontal(double dt)
+            - void DeplacementVertical(double dt)
+            - void Animate(Vector2 velocity)
+            - void WhenHorizontalCollisions(Rectangle rect)
+            - void WhenVerticalCollisions(Rectangle rect)
+            + void CheckCollisionWithPlayer(Player player)
+        }
+        
+        abstract class Enemy {
+            - Vector2 StartPosition
+            - int _currentHealth
+            + float HitboxRatio
+            + int MaxHealth
+            + int DamageDealt
+            + int Health { get; private set; }
+            + Enemy(Texture2D texture, Vector2 position, int maxHealth, float hitboxRatio)
+            + Enemy()
+            + void Load(Texture2D texture, Vector2 position)
+            + void TakeDamage(int damage, Vector2 source)
+            # abstract void DeplacementHorizontal(double dt)
+            # abstract void DeplacementVertical(double dt)
+            # abstract void Animate(Vector2 velocity)
+        }
+        
+        class Ghost {
+            + int Distance
+            + int Speed
+            - Player _player
+            + void Load(Vector2 position, Player player)
+            + void TakeDamage(int damage, Vector2 source)
+            + void Update(Dictionary<Vector2, int> collision)
+            + void Draw(Vector2 offset)
+            - bool CheckPlayerDistance()
+            - void DeplacementHorizontal(double dt)
+            - void DeplacementVertical(double dt)
+            - void Animate(Vector2 velocity)
+            - void CheckCollisionsHorizontal(Dictionary<Vector2, int> collision)
+            - void CheckCollisionsVertical(Dictionary<Vector2, int> collision)
+        }
+        
+        class Snake {
+            + int Speed
+            + int Distance
+            + void Load(Vector2 position)
+            - void DeplacementHorizontal(double dt)
+            - void DeplacementVertical(double dt)
+            - void Animate(Vector2 velocity)
+        }
+        
+        class Spike {
+            + void Load(Vector2 position)
+            + void DeplacementHorizontal(double dt)
+            + void DeplacementVertical(double dt)
+            + void Animate(Vector2 velocity)
+        }
+            
+    }
+    
+    package http://www-univ-grenoble-alpes-fr/jeu/effects {
+    
+        class EffectsManager {
+            - Dictionary<string, Effect> _effects
+            + void AddEffect(string effectName)
+            + void PlayEffect(string effectName, Vector2 position, int direction)
+            + void Update()
+            + void Draw(Vector2 offset)
+        }
+        
+        class Effect {
+            - string GetName { get; }
+            + Effect(string textureName)
+            + void Play(Vector2 position, int direction)
+            + void Update()
+            + void Draw(Vector2 offset)
+        }
+    
+    }
+    
+    package http://www-univ-grenoble-alpes-fr/jeu/animations {
+        
+        class AnimationManager {
+            - int _numColumns
+            - Vector2 _size
+            - string _currentAnimation
+            - Dictionary<string, Animation> _animations
+            + AnimationManager(Texture2D spriteSheet)
+            - void LoadData(Texture2D spriteSheet)
+            - string GetFileName(Texture2D spriteSheet)
+            - int[] GetFramesArray(int numFrames, XmlNode animationNode)
+            + Vector2 GetSize()
+            + string GetCurrentAnimation()
+            + bool IsPlaying()
+            + Rectangle GetSourceRectangle()
+            + void Update()
+            + void SetAnimation(string anim)
+        }
+        
+        class Animation {
+            - int[] _frames
+            - float _counter
+            - int _activeFrame
+            - float _interval
+            - int _nbFrames
+            + bool IsPlaying
+            + AnimationType Type
+            + Animation(int[] frames, AnimationType type, int speed)
+            + void Update()
+            + int GetNextFrame()
+        }
+    
+    }
+    
+    package http://www-univ-grenoble-alpes-fr/jeu/character {
+        
+        class AttackManager {
+            - double _lastAttackTime
+            + EffectsManager EffectsManager
+            - AnimationManager _animationManager
+            + float AttackCooldown
+            + int AttackHitbox
+            + int AttackDamage
+            + int SpecialHitbox
+            + int SpecialDamage
+            + int SpecialCost
+            + void Load(AnimationManager animationManager, EffectsManager effectsManager)
+            + bool CanAttack(int currentMana = 0, bool isSpecial = false)
+            + void Attack(List<Enemy> enemies, Vector2 position, int direction)
+            + void SpecialAttack(List<Enemy> enemies, Vector2 position, int direction)
+            - void ApplyDamage(List<Enemy> enemies, Rectangle hitbox, int damage)
+        }
+        
+        class GoldCounter {
+            - Texture2D _coinTexture
+            - int _money
+            - SpriteFont _font
+            + int Money { get; private set; }
+            + GoldCounter(Vector2 position)
+            + void AddMoney(int value)
+            + void RemoveMoney(int value)
+            + void Reset()
+            + void Draw()
+        }
+        
+        class ResourceManager {
+            - int MaxHealth
+            - int _currentHealth
+            - QuantityBar _healthBar
+            - int MaxMana
+            - int _currentMana
+            - QuantityBar _manaBar
+            - GoldCounter GoldCounter
+            - double _lastRegenTime
+            + int Health { get; set; }
+            + int Mana { get; set; }
+            + bool IsDead { get; }
+            + void Load()
+            + void AddMaxHealth(int value)
+            + void AddMaxMana(int value)
+            + void Regen()
+            + void ResetRessource()
+            + void Draw()
+        }
+        
+        class Player {
+            - bool _grounded
+            - KeyboardState _prevKeystate
+            - AttackManager _attackManager
+            + ResourceManager ResourceManager
+            - double _lastDamageTime
+            + float HitboxRatio
+            + bool IsDead
+            + void Load(Vector2 position, EffectsManager effets)
+            + void Update(Dictionary<Vector2, int> collision, List<Enemy> enemies)
+            + void CheckCollisionsVertical(Dictionary<Vector2, int> collision)
+            + void DeplacementHorizontal(double dt)
+            + void DeplacementVertical(double dt)
+            + void Animate(Vector2 velocity)
+            + void TakeDamage(List<Enemy> enemies)
+            + void TakeDamage(int damage)
+            + void Draw(Vector2 offset)
+            + void Respawn()
+        }
+    
+    }
+    
+
+'Relations entre les classes
+Game1 *-- GraphicsDeviceManager
+Game1 *-- SpriteBatch
+Game1 *-- Texture2D
+Game1 *-- Tile
+Game1 *-- Player
+Game1 *-- Enemy
+Game1 *-- ShopKeeper
+Game1 *-- EffectsManager
+Game1 *-- Camera
+Game1 *-- PauseMenu
+Game1 *-- Canvas
+Game1 *-- KeyboardState
+Game1 *-- Bubble
+Game1 *-- Timer
+
+Sprite *-- Vector2
+Sprite *-- Texture2D
+Sprite *-- AnimationManager
+Sprite *-- SpriteBatch
+
+GameObject *-- Vector2
+GameObject *-- Rectangle
+GameObject *-- Texture2D
+GameObject *-- Dictionary
+GameObject *-- Sprite
+
+Camera *-- Vector2
+Camera *-- Rectangle
+
+Canvas *-- GraphicsDevice
+Canvas *-- Rectangle
+Canvas *-- RenderTarget2D
+Canvas *-- Vector2
+Canvas *-- SpriteBatch
+
+Globals *-- ContentManager
+Globals *-- SpriteBatch
+Globals *-- GameTime
+Globals *-- GraphicsDevice
+Globals *-- Vector2
+Globals *-- Texture2D
+Globals *-- Rectangle
+
+Tile *-- List
+Tile *-- Dictionary
+Tile *-- Vector2
+Tile *-- Texture2D
+Tile *-- XmlDocument
+Tile *-- SpriteBatch
+
+Timer *-- Texture2D
+Timer *-- SpriteFont
+Timer *-- Vector2
+Timer *-- Rectangle
+Timer *-- Globals
+Timer *-- XmlDocument
+Timer *-- XmlElement
+Timer *-- CultureInfo
+
+XmlManager *-- TextReader
+XmlManager *-- TextWriter
+XmlManager *-- StreamReader
+XmlManager *-- StreamWriter
+XmlManager *-- XmlSerializer
+XmlManager *-- XmlSerializerNamespaces
+
+XmlUtils *-- XmlSchemaSet
+XmlUtils *-- XmlDocument
+XmlUtils *-- XPathDocument
+XmlUtils *-- XslCompiledTransform
+XmlUtils *-- XsltSettings
+XmlUtils *-- XmlResolver
+XmlUtils *-- XsltArgumentList
+XmlUtils *-- XmlTextWriter
+
+
+Bubble *-- Texture2D
+Bubble *-- Rectangle
+Bubble *-- SpriteFont
+Bubble *-- Vector2
+Bubble *-- Color
+Bubble *-- Globals
+
+Button *-- MouseState
+Button *-- Texture2D
+Button *-- Rectangle
+Button *-- Vector2
+Button *-- Globals
+
+Menu *-- Texture2D
+Menu *-- Vector2
+Menu *-- List
+Menu *-- Button
+Menu *-- Rectangle
+Menu *-- Globals
+
+PauseMenu --|> Menu
+PauseMenu *-- Button
+PauseMenu *-- Texture2D
+PauseMenu *-- Vector2
+PauseMenu *-- Globals
+PauseMenu *-- Game1
+
+QuantityBar *-- Vector2
+QuantityBar *-- Texture2D
+QuantityBar *-- Color
+QuantityBar *-- Globals
+QuantityBar *-- SpriteBatch
+
+ShopMenu --|> Menu
+ShopMenu *-- Button
+ShopMenu *-- Texture2D
+ShopMenu *-- Vector2
+ShopMenu *-- Globals
+ShopMenu *-- Player
+
+
+ShopKeeper --|> GameObject
+ShopKeeper *-- ShopMenu
+ShopKeeper *-- Player
+ShopKeeper *-- Vector2
+ShopKeeper *-- Texture2D
+ShopKeeper *-- Dictionary
+
+
+Boss --|> Enemy
+Boss *-- Player
+Boss *-- Texture2D
+Boss *-- Vector2
+Boss *-- List
+Boss *-- BossSummon
+Boss *-- Dictionary
+
+BossSummon --|> GameObject
+BossSummon *-- Texture2D
+BossSummon *-- Vector2
+BossSummon *-- Player
+BossSummon *-- Rectangle
+BossSummon *-- Globals
+
+Enemy --|> GameObject
+Enemy *-- Vector2
+Enemy *-- Texture2D
+
+Ghost --|> Enemy
+Ghost *-- Player
+Ghost *-- Vector2
+Ghost *-- Texture2D
+Ghost *-- Dictionary
+
+Snake --|> Enemy
+Snake *-- Vector2
+Snake *-- Texture2D
+
+Spike --|> Enemy
+Spike *-- Vector2
+Spike *-- Texture2D
+
+
+EffectsManager *-- Effect
+EffectsManager *-- Dictionary
+EffectsManager *-- Vector2
+
+Effect --|> Sprite
+Effect *-- Vector2
+Effect *-- Texture2D
+Effect *-- AnimationManager
+
+
+AnimationManager *-- Vector2
+AnimationManager *-- Texture2D
+AnimationManager *-- Dictionary
+AnimationManager *-- Animation
+AnimationManager *-- XmlNode
+
+Animation *-- int
+Animation *-- AnimationType
+
+
+AttackManager *-- EffectsManager
+AttackManager *-- AnimationManager
+AttackManager *-- List
+AttackManager *-- Enemy
+AttackManager *-- Vector2
+AttackManager *-- Rectangle
+
+GoldCounter *-- Texture2D
+GoldCounter *-- SpriteFont
+GoldCounter *-- Vector2
+
+ResourceManager *-- QuantityBar
+ResourceManager *-- GoldCounter
+ResourceManager *-- Vector2
+ResourceManager *-- Color
+ResourceManager *-- Globals
+
+Player *-- Vector2
+Player *-- KeyboardState
+Player *-- AttackManager
+Player *-- ResourceManager
+Player *-- EffectsManager
+Player *-- Dictionary
+Player *-- List
+Player *-- Enemy
+
+@enduml
