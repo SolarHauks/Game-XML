@@ -5,20 +5,21 @@ using Microsoft.Xna.Framework.Input;
 
 namespace JeuVideo.UI;
 
+// Bouton de menu
 public class Button : Sprite
 {
-    private MouseState _previousMouseState;
-    private readonly Texture2D _texture;
-    private Rectangle _rectangle;
+    private MouseState _previousMouseState; // Etat de la souris à la frame précédente
+    private readonly Texture2D _texture;    // Texture du bouton
+    private Rectangle _destRect;    // Rectangle de destination
 
-    public bool IsClicked { get; private set; }
+    public bool IsClicked { get; private set; } // 
 
     public Button(Texture2D texture, Vector2 position) : base(texture, position, false)
     {
         _texture = texture;
         int width = _texture.Width;
         int height = _texture.Height;
-        _rectangle = new Rectangle((int)position.X - width / 2, (int)position.Y - height / 2, width*2, height*2);
+        _destRect = new Rectangle((int)position.X - width / 2, (int)position.Y - height / 2, width*2, height*2);
     }
     
     public void Update(Vector2 scale)
@@ -29,7 +30,7 @@ public class Button : Sprite
         // Ajuster la position de la souris en fonction de la caméra et de l'échelle
         Vector2 adjustedMousePosition = new Vector2(mousePosition.X, mousePosition.Y) / scale;
         
-        if (_rectangle.Contains(adjustedMousePosition) && currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+        if (_destRect.Contains(adjustedMousePosition) && currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
         {
             IsClicked = true;
         }
@@ -43,7 +44,7 @@ public class Button : Sprite
     
     public void Draw()
     {
-       Globals.SpriteBatch.Draw(_texture, _rectangle, Color.White);
+       Globals.SpriteBatch.Draw(_texture, _destRect, Color.White);
     }
     
 }

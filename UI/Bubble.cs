@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.UI;
 
+// Bulle de dialogue
 public class Bubble
 {
     private readonly Texture2D _texture;
@@ -11,11 +12,11 @@ public class Bubble
     private readonly Rectangle[] _sourceRectangles;
     private readonly Rectangle[] _destinationRectangles;
     
-    public bool Visible { get; set; } = false;
+    public bool Visible { get; set; } = false;  // Bulle active
     private int Width { get; set; }
     private int Height { get; set; }
-    private const int CornerSize = 12;
-    private readonly SpriteFont _font;
+    private const int CornerSize = 12;  // Pour le découpage de la bulle
+    private readonly SpriteFont _font;  // Font du texte
     private string _text = "";
     private Vector2 _textPosition;
     public Color TextColor { get; set; } = Color.White;
@@ -43,7 +44,7 @@ public class Bubble
         _sourceRectangles[7] = new(CornerSize, _texture.Height - CornerSize, _texture.Width - 2 * CornerSize, CornerSize);
         _sourceRectangles[8] = new(_texture.Width - CornerSize, _texture.Height - CornerSize, CornerSize, CornerSize);
     }
-
+    
     private void CalculateDestinationRectangles()
     {
         Vector2 screenSize = Globals.ScreenSize;
