@@ -3,9 +3,10 @@ using Microsoft.Xna.Framework;
 
 namespace JeuVideo.Effects;
 
+// Gestionnaire des effets
 public class EffectsManager
 {
-    private readonly Dictionary<string, Effect> _effects = new(); 
+    private readonly Dictionary<string, Effect> _effects = new();   // Liste des effets
 
     // Ajout d'un effet à la liste
     public void AddEffect(string effectName)
