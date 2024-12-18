@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +13,7 @@ public class AnimationManager
     private Vector2 _size;  // Taille d'une frame d'animation
     private string _currentAnimation;   // Animation actuelle
     
-    private readonly Dictionary<string, Animation> _animations; // Dictoinnaire des animations
+    private readonly Dictionary<string, Animation> _animations; // Dictionnaire des animations
     
     public AnimationManager(Texture2D spriteSheet)
     {
@@ -20,8 +21,11 @@ public class AnimationManager
         LoadData(spriteSheet);
     }
     
+    // Charge les données d'animation à partir d'un fichier XML
     private void LoadData(Texture2D spriteSheet)
     {
+        // Le fichier XML doit être nommé avec le meme nom que la spriteSheet avec l'extension .xml
+        // Par exemple, si la spriteSheet s'appelle "character", le fichier XML doit s'appeler "character.xml"
         string dataFileName = GetFileName(spriteSheet) + ".xml";
         string xmlFilePath = "../../../Content/Data/Animation/" + dataFileName;
         
@@ -29,7 +33,7 @@ public class AnimationManager
         doc.Load(xmlFilePath);
         
         // La validation du fichier XML se fait dans Game1 pour que ce ne soit fait qu'une fois
-        // et pas à chaque isntanciation d'une entité
+        // et pas à chaque instanciation d'une entité
         
         XmlNode paramNode = doc.DocumentElement; // Sélectionne la racine du document XML
 
@@ -65,38 +69,28 @@ public class AnimationManager
             
     }
 
-    private string GetFileName(Texture2D spriteSheet)
-    {
-        // spriteSheet.ToString() renvoit un truc du style "Assets/Character/character"
-        // On utilise l'indexation à partir de la fin pour obtenir le dernier segment
-        return spriteSheet.ToString().Split('/')[^1]; 
-    }
-    
-    private int[] GetFramesArray(int numFrames, XmlNode animationNode)
-    {
-        int[] frames = new int[numFrames];
-        for (int i = 0; i < numFrames; i++)
-        {
-            frames[i] = int.Parse(animationNode.SelectNodes("frame")[i].Attributes["numFrame"].Value);
-        }
-        return frames;
-    }
+    // Renvoie le nom du fichier de la spriteSheet sans le chemin ni l'extension
+    // spriteSheet.ToString() renvoit un truc du style "Assets/Character/character"
+    // On utilise l'indexation à partir de la fin pour obtenir le dernier segment
+    private string GetFileName(Texture2D spriteSheet) => spriteSheet.ToString().Split('/')[^1]; 
+        
+    // Renvoie un tableau d'entiers contenant les index des frames de l'animation
+    private int[] GetFramesArray(int numFrames, XmlNode animationNode) => animationNode.SelectNodes("frame")
+                        .Cast<XmlNode>()
+                        .Select(node => int.Parse(node.Attributes["numFrame"].Value))
+                        .ToArray();
 
-    public Vector2 GetSize()
-    {
-        return _size;
-    }
+    // Renvoie la taille d'une frame d'animation
+    public Vector2 GetSize() => _size;
     
-    public string GetCurrentAnimation()
-    {
-        return _currentAnimation;
-    }
+    // Renvoit la frame actuelle de l'animation
+    public string GetCurrentAnimation() => _currentAnimation;
     
-    public bool IsPlaying()
-    {
-        return _animations[_currentAnimation].IsPlaying;
-    }
-
+    // Renvoie true si l'animation est en cours
+    public bool IsPlaying() => _animations[_currentAnimation].IsPlaying;
+        
+    // Renvoie le rectangle source de la frame actuelle
+    // Permet surtout d'afficher
     public Rectangle GetSourceRectangle()
     {
         int currentFrame = _animations[_currentAnimation].GetNextFrame();
@@ -107,20 +101,16 @@ public class AnimationManager
         return new Rectangle(x, y, (int)_size.X, (int)_size.Y);
     }
     
-    public void Update()
-    {
-        _animations[_currentAnimation].Update();
-    }
+    // Met à jour l'animation
+    public void Update() => _animations[_currentAnimation].Update();
     
+    // Démarre une animation
     public void SetAnimation(string anim)
     {
         if (_animations.TryGetValue(anim, out Animation value))
         {
             _currentAnimation = anim;
-            if (value.Type == AnimationType.OneTime)
-            {
-                value.IsPlaying = true;
-            }
+            value.IsPlaying = value.Type == AnimationType.OneTime;  // Set du type d'animation
         }
         else
         {
