@@ -24,16 +24,18 @@ public class Player : GameObject
 
     [XmlElement("hitboxRatio")] public float HitboxRatio;   // Ratio de la hitbox du joueur, textureSize * ratio = hitbox
     
-    public bool IsDead => ResourceManager.IsDead;
+    public bool IsDead => ResourceManager.IsDead;   // Si le joueur est mort
     
     public void Load(Vector2 position, EffectsManager effets)
     {
         Texture2D texture = Globals.Content.Load<Texture2D>("Assets/Character/character");
         base.Load(texture, position, true, HitboxRatio);
         
+        // Désérialization des données d'attaques
         _attackManager = new XmlManager<AttackManager>().Load("../../../Content/Data/Stats/Player/attack.xml");
         _attackManager.Load(AnimationManager, effets);
         
+        // Désérialization des données de ressources
         ResourceManager = new XmlManager<ResourceManager>().Load("../../../Content/Data/Stats/Player/ressource.xml");
         ResourceManager.Load();
     }
@@ -54,13 +56,13 @@ public class Player : GameObject
             if (Position.Y > 1000) ResourceManager.Health = 0;  // Si le joueur tombe dans le vide, il meurt
             
             // Attaque
-            if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C))
+            if (keystate.IsKeyDown(Keys.C) && !_prevKeystate.IsKeyDown(Keys.C) && _attackManager.CanAttack())
             {
                 _attackManager.Attack(enemies, Position, Direction);
             }
 
             // Attaque Spé
-            if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V) && _attackManager.CanAttack())
+            if (keystate.IsKeyDown(Keys.V) && !_prevKeystate.IsKeyDown(Keys.V) && _attackManager.CanAttack(ResourceManager.Mana, true))
             {
                 ResourceManager.Mana -= 20;
                 _attackManager.SpecialAttack(enemies, Position, Direction);
@@ -100,10 +102,7 @@ public class Player : GameObject
                     16
                 );
 
-                if (!Rect.Intersects(collisionTile))
-                {
-                    continue;
-                }
+                if (!Rect.Intersects(collisionTile)) { continue; }
 
                 // colliding with the top face
                 if (Velocity.Y > 0.0f)
@@ -181,6 +180,7 @@ public class Player : GameObject
     }
     
     // Gère les dégâts subis par le joueur lorsqu'il entre en collision avec un ennemi.
+    // Si on prend des dégats, on a 1 seconde d'invincibilité
     // enemies - Liste des ennemis présents dans le jeu.
     private void TakeDamage(List<Enemy> enemies)
     {
@@ -200,14 +200,17 @@ public class Player : GameObject
         }
     }
     
+    // Inflige des dégâts au joueur. Utilse uniquement pour le summons qui n'est pas directement dans la liste d'ennemi
     public void TakeDamage(int damage) => ResourceManager.Health -= damage;
     
+    // Dessine le joueur à l'écran.
     public override void Draw(Vector2 offset)
     {
         base.Draw(offset);
         ResourceManager.Draw();
     }
 
+    // Réinitialise la position du joueur et ses ressources à la mort.
     private void Respawn()
     {
         Position = new Vector2(20, 10);

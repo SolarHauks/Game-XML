@@ -34,13 +34,13 @@ public class ShopMenu : Menu
         if (Buttons[0].IsClicked && player.ResourceManager.GoldCounter.Money >= HealthPrice)
         {
             player.ResourceManager.AddMaxHealth(HealthAdd);
-            player.ResourceManager.GoldCounter.RemoveMoney(HealthPrice);
+            player.ResourceManager.GoldCounter.AddMoney(-HealthPrice);
         }
 
         if (Buttons[1].IsClicked && player.ResourceManager.GoldCounter.Money >= ManaPrice)
         {
             player.ResourceManager.AddMaxMana(ManaAdd);
-            player.ResourceManager.GoldCounter.RemoveMoney(ManaPrice);
+            player.ResourceManager.GoldCounter.AddMoney(-ManaPrice);
         }
     }
 }

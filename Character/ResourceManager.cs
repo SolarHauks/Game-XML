@@ -5,23 +5,24 @@ using JeuVideo.UI;
 
 namespace JeuVideo.Character;
 
+// Classe permettant de gérer les ressources du joueur
 [Serializable]
 [XmlRoot("ressource", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/character")]
 public class ResourceManager
 {
-    [XmlElement("health")] public int MaxHealth;
-    [XmlIgnore] private int _currentHealth;
-    [XmlIgnore] private QuantityBar _healthBar;
+    [XmlElement("health")] public int MaxHealth;    // Vie maximale du joueur
+    [XmlIgnore] private int _currentHealth;       // Vie actuelle du joueur
+    [XmlIgnore] private QuantityBar _healthBar;   // Barre de vie
     
-    [XmlElement("mana")] public int MaxMana;
-    [XmlIgnore] private int _currentMana;
-    [XmlIgnore] private QuantityBar _manaBar;
+    [XmlElement("mana")] public int MaxMana;    // Mana maximal du joueur
+    [XmlIgnore] private int _currentMana;    // Mana actuel du joueur
+    [XmlIgnore] private QuantityBar _manaBar;   // Barre de mana
     
-    [XmlIgnore] public GoldCounter GoldCounter;
-    [XmlIgnore] private double _lastRegenTime;
+    [XmlIgnore] public GoldCounter GoldCounter;  // Compteur d'or
+    [XmlIgnore] private double _lastRegenTime;  // Dernier temps de régénération
     
-    [XmlElement("regenTime")] public float RegenTime;
-    [XmlElement("regenAmount")] public int RegenAmount;
+    [XmlElement("regenTime")] public float RegenTime;   // Temps entre chaque tic de régénération
+    [XmlElement("regenAmount")] public int RegenAmount; // Quantité de régénération par tic
 
     public int Health
     {
@@ -41,7 +42,7 @@ public class ResourceManager
         }
     }
 
-    public bool IsDead => _currentHealth <= 0;
+    public bool IsDead => _currentHealth <= 0;  // Le joueur est mort si sa vie est inférieure ou égale à 0
 
     // On ne note pas cette méthode [OnDeserialized] par soucis de cohérence
     public void Load()
@@ -52,19 +53,22 @@ public class ResourceManager
         _manaBar = new QuantityBar(MaxMana, Color.Blue, new Vector2(10, 30));
         GoldCounter = new GoldCounter(new Vector2(10, 50));
     }
-
+    
+    // Ajoute de la vie max au joueur avec un cap à 200, utile dans le shop
     public void AddMaxHealth(int value)
     {
         MaxHealth = Math.Min(MaxHealth + value, 200);   // Cap de la vie à 200
         Health += Math.Min(Health + value, MaxHealth);
     }
 
+    // Ajoute du mana max au joueur avec un cap à 200, utile dans le shop
     public void AddMaxMana(int value)
     {
         MaxMana = Math.Min(MaxMana + value, 200);   // Cap du mana à 200
         Mana += Math.Min(Mana + value, MaxMana);
     }
     
+    // Régénération du joueur
     public void Regen()
     {
         double currentTime = Globals.GameTime.TotalGameTime.TotalSeconds;
@@ -76,6 +80,7 @@ public class ResourceManager
         }
     }
 
+    // Reset des ressources à la mort
     public void ResetRessource()
     {
         MaxHealth = 100;
@@ -87,6 +92,7 @@ public class ResourceManager
         GoldCounter.Reset();
     }
 
+    // Dessine les barres de ressources et le compteur d'or
     public void Draw()
     {
         _healthBar.Draw();
