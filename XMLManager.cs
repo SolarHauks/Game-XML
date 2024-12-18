@@ -8,8 +8,12 @@ It's a generic class that must be specialized for a particular object that corre
 
 documentation : https://learn.microsoft.com/fr-fr/dotnet/api/system.xml.serialization.xmlserializer.deserialize?view=net-8.0
 */
+
+// Classe contenant les méthodes pour la sérialization et la désérialization d'un fichier XML
+// Directement reprise des exemples du cours
 public class XmlManager<T> {
     
+    // Désérialize un fichier XML en un objet de type T
     public T Load(string path) {
         // Declare a generic T variable of the type to be deserialized to store the deserialized xml file 
         T instance;

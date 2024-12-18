@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo;
 
+// Classe Timer pour gérer le temps de jeu
 public class Timer {
     
     private readonly Texture2D _texture;    // Texture du background du timer
@@ -31,20 +32,27 @@ public class Timer {
         _destRect = new Rectangle((int)position.X, (int)position.Y, _texture.Width * 3, _texture.Height);
     }
     
+    // Méthode pour mettre à jour le timer
     public void Update()
     {
-        if (!_active) return;
+        if (!_active) return;   // Si le timer n'est pas actif, on ne fait rien
         
         _time = Globals.GameTime.TotalGameTime.TotalSeconds;    // On récupère le temps total du jeu
         _text = TimeSpan.FromSeconds(_time).ToString(@"mm\:ss\.ff");    // On le convertit en minutes:secondes:centièmes
     }
 
+    // Méthode pour arrêter le timer
     public void Stop()
     {
         _active = false;
         Save();
     }
 
+    // Méthode pour sauvegarder le timer
+    // Suite à des problèmes rencontrés, on fait la sauvegarde du meilleur temps en 2 étapes :
+    // 1. A la mort du boss, on sauvegarde le temps dans un fichier XML
+    // 2. De ce fichier on en génère un autre avec les temps triés
+    // 3. De ce fichier trié, on en génère un autre avec uniquement le meilleur temps
     private void Save()
     {
         String filePrefix = "../../../Content/Data/Highscore/";
@@ -78,6 +86,7 @@ public class Timer {
         XmlUtils.XslTransform(xmlFilePath, filePrefix + "min_score.xslt", result);
     }
     
+    // Méthode pour dessiner le timer
     public void Draw()
     {
         Globals.SpriteBatch.Draw(_texture, _destRect, Color.White); // Background

@@ -22,6 +22,7 @@ public abstract class Sprite {
     // Constructeur sans paramètre pour la sérialisation
     protected Sprite() { }
 
+    // Charge ce qui n'a pas été chargé par la désérialisation
     protected void Load(Texture2D texture, Vector2 position, bool isAnimed)
     {
         _texture = texture;
@@ -37,7 +38,7 @@ public abstract class Sprite {
         else
         {
             AnimationManager = null;
-            _displaySize = new Vector2(texture.Width, texture.Height);
+            _displaySize = new Vector2(texture.Width, texture.Height);  // Taille affichée = taille de l'image
         }
     }
     
@@ -55,7 +56,7 @@ public abstract class Sprite {
         else
         {
             AnimationManager = null;
-            _displaySize = new Vector2(texture.Width, texture.Height);
+            _displaySize = new Vector2(texture.Width, texture.Height);  // Taille affichée = taille de l'image
         }
     }
     
@@ -74,15 +75,8 @@ public abstract class Sprite {
             (int)_displaySize.X, 
             (int)_displaySize.Y);
 
-        Rectangle sRect;
-        if (IsAnimed)
-        {
-            sRect = AnimationManager.GetSourceRectangle();   
-        }
-        else
-        {
-            sRect = new Rectangle(0, 0, _texture.Width, _texture.Height);
-        }
+        // Rectangle source de l'image. Si l'objet est animé, on prend la frame actuelle. Sinon on prend l'image entière
+        Rectangle sRect = IsAnimed ? AnimationManager.GetSourceRectangle() : new Rectangle(0, 0, _texture.Width, _texture.Height);
         
         Vector2 origin = Vector2.Zero;
         

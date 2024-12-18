@@ -11,7 +11,7 @@ public class Canvas
     private readonly GraphicsDevice _graphicsDevice;
     private Rectangle _destinationRectangle;
     public readonly RenderTarget2D Target;
-    public Vector2 MenuScale { get; private set; }
+    public Vector2 MenuScale { get; private set; }  // Échelle pour le menu.
 
     public Canvas(GraphicsDevice graphicsDevice, int width, int height)
     {

@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo;
 
+// Classe de gestion du niveau.
+// On dessine le niveau et les entités dans un logiciel appelé Tiled, qui génère un fichier XML.
+// On charge ce fichier XML pour afficher le niveau, récupérer les collisions et les entités.
 public class Tile
 {
     private readonly List<Dictionary<Vector2, int>> _layerList; // liste des layers du niveau
@@ -23,6 +26,7 @@ public class Tile
     // liste des entités, qu'on sépare par soucis de simplicité
     public Dictionary<Vector2, int> Entities { get; private set; }
     
+    // seuil pour détecter le layer de collision et récupérer les valeurs correctes
     public int CollisionTilesetThreshold { get; private set; }
     
 
@@ -192,6 +196,7 @@ public class Tile
             int x = (item.Value - 1) % _numTilesPerRow;
             int y = (item.Value - 1) / _numTilesPerRow;
             
+            // Rectangle source, on le place en fonction de la position du tile dans le tileset
             Rectangle src = new(
                 x * _pixelTilesize,
                 y * _pixelTilesize,

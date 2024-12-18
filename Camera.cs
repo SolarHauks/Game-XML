@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace JeuVideo;
 
+// Représente une caméra qui suit une cible.
 public class Camera(Vector2 position)
 {
     public Vector2 Position = position;

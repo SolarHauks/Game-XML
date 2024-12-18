@@ -9,8 +9,11 @@ namespace JeuVideo;
 
 // Classe utilitaire pour la validation et la transformation de fichiers XML
 // Tous est en static pour éviter d'avoir à instancier un objet pour les utiliser
+// La base de la classe est la classe donnée dans le cours
+// Les méthodes de validation ont été adaptés et réécrites.
 public static class XmlUtils
 {
+    // Valide tous les fichiers XML contenu dans un dossier avec un schéma XSD
     public static void ValidateXmlFiles(string folderPath, string schemaNamespace, string xsdFilePath)
     {
         XmlSchemaSet schemaSet = new XmlSchemaSet();
@@ -22,6 +25,7 @@ public static class XmlUtils
         }
     }
 
+    // Valide un seul fichier XML avec un schéma XSD
     public static void ValidateXmlFile(string schemaNamespace, string xsdFilePath, string xmlFilePath)
     {
         XmlSchemaSet schemaSet = new XmlSchemaSet();
@@ -29,7 +33,8 @@ public static class XmlUtils
 
         ValidateXmlFile(xmlFilePath, schemaSet);
     }
-
+    
+    // Méthode permettant de valider un fichier XML avec un schéma XSD
     private static void ValidateXmlFile(string xmlFilePath, XmlSchemaSet schemaSet)
     {
         XmlDocument doc = new XmlDocument();
@@ -57,26 +62,10 @@ public static class XmlUtils
     {
         XPathDocument xpathDoc = new XPathDocument(xmlFilePath);
         XslCompiledTransform xslt = new XslCompiledTransform();
+
+        xslt.Load(xsltFilePath);
         
-        // Permet de forcer la résolution des ressources externes (fonction document() et les URI externes)
-        XsltSettings settings = new XsltSettings(true, true);
-        XmlResolver resolver = new XmlUrlResolver();
-
-        // Crée une liste d'arguments pour passer des paramètres à la transformation XSLT
-        XsltArgumentList argList = new XsltArgumentList();
-        // Selon le fichier XSLT, on ajoute des paramètres correspondants
-        if (xsltFilePath.EndsWith("infirmiere.xslt"))
-        {
-            // Passe à la transformation le numéro de l'infirmiere en paramètre
-            argList.AddParam("destinedId", "", "001");
-        } else if (xsltFilePath.EndsWith("extractionPatient.xslt"))
-        {
-            // Passe à la transformation le nom du patient en paramètre
-            argList.AddParam("destinedName", "", "Pourferlavésel");
-        }
-
-        xslt.Load(xsltFilePath, settings, resolver);
         using XmlTextWriter outputWriter = new XmlTextWriter(outputFilePath, null);
-        xslt.Transform(xpathDoc, argList, outputWriter);
+        xslt.Transform(xpathDoc, outputWriter);
     }
 }

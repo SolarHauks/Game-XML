@@ -26,16 +26,15 @@ public class Game1 : Game
     private Tile _tile; // classe Tile pour gérer les tiles
 
     private Player _player; // classe Player pour gérer le joueur
-    private readonly List<Enemy> _enemies;
-    private ShopKeeper _shopKeeper;
+    private readonly List<Enemy> _enemies;  // liste des ennemis actifs
+    private ShopKeeper _shopKeeper; // NPC pour le shop
 
     private EffectsManager _effectsManager; // classe EffectsManager pour gérer les effets
 
     private readonly Camera _camera; // classe Camera pour gérer la caméra
 
-    // private PauseMenu _pauseMenu;
-    private PauseMenu _pauseMenu;
-    private Canvas _canvas;
+    private PauseMenu _pauseMenu;   // classe PauseMenu pour gérer le menu de pause
+    private Canvas _canvas; // classe Canvas pour gérer le redimensionnement de l'écran
 
     private KeyboardState _previousKeyState, _currentKeyState; // variables pour la pause du jeu
 
@@ -66,6 +65,7 @@ public class Game1 : Game
         _graphics.PreferredBackBufferHeight = 320;
         _graphics.ApplyChanges();
 
+        // Initialisation du canvas pour le redimensionnement de l'écran
         _canvas = new Canvas(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         _canvas.SetDestinationRectangle();
 
@@ -77,6 +77,8 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        
+        // Initialisation des variables globales
         Globals.SpriteBatch = _spriteBatch;
         Globals.Content = Content;
         Globals.ScreenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
@@ -123,14 +125,17 @@ public class Game1 : Game
         _player.Load(new Vector2(100, 100), _effectsManager);
 
         // Tile
-        _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset"); // Texture du terrain
-        _hitboxTexture =
-            Content.Load<Texture2D>("Assets/Tileset/collisions"); // Texture de debug pour les collisions et les entités
+        // Texture du terrain
+        _textureAtlas = Content.Load<Texture2D>("Assets/Tileset/tileset");
+        // Texture de debug pour les collisions et les entités
+        _hitboxTexture = Content.Load<Texture2D>("Assets/Tileset/collisions");
 
         _tile = new(_textureAtlas, _hitboxTexture);
+        
         EntitiesProcessed(_tile.Entities); // Chargement des entités
     }
 
+    // Chargement des entités présentes dans le layer d'entité récupéré du fichier Tiled
     private void EntitiesProcessed(Dictionary<Vector2, int> entities)
     {
         string folderPath = "../../../Content/Data/Stats/Ennemies/";    // Chemin des fichiers de stats des ennemis
@@ -146,6 +151,7 @@ public class Game1 : Game
 
         int collisionTilesetThreshold = _tile.CollisionTilesetThreshold; // Décalage des valeurs des tiles d'entités
 
+        // Création de l'entité correspondante à la valeur de la tile
         foreach (KeyValuePair<Vector2, int> entity in entities)
         {
             Vector2 position = entity.Key * 16; // Position de l'entité
@@ -240,6 +246,8 @@ public class Game1 : Game
 
             // On mets aussi en pause si on interagit avec le shop. Mais ici pas de menu de pause
             if (_shopKeeper.IsPaused) return;
+            
+            // --------------------------------- Reste de la logique ---------------------------------
 
             // Logique de la caméra
             _camera.Follow(_player.Rect, new Vector2(_canvas.Target.Width, _canvas.Target.Height));
@@ -267,6 +275,7 @@ public class Game1 : Game
         _player.Update(_tile.Collisions, _enemies);
     }
 
+    // Set la résolution de l'écran
     private void SetResolution(int height, int width)
     {
         _graphics.IsFullScreen = false;
@@ -276,6 +285,7 @@ public class Game1 : Game
         _canvas.SetDestinationRectangle();
     }
 
+    // Set l'écran en plein écran
     private void SetFullScreen()
     {
         _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -294,7 +304,7 @@ public class Game1 : Game
 
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        if (_player.IsDead) // Si le joueur est mort
+        if (_player.IsDead) // Si le joueur est mort, on affiche l'écran de mort
         {
             GraphicsDevice.Clear(Color.Black); // Met la couleur du fond en noir pour le game over
 

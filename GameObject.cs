@@ -5,17 +5,22 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo;
 
+// Classe abstraite représentant un objet de jeu
+// Contient la logique de base, avec la gestion des collisions et les méthodes à implémenter pour les déplacements et l'animation
 public abstract class GameObject : Sprite
 {
     protected Vector2 Velocity; // Vélocité de l'objet de jeu, servant dans les déplacements et les collisions
     
     // Rectangle de l'objet servant pour les collisions
     private Vector2 _size; // Taille logique de l'objet, sert pour les collisions
+    
+    // Hitbox de l'objet, servant pour les détections des collisions
     public Rectangle Rect => new Rectangle((int)Position.X, (int)Position.Y, (int)_size.X, (int)_size.Y);
     
     // Rectangle servant dans les detections de dégats
-    private Vector2 _positionOffset;
-    private float _hitboxRatio;
+    // On sépare hitbox de collision et de dégats pour plus de flexibilité et pour facilité l'équilibrage
+    private Vector2 _positionOffset;    // Offset de la hitbox par rapport à la position de l'objet
+    private float _hitboxRatio; // Ratio de la hitbox par rapport à la taille de la texture de l'objet
     public Rectangle DamageHitbox => new Rectangle(
         (int)(Position.X + _positionOffset.X), 
         (int)(Position.Y + _positionOffset.Y), 
@@ -25,7 +30,8 @@ public abstract class GameObject : Sprite
     protected GameObject(Texture2D texture, Vector2 position, bool isAnimed, float hitboxRatio) : base(texture, position, isAnimed)
     {
         _size = Size;
-            
+        
+        // Calcul de la hitbox de dégats de l'objet
         _hitboxRatio = hitboxRatio;
         float newWidth = Size.X * hitboxRatio;
         float newHeight = Size.Y * hitboxRatio;
@@ -35,15 +41,17 @@ public abstract class GameObject : Sprite
         _positionOffset = new Vector2(offsetX, offsetY);
     }
     
-    // Constructeur sans paramètre pour la sérialisation
+    // Constructeur sans paramètre pour la désérialisation
     protected GameObject() { }
     
+    // Charge ce qui n'a pas été chargé par la désérialization
     protected void Load(Texture2D texture, Vector2 position, bool isAnimed, float hitboxRatio)
     {
         base.Load(texture, position, isAnimed); // Appel du "constructeur" de la classe mère
         
         _size = Size;
-            
+        
+        // Calcul de la hitbox de dégats de l'objet
         _hitboxRatio = hitboxRatio;
         float newWidth = Size.X * hitboxRatio;
         float newHeight = Size.Y * hitboxRatio;
@@ -72,6 +80,7 @@ public abstract class GameObject : Sprite
         }
     }
     
+    // L'implementation des déplacements horizontaux et verticaux est laissée aux classes filles
     protected abstract void DeplacementHorizontal(double dt);
     
     protected abstract void DeplacementVertical(double dt);
@@ -110,6 +119,7 @@ public abstract class GameObject : Sprite
         }
     }
 
+    // Gère ce qui se passe en cas de collision horizontale
     protected virtual void WhenHorizontalCollisions(Rectangle rect)
     {
         Rectangle collisionTile = new Rectangle(
@@ -129,6 +139,7 @@ public abstract class GameObject : Sprite
         }
     }
     
+    // Gère ce qui se passe en cas de collision verticale
     protected virtual void WhenVerticalCollisions(Rectangle rect)
     {
         Rectangle collisionTile = new Rectangle(
@@ -138,10 +149,7 @@ public abstract class GameObject : Sprite
             16
         );
 
-        if (Rect.Intersects(collisionTile))
-        {
-            return;
-        }
+        if (Rect.Intersects(collisionTile)) { return; }
 
         // colliding with the top face
         if (Velocity.Y > 0.0f)

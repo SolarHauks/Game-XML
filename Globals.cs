@@ -11,6 +11,8 @@ public static class Globals
     public static ContentManager Content { get; set; }  // Permet de charger des textures
     public static SpriteBatch SpriteBatch { get; set; } // Utile dans tous les Draw()
     public static GameTime GameTime { get; set; }   // Pour deltaTime
+    
+    // Sert uniquement dans les barres de ressources mais ce serait trop compliqué de faire circuler en paramètre
     public static GraphicsDevice GraphicsDevice { get; set; }  // Pour les textures
     public static Vector2 ScreenSize { get; set; }  // Taille de l'écran
     
