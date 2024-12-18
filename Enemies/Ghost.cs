@@ -7,14 +7,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
+// Classe représentant un fantôme
 [Serializable]
 [XmlRoot("ghost", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/ennemi")]
 public class Ghost : Enemy
 {
-    [XmlElement("distance")] public int Distance;
-    [XmlElement("speed")] public int Speed;
+    [XmlElement("distance")] public int Distance;   // Distance au joueur maximale pour que le fantome le suive
+    [XmlElement("speed")] public int Speed;        // Vitesse du fantome
     
-    [XmlIgnore] private Player _player;
+    [XmlIgnore] private Player _player;           // Joueur
     
     public void Load(Vector2 position, Player player)
     {
@@ -24,6 +25,7 @@ public class Ghost : Enemy
         base.Load(texture, position);
     }
 
+    // Si le joueur est à portée, le fantome le suit
     protected override void DeplacementHorizontal(double dt)
     {
         if (CheckPlayerDistance())
@@ -35,6 +37,7 @@ public class Ghost : Enemy
         }
     }
 
+    // Si le joueur est à portée, le fantome le suit
     protected override void DeplacementVertical(double dt)
     {
         if (CheckPlayerDistance())
@@ -45,8 +48,10 @@ public class Ghost : Enemy
         }
     }
     
+    // Vérifie si le joueur est à portée
     private bool CheckPlayerDistance() => (Vector2.Distance(_player.Position, Position) < Distance);
 
+    // Une seule animation ici
     protected override void Animate(Vector2 velocity) { AnimationManager.SetAnimation("fly"); }
     
     // On reimplemente ces deux méthodes pour éviter les collisions

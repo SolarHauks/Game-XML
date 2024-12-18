@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.Enemies;
 
+// Boss final
 [Serializable]
 [XmlRoot("boss", Namespace = "https://www.univ-grenoble-alpes.fr/jeu/ennemi")]
 public class Boss : Enemy
@@ -32,6 +33,7 @@ public class Boss : Enemy
     
     [XmlIgnore] private readonly List<BossSummon> _summons = new(); // Liste des invocations du boss
 
+    // Enumération des états du boss, pour éviter les conflits dans les animations
     public enum BossState
     {
         Normal,
@@ -54,6 +56,7 @@ public class Boss : Enemy
         base.Load(texture, position);
     }
 
+    // Deplacement horizontal du boss, fait des aller-retours
     protected override void DeplacementHorizontal(double dt)
     {
         // Si le boss est en train de mourir, attaque ou fait son spécial => on ne fait rien
@@ -64,6 +67,8 @@ public class Boss : Enemy
         // Si on dépasse de 50 pixels de la position de départ, on change de direction
         if (Math.Abs(Position.X - StartPosition.X) > Distance) { Direction *= -1; }
     }
+    
+    // Deplacement vertical du boss, est soumis à la gravité
     protected override void DeplacementVertical(double dt)
     {
         // Si le boss est en train de mourir, attaque ou fait son spécial => on ne fait rien
@@ -73,6 +78,7 @@ public class Boss : Enemy
         Position.Y += Velocity.Y;
     }
     
+    // Animations du boss
     protected override void Animate(Vector2 velocity)
     {
         if (_isBloqued)
@@ -99,6 +105,9 @@ public class Boss : Enemy
         }
     }
 
+    // Boss bloqué, .i.e. en train de faire une action spéciale ou d'attaque
+    // Dans ce cas on attend la fin de l'animation en cours avant d'en lancer une autres
+    // Permet aux animations ponctuelles de se finir avant de lancer une autre
     private void Bloqued()
     {
         _counter++;
@@ -148,6 +157,7 @@ public class Boss : Enemy
         }
     }
     
+    // Update du boss et des summons invoquées
     public override void Update(Dictionary<Vector2, int> collision)
     {
         base.Update(collision);
@@ -161,6 +171,7 @@ public class Boss : Enemy
         }
     }
     
+    // Dessin du boss et des summons invoquées
     public override void Draw(Vector2 offset)
     {
         base.Draw(offset);
