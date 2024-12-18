@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace JeuVideo.UI;
 
+// Classe abstraite de menu, sert de base aux autres menus
 public abstract class Menu
 {
     private readonly Texture2D _bgTexture;  // textures du menu
