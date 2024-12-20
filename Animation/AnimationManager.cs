@@ -53,17 +53,14 @@ public class AnimationManager
             
             int[] frames = GetFramesArray(numFrames, animationNode);
             
-            switch (type)
+            var animationType = type == "continu" ? AnimationType.Continuous : AnimationType.OneTime;
+            if (Enum.IsDefined(typeof(AnimationType), animationType))
             {
-                case "continu":
-                    _animations.Add(nom, new Animation(frames, AnimationType.Continuous, speed));
-                    break;
-                case "ponctuel":
-                    _animations.Add(nom, new Animation(frames, AnimationType.OneTime, speed));
-                    break;
-                default:
-                    Console.WriteLine("Erreur : le type d'animation " + type + " n'existe pas");
-                    break;
+                _animations.Add(nom, new Animation(frames, animationType, speed));
+            }
+            else
+            {
+                Console.WriteLine("Erreur : le type d'animation " + type + " n'existe pas");
             }
         }
             
