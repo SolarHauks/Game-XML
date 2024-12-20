@@ -52,8 +52,6 @@ public static class XmlUtils
                 Console.WriteLine($"Error: {e.Message}");
             }
         });
-
-        Console.WriteLine($"{xmlFilePath} is valid.");
     }
     
     // Méthode pemettant d'appliquer une transformation XSLT sur un fichier XML,
